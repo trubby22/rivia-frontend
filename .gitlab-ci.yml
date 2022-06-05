@@ -13,7 +13,7 @@ build-job:
     - flutter build web
 
 deploy-job:
-  stage: production
+  stage: deploy
   dependencies:
     - build-job
   script:
