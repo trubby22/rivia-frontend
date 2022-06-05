@@ -1,0 +1,21 @@
+default:
+  tags:
+    - DRP
+
+build-job:
+  stage: build
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+    - when: manual
+  artifacts:
+    untracked: true
+  script:
+    - flutter build web
+
+deploy-job:
+  stage: production
+  dependencies:
+    - build-job
+  script:
+    - aws s3 sync build/web s3://drp-group-13.com
+    - aws cloudfront create-invalidation --distribution-id E22LUVITD97BOO --paths '/*'
