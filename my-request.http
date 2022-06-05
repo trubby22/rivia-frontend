@@ -1,0 +1,5 @@
+#For testing the lambda functions
+
+GET https://28p2bz73y5.execute-api.eu-west-2.amazonaws.com/my-function-3
+###
+PUT https://28p2bz73y5.execute-api.eu-west-2.amazonaws.com/my-function-4
