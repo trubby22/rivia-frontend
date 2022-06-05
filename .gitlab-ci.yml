@@ -10,6 +10,7 @@ build-job:
     - flutter build web
 
 deploy-job:
+  image: amazon/aws-cli:latest
   stage: deploy
   dependencies:
     - build-job
