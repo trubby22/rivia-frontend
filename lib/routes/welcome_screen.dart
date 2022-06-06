@@ -55,6 +55,14 @@ class WelcomeScreen extends StatelessWidget {
                   },
                   child: Text('summary')),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/login');
+                  },
+                  child: Text('login')),
+            ),
           ],
         ),
       ),
