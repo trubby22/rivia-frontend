@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import '../models/meeting.dart';
 import '../models/participant.dart';
 
+List<String> painPoints = [
+  'meeting overran',
+  'meeting too short',
+  'I spoke too little and listened too long',
+  'too many people invited',
+];
+
 class Review extends StatelessWidget {
   final int participants_num = 6;
   final TextEditingController controller = TextEditingController();
@@ -34,7 +41,7 @@ class Review extends StatelessWidget {
                     child: Column(
                       children: List.generate(
                         meeting.participants.length,
-                        (index) {
+                            (index) {
                           Participant participant = meeting.participants[index];
 
                           return Row(
@@ -56,9 +63,12 @@ class Review extends StatelessWidget {
                     child: GridView.count(
                       crossAxisCount: 2,
                       scrollDirection: Axis.horizontal,
-                      children: List.generate(6, (index) {
-                        return Card(
-                          child: Text('$index'),
+                      children: List.generate(painPoints.length, (index) {
+                        return GestureDetector(
+                          child: Card(
+                            child: Text(painPoints[index]),
+                          ),
+                          onTap: () {},
                         );
                       }),
                     ),
