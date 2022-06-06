@@ -10,11 +10,15 @@ build-job:
     - flutter build web
 
 deploy-job:
-  image: amazon/aws-cli:latest
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   stage: deploy
   dependencies:
     - build-job
   script:
+#    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+#    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+#    - aws configure set default.region $AWS_DEFAULT_REGION
+#    - aws configure set output "text"
     - aws s3 sync build/web s3://drp-group-13.com
     - aws cloudfront create-invalidation --distribution-id E22LUVITD97BOO --paths '/*'
 
