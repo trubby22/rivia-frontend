@@ -18,25 +18,25 @@ class Summary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<Participant, int> notNeeded = {};
-    Map<Participant, int> notPrepared = {};
+    Map<Participant, List<Participant>> notNeeded = {};
+    Map<Participant, List<Participant>> notPrepared = {};
 
     for (final response in responses) {
       for (final participant in response.notNeeded) {
         if (notNeeded.containsKey(participant)) {
-          notNeeded[participant] = notNeeded[participant]! + 1;
+          notNeeded[participant]!.add(response.participant);
         } else {
-          notNeeded[participant] = 1;
+          notNeeded[participant] = [response.participant];
         }
       }
     }
 
     for (final response in responses) {
-      for (final participant in response.notNeeded) {
+      for (final participant in response.notPrepared) {
         if (notPrepared.containsKey(participant)) {
-          notPrepared[participant] = notPrepared[participant]! + 1;
+          notPrepared[participant]!.add(response.participant);
         } else {
-          notPrepared[participant] = 1;
+          notPrepared[participant] = [response.participant];
         }
       }
     }
@@ -51,10 +51,32 @@ class Summary extends StatelessWidget {
             Text(
               '${LangText.aggregateParticipants.local}: ${meeting.participants.length}',
             ),
-            Text('${LangText.aggregateNotNeeded.local}: ###'),
-            Text('${LangText.aggregateNotPrepared.local}: ###'),
-            BarGraph(dicts: notNeeded),
-            BarGraph(dicts: notPrepared),
+            Text('${LangText.aggregateNotNeeded.local}: ${notNeeded.length}'),
+            Text(
+                '${LangText.aggregateNotPrepared.local}: ${notPrepared.length}'),
+            Text(LangText.aggregateStats.local),
+            Text(LangText.detailedNotNeeded.local),
+            if (notNeeded.isNotEmpty)
+              BarGraph(
+                dicts: notNeeded.map(
+                  (key, value) => MapEntry(key, value.length),
+                ),
+                callback: (participant) => notNeeded[participant]
+                    ?.map((p) => Text(p.fullName))
+                    .toList(),
+              ),
+            if (notNeeded.isEmpty) Text(LangText.noOneNotNeeded.local),
+            Text(LangText.detailedNotPrepared.local),
+            if (notPrepared.isNotEmpty)
+              BarGraph(
+                dicts: notPrepared.map(
+                  (key, value) => MapEntry(key, value.length),
+                ),
+                callback: (participant) => notPrepared[participant]
+                    ?.map((p) => Text(p.fullName))
+                    .toList(),
+              ),
+            if (notPrepared.isEmpty) Text(LangText.noOneNotPrepared.local),
           ],
         ),
       ),

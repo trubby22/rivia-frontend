@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rivia/constants/languages.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/widget_size.dart';
 
@@ -21,9 +22,15 @@ class BarGraphListener with ChangeNotifier {
 
 /// The bar graph showing friends' speciaties.
 class BarGraph extends StatefulWidget {
-  const BarGraph({Key? key, required this.dicts}) : super(key: key);
+  const BarGraph({
+    Key? key,
+    required this.dicts,
+    this.callback,
+  }) : super(key: key);
 
   final Map<Participant, int> dicts;
+
+  final List<Widget>? Function(Participant participant)? callback;
 
   @override
   _BarGraphState createState() => _BarGraphState();
@@ -58,8 +65,7 @@ class _BarGraphState extends State<BarGraph> {
 
   final graphButtonHeight = 20.0;
   final titlePanelHeight = 20.0;
-  final infoButtonSize = 20.0;
-  final attributeWidth = 90.0;
+  final attributeWidth = 150.0;
 
   /// The separator [Widget] between consecutive entries.
   late final _barSeparator = Row(
@@ -113,12 +119,14 @@ class _BarGraphState extends State<BarGraph> {
         ),
       );
 
-  Widget _barGraphBuilder(int showCount) {
+  Widget _barGraphBuilder(int? showCount) {
     // TODO: No Friend Scenario
     if (_sortedRanks.isEmpty) return const SizedBox();
 
     final maxCount = _sortedRanks.lastKey()!;
-    final entryCount = min(showCount, _totalSpecialtiesCount);
+    final entryCount = showCount != null
+        ? min(showCount, _totalSpecialtiesCount)
+        : _totalSpecialtiesCount;
 
     final entryWidgetList = Iterable<int>.generate(entryCount).map(
       (index) {
@@ -173,13 +181,37 @@ class _BarGraphState extends State<BarGraph> {
     return Consumer<BarGraphListener>(
       builder: (context, data, _) {
         return GestureDetector(
-          onTap: () => data.highlightedBarIndex = index,
+          onTap: () {
+            if (data.highlightedBarIndex == index) {
+              data.highlightedBarIndex = -1;
+              final associatedParticipants = widget.callback?.call(participant);
+              if (associatedParticipants != null) {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    contentPadding: const EdgeInsets.all(12.0),
+                    title: Text(LangText.voters.local),
+                    content: SingleChildScrollView(
+                      child: ListTileTheme(
+                        child: ListBody(children: associatedParticipants),
+                      ),
+                    ),
+                  ),
+                );
+              }
+            } else {
+              data.highlightedBarIndex = index;
+            }
+          },
           child: Row(
             children: [
               // MARK: Specialty Name
               Container(
                 width: attributeWidth,
-                height: 14.0,
+                height: 20.0,
                 alignment: Alignment.centerRight,
                 child: Text(
                   participant.fullName,
@@ -250,30 +282,30 @@ class _BarGraphState extends State<BarGraph> {
           children: [
             SizedBox(height: titlePanelHeight),
             // MARK: Bar Graph Title
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // MARK: TOP 5 Button
-                _graphButtonBuilder(
-                  text: "5",
-                  index: 0,
-                ),
-                // MARK: TOP 10 Button
-                _graphButtonBuilder(
-                  text: "10",
-                  index: 1,
-                ),
-                // MARK: ALL Button
-                _graphButtonBuilder(
-                  text: "100",
-                  index: 2,
-                ),
-              ],
-            ),
-            const SizedBox(height: 12.0),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     // MARK: TOP 5 Button
+            //     _graphButtonBuilder(
+            //       text: "5",
+            //       index: 0,
+            //     ),
+            //     // MARK: TOP 10 Button
+            //     _graphButtonBuilder(
+            //       text: "10",
+            //       index: 1,
+            //     ),
+            //     // MARK: ALL Button
+            //     _graphButtonBuilder(
+            //       text: "100",
+            //       index: 2,
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 12.0),
             // MARK: Bar Graph Content
-            _barGraphBuilder(_topNList[_highlightIndex]),
+            _barGraphBuilder(null),
           ],
         ),
       ),

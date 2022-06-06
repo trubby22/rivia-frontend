@@ -9,10 +9,8 @@ import 'dart:convert';
 
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:rivia/main.dart';
 import 'package:rivia/models/response.dart';
 
 List<Participant> testParticipants = [

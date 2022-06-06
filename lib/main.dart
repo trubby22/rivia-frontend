@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rivia/models/response.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
 import 'package:rivia/routes/review.dart';
+import 'package:rivia/routes/summary.dart';
 
 import 'models/meeting.dart';
 import 'models/participant.dart';
@@ -22,6 +24,17 @@ Meeting testMeeting = Meeting(
   participants: testParticipants,
 );
 
+List<Response> testResponse = [
+  Response(
+    participant: testParticipants[0],
+    quality: 114.514,
+    painPoints: {0: "PAINTOS"},
+    notNeeded: List.of(testParticipants),
+    notPrepared: List.of(testParticipants),
+    feedback: "HOT PASSION 暑く強い思い",
+  ),
+];
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -29,11 +42,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/dashboard_assigned',
+      initialRoute: '/summary',
       routes: {
         '/review': (_) => Review(meeting: testMeeting),
         '/dashboard_unassigned': (_) => DashboardUnassigned(),
         '/dashboard_assigned': (_) => DashboardAssigned(),
+        '/summary': (_) => Summary(
+              meeting: testMeeting,
+              responses: testResponse,
+            ),
       },
     );
   }

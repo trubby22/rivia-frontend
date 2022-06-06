@@ -12,6 +12,12 @@ enum LangText {
   aggregateParticipants,
   aggregateNotNeeded,
   aggregateNotPrepared,
+  detailedStats,
+  detailedNotNeeded,
+  detailedNotPrepared,
+  noOneNotNeeded,
+  noOneNotPrepared,
+  voters,
 }
 
 extension ExtendedLangText on LangText {
@@ -20,13 +26,19 @@ extension ExtendedLangText on LangText {
     LangText.aggregateStats: ['Aggregate Stats', '嘿嘿啊哈哈哈哈'],
     LangText.aggregateParticipants: ['Number of participants', '嘿嘿啊哈哈哈哈'],
     LangText.aggregateNotNeeded: [
-      'Numer of people voted as not needed for at least once',
+      'Number of people voted as not needed for at least once',
       '嘿嘿啊哈哈哈哈',
     ],
     LangText.aggregateNotPrepared: [
-      'Numer of people voted as not prepared for at least once',
+      'Number of people voted as not prepared for at least once',
       '嘿嘿啊哈哈哈哈',
     ],
+    LangText.detailedStats: ['Detailed Stats', '嘿嘿啊哈哈哈哈'],
+    LangText.detailedNotNeeded: ['People voted as not needed', '嘿嘿啊哈哈哈哈'],
+    LangText.detailedNotPrepared: ['People voted as not prepared', '嘿嘿啊哈哈哈哈'],
+    LangText.noOneNotNeeded: ['No one voted as not needed', '嘿嘿啊哈哈哈哈'],
+    LangText.noOneNotPrepared: ['No one voted as not prepared', '嘿嘿啊哈哈哈哈'],
+    LangText.voters: ['Voters', '嘿嘿啊哈哈哈哈'],
   };
 
   String get local => langTexts[this]![language.index];

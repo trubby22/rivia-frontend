@@ -41,7 +41,7 @@ class Review extends StatelessWidget {
                     child: Column(
                       children: List.generate(
                         meeting.participants.length,
-                            (index) {
+                        (index) {
                           Participant participant = meeting.participants[index];
 
                           return Row(
