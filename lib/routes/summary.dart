@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
+import 'package:rivia/constants/ui_texts.dart';
 
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
@@ -44,18 +45,42 @@ class Summary extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(meeting.title)),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 80.0),
         child: ListView(
           children: [
-            Text(LangText.aggregateStats.local),
+            Center(
+              child: Text(
+                LangText.aggregateStats.local,
+                style: UITexts.sectionHeader,
+              ),
+            ),
+            const SizedBox(height: 12.0),
             Text(
               '${LangText.aggregateParticipants.local}: ${meeting.participants.length}',
+              style: UITexts.sectionSubheader,
             ),
-            Text('${LangText.aggregateNotNeeded.local}: ${notNeeded.length}'),
+            const SizedBox(height: 12.0),
             Text(
-                '${LangText.aggregateNotPrepared.local}: ${notPrepared.length}'),
-            Text(LangText.aggregateStats.local),
-            Text(LangText.detailedNotNeeded.local),
+              '${LangText.aggregateNotNeeded.local}: ${notNeeded.length}',
+              style: UITexts.sectionSubheader,
+            ),
+            const SizedBox(height: 12.0),
+            Text(
+              '${LangText.aggregateNotPrepared.local}: ${notPrepared.length}',
+              style: UITexts.sectionSubheader,
+            ),
+            const SizedBox(height: 12.0),
+            Center(
+              child: Text(
+                LangText.detailedStats.local,
+                style: UITexts.sectionHeader,
+              ),
+            ),
+            const SizedBox(height: 12.0),
+            Text(
+              LangText.detailedNotNeeded.local,
+              style: UITexts.sectionSubheader,
+            ),
             if (notNeeded.isNotEmpty)
               BarGraph(
                 dicts: notNeeded.map(
@@ -66,7 +91,11 @@ class Summary extends StatelessWidget {
                     .toList(),
               ),
             if (notNeeded.isEmpty) Text(LangText.noOneNotNeeded.local),
-            Text(LangText.detailedNotPrepared.local),
+            const SizedBox(height: 12.0),
+            Text(
+              LangText.detailedNotPrepared.local,
+              style: UITexts.sectionSubheader,
+            ),
             if (notPrepared.isNotEmpty)
               BarGraph(
                 dicts: notPrepared.map(

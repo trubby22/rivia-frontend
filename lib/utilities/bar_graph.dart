@@ -190,7 +190,7 @@ class _BarGraphState extends State<BarGraph> {
                   context: context,
                   builder: (context) => AlertDialog(
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
                     ),
                     contentPadding: const EdgeInsets.all(12.0),
                     title: Text(LangText.voters.local),
@@ -233,7 +233,7 @@ class _BarGraphState extends State<BarGraph> {
                 child: Container(
                   height: 14.0,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(12.0),
                     color: index == data.highlightedBarIndex
                         ? Colors.blue
                         : Colors.lightBlue,
@@ -275,8 +275,7 @@ class _BarGraphState extends State<BarGraph> {
       child: Container(
         padding: const EdgeInsets.only(bottom: 18.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
-          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.0),
         ),
         child: Column(
           children: [
