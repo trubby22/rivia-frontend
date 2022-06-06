@@ -9,7 +9,7 @@ import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
 import 'package:rivia/routes/review.dart';
 import 'package:rivia/routes/welcome_screen.dart';
-import 'package:rivia/routes/summary.dart';
+import 'package:rivia/routes/meeting_summary.dart';
 
 import 'models/meeting.dart';
 import 'models/participant.dart';
