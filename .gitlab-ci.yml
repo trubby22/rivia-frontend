@@ -16,4 +16,3 @@ deploy-job:
     - build-job
   script:
     - aws s3 sync build/web s3://rivia-frontend/
-    - aws cloudfront create-invalidation --distribution-id E22LUVITD97BOO --paths '/*'
