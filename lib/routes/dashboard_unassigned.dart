@@ -18,21 +18,8 @@ class DashboardUnassigned extends StatelessWidget {
           alignment: Alignment.topCenter,
           child: Column(
             children: [
-              Text('You are currently not a part of any organisation'),
-              ElevatedButton(
-                  onPressed: () {
-                    final snackBar = SnackBar(
-                      content: const Text('Request sent successfully'),
-                      action: SnackBarAction(
-                        label: 'Hide message',
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        },
-                      ),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  },
-                  child: Text('Ask your supervisor to add you to organisation')),
+              Text('You are currently not a part of any organisation\nAsk '
+                  'your supervisor to add you to an organisation'),
             ],
           ),
         ),

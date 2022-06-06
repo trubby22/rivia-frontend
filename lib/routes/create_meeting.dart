@@ -4,8 +4,6 @@ import 'package:rivia/helper_widgets/time_picker.dart';
 
 class CreateMeeting extends StatelessWidget {
   TextEditingController _nameController = TextEditingController();
-  TextEditingController _startController = TextEditingController();
-  TextEditingController _endController = TextEditingController();
 
   CreateMeeting({Key? key}) : super(key: key);
 
@@ -30,9 +28,15 @@ class CreateMeeting extends StatelessWidget {
                     Expanded(
                       child: Row(
                         children: [
-                          Expanded(child: Text('Meeting name:')),
                           Expanded(
-                              child: TextField(controller: _nameController)),
+                            child: TextField(
+                              decoration: const InputDecoration(
+                                filled: true,
+                                labelText: 'Meeting name',
+                              ),
+                              controller: _nameController,
+                            ),
+                          ),
                         ],
                       ),
                     ),

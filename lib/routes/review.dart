@@ -35,29 +35,97 @@ class Review extends StatelessWidget {
           children: [
             Expanded(child: Column()),
             Expanded(
+              flex: 3,
               child: Column(
                 children: [
                   Expanded(
                     child: Column(
-                      children: List.generate(
-                        meeting.participants.length,
-                        (index) {
-                          Participant participant = meeting.participants[index];
-
-                          return Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Card(
-                                  child: Checkbox(
-                                      value: false, onChanged: (_) {})),
-                              Card(
-                                  child: Checkbox(
-                                      value: false, onChanged: (_) {})),
-                              Card(child: Text(participant.fullName)),
+                              Expanded(child: Text('not needed')),
+                              Expanded(child: Text('unprepared')),
+                              Expanded(child: Text('participant')),
                             ],
-                          );
-                        },
-                      ),
+                          ),
+                        ),
+                        ...List.generate(
+                          meeting.participants.length,
+                          (index) {
+                            Participant participant =
+                                meeting.participants[index];
+
+                            return Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Checkbox(value: false, onChanged: (_) {}),
+                                  Checkbox(value: false, onChanged: (_) {}),
+                                  Text(participant.fullName),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
+                    //     Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: Row(
+                    //         children: [
+                    //           Expanded(
+                    //             child: Column(
+                    //               children: [
+                    //                 Expanded(child: Text('redundant')),
+                    //                 ...List.generate(
+                    //                     meeting.participants.length, (index) {
+                    //                   return Expanded(
+                    //                     child: Checkbox(
+                    //                         value: false, onChanged: (_) {}),
+                    //                   );
+                    //                 })
+                    //               ],
+                    //             ),
+                    //           ),
+                    //           Expanded(
+                    //             child: Column(
+                    //               children: [
+                    //                 Expanded(child: Text('unprepared')),
+                    //                 ...List.generate(
+                    //                     meeting.participants.length, (index) {
+                    //                   return Expanded(
+                    //                     child: Checkbox(
+                    //                         value: false, onChanged: (_) {}),
+                    //                   );
+                    //                 })
+                    //               ],
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     Expanded(
+                    //       child: Column(
+                    //         children: [
+                    //           Expanded(child: Text('participants')),
+                    //           ...List.generate(meeting.participants.length,
+                    //               (index) {
+                    //             Participant participant =
+                    //                 meeting.participants[index];
+                    //
+                    //             return Expanded(
+                    //               child: Text(participant.fullName),
+                    //             );
+                    //           })
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ),
                   Expanded(
                     child: GridView.count(
@@ -75,6 +143,10 @@ class Review extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextField(
+                      decoration: const InputDecoration(
+                        filled: true,
+                        labelText: 'Additional comments',
+                      ),
                       controller: controller,
                     ),
                   ),
