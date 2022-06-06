@@ -1,5 +1,7 @@
-import 'package:rivia/routes/review.dart';
 import 'package:flutter/material.dart';
+import 'package:rivia/routes/dashboard_assigned.dart';
+import 'package:rivia/routes/dashboard_unassigned.dart';
+import 'package:rivia/routes/review.dart';
 
 import 'models/meeting.dart';
 import 'models/participant.dart';
@@ -27,9 +29,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/dashboard_assigned',
       routes: {
-        '/': (context) => Review(meeting: testMeeting),
+        '/review': (_) => Review(meeting: testMeeting),
+        '/dashboard_unassigned': (_) => DashboardUnassigned(),
+        '/dashboard_assigned': (_) => DashboardAssigned(),
       },
     );
   }
