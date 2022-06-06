@@ -7,11 +7,11 @@ import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/bar_graph.dart';
 
-class Summary extends StatelessWidget {
+class MeetingSummary extends StatelessWidget {
   final Meeting meeting;
   final List<Response> responses;
 
-  Summary({
+  MeetingSummary({
     Key? key,
     required this.meeting,
     required this.responses,

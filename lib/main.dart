@@ -1,8 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rivia/models/response.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
 import 'package:rivia/routes/review.dart';
+import 'package:rivia/routes/create_meeting.dart';
+import 'package:rivia/routes/dashboard_assigned.dart';
+import 'package:rivia/routes/dashboard_unassigned.dart';
+import 'package:rivia/routes/review.dart';
+import 'package:rivia/routes/welcome_screen.dart';
 import 'package:rivia/routes/summary.dart';
 
 import 'models/meeting.dart';
@@ -24,7 +30,7 @@ Meeting testMeeting = Meeting(
   participants: testParticipants,
 );
 
-List<Response> testResponse = [
+List<Response> testResponses = [
   Response(
     participant: testParticipants[0],
     quality: 114.514,
@@ -50,15 +56,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/summary',
+      initialRoute: '/welcome_screen',
       routes: {
+        '/welcome_screen': (_) => WelcomeScreen(),
         '/review': (_) => Review(meeting: testMeeting),
         '/dashboard_unassigned': (_) => DashboardUnassigned(),
         '/dashboard_assigned': (_) => DashboardAssigned(),
-        '/summary': (_) => Summary(
-              meeting: testMeeting,
-              responses: testResponse,
-            ),
+        '/create_meeting': (_) => CreateMeeting(),
+        '/summary': (_) =>
+            MeetingSummary(meeting: testMeeting, responses: testResponses),
       },
     );
   }
