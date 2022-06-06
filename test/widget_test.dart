@@ -5,12 +5,15 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:convert';
+
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:rivia/main.dart';
+import 'package:rivia/models/response.dart';
 
 List<Participant> testParticipants = [
   Participant(name: "Jacen", surname: "Solo", email: "js@rt.cr"),
@@ -21,27 +24,48 @@ Meeting testMeeting = Meeting(
   title: "Foo Meeting",
   startTime: DateTime.now(),
   endTime: DateTime.now(),
-  participants: testParticipants,
+  participants: List.of(testParticipants),
+);
+
+Response testResponse = Response(
+  participant: testParticipants[0],
+  quality: 114.514,
+  painPoints: {0: "PAINTOS"},
+  notNeeded: List.of(testParticipants),
+  notPrepared: List.of(testParticipants),
+  feedback: "HOT PASSION 暑く強い思い",
 );
 
 void main() {
-  final j1 = testMeeting.toJson();
-  print(j1);
-  print(Meeting.fromJson(j1));
-  // testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-  //   // Build our app and trigger a frame.
-  //   await tester.pumpWidget(const MyApp());
+  testWidgets('Can encode Meeting', (WidgetTester tester) async {
+    final jason = json.encode(testMeeting.toJson());
+    print(jason);
+    print(Meeting.fromJson(json.decode(jason)));
+  });
 
-  //   // Verify that our counter starts at 0.
-  //   expect(find.text('0'), findsOneWidget);
-  //   expect(find.text('1'), findsNothing);
+  testWidgets('Can encode Response', (WidgetTester tester) async {
+    final jason = json.encode(testResponse.toJson());
+    print(jason);
+    print(Response.fromJson(json.decode(jason)));
+  });
 
-  //   // Tap the '+' icon and trigger a frame.
-  //   await tester.tap(find.byIcon(Icons.add));
-  //   await tester.pump();
+  // testWidgets('Can encode Meeting', (WidgetTester tester) async {
+  //   final j1 = json.encode(testMeeting.toJson());
+  //   print(j1);
+  //   print(Meeting.fromJson(json.decode(j1)));
+  //   // // Build our app and trigger a frame.
+  //   // await tester.pumpWidget(const MyApp());
 
-  //   // Verify that our counter has incremented.
-  //   expect(find.text('0'), findsNothing);
-  //   expect(find.text('1'), findsOneWidget);
+  //   // // Verify that our counter starts at 0.
+  //   // expect(find.text('0'), findsOneWidget);
+  //   // expect(find.text('1'), findsNothing);
+
+  //   // // Tap the '+' icon and trigger a frame.
+  //   // await tester.tap(find.byIcon(Icons.add));
+  //   // await tester.pump();
+
+  //   // // Verify that our counter has incremented.
+  //   // expect(find.text('0'), findsNothing);
+  //   // expect(find.text('1'), findsOneWidget);
   // });
 }

@@ -8,4 +8,11 @@ class Fields {
   static String startTime = "start";
   static String endTime = "end";
   static String participants = "participants";
+
+  static String participant = "participant";
+  static String quality = "quality";
+  static String painPoints = "points";
+  static String notNeeded = "not_needed";
+  static String notPrepared = "not_prepared";
+  static String feedback = "feedback";
 }

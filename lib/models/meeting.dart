@@ -1,4 +1,5 @@
 import 'package:rivia/constants/fields.dart';
+import 'package:rivia/models/date_time_json.dart';
 import 'package:rivia/models/participant.dart';
 
 /// The model for meetings.
@@ -17,20 +18,17 @@ class Meeting {
 
   Meeting.fromJson(Map<String, dynamic> json)
       : title = json[Fields.title],
-        startTime = json[Fields.startTime],
-        endTime = json[Fields.endTime],
-        participants =
-            (json[Fields.participantId] as List<Map<String, dynamic>>?)
-                    ?.map((e) {
-                  print(e);
-                  return Participant.fromJson(e);
-                }).toList() ??
-                const [];
+        startTime = DateTimeJson.fromJSON(json[Fields.startTime]),
+        endTime = DateTimeJson.fromJSON(json[Fields.endTime]),
+        participants = (json[Fields.participantId] as List<dynamic>?)
+                ?.map((e) => Participant.fromJson(e))
+                .toList() ??
+            const [];
 
   Map<String, dynamic> toJson() => {
         Fields.title: title,
-        Fields.startTime: startTime,
-        Fields.endTime: endTime,
-        Fields.participants: participants.map((e) => e.toJson()),
+        Fields.startTime: startTime.toJSON(),
+        Fields.endTime: endTime.toJSON(),
+        Fields.participants: participants.map((e) => e.toJson()).toList(),
       };
 }

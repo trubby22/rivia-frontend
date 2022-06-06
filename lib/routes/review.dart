@@ -45,9 +45,7 @@ class Review extends StatelessWidget {
                               Card(
                                   child: Checkbox(
                                       value: false, onChanged: (_) {})),
-                              Card(
-                                  child: Text('${participant.name} '
-                                      '${participant.surname}')),
+                              Card(child: Text(participant.fullName)),
                             ],
                           );
                         },

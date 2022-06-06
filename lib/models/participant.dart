@@ -14,6 +14,8 @@ class Participant {
     this.id,
   });
 
+  get fullName => name + " " + surname;
+
   Participant.fromJson(Map<String, dynamic> json)
       : name = json[Fields.name],
         surname = json[Fields.surname],
