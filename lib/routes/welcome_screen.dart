@@ -47,6 +47,14 @@ class WelcomeScreen extends StatelessWidget {
                   },
                   child: Text('dashboard unassigned')),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/summary');
+                  },
+                  child: Text('summary')),
+            ),
           ],
         ),
       ),

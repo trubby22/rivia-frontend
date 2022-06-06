@@ -1,10 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:rivia/models/response.dart';
 import 'package:rivia/routes/create_meeting.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
-import 'package:rivia/helper_widgets/date_picker.dart';
 import 'package:rivia/routes/review.dart';
 import 'package:rivia/routes/welcome_screen.dart';
+import 'package:rivia/routes/summary.dart';
 
 import 'models/meeting.dart';
 import 'models/participant.dart';
@@ -25,6 +27,15 @@ Meeting testMeeting = Meeting(
   participants: testParticipants,
 );
 
+Response testResponse = Response(
+  participant: testParticipants[0],
+  quality: 114.514,
+  painPoints: {0: "PAINTOS"},
+  notNeeded: List.of(testParticipants),
+  notPrepared: List.of(testParticipants),
+  feedback: "HOT PASSION 暑く強い思い",
+);
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -34,11 +45,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/welcome_screen',
       routes: {
+        '/welcome_screen': (_) => WelcomeScreen(),
         '/review': (_) => Review(meeting: testMeeting),
         '/dashboard_unassigned': (_) => DashboardUnassigned(),
         '/dashboard_assigned': (_) => DashboardAssigned(),
         '/create_meeting': (_) => CreateMeeting(),
-        '/welcome_screen': (_) => WelcomeScreen(),
+        '/summary': (_) =>
+            MeetingSummary(meeting: testMeeting, responses: [testResponse]),
       },
     );
   }
