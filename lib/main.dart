@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/response.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
@@ -30,25 +31,6 @@ Meeting testMeeting = Meeting(
   participants: testParticipants,
 );
 
-List<Response> testResponses = [
-  Response(
-    participant: testParticipants[0],
-    quality: 114.514,
-    painPoints: {0: "PAINTOS"},
-    notNeeded: List.of(testParticipants),
-    notPrepared: List.of(testParticipants),
-    feedback: "HOT PASSION 暑く強い思い",
-  ),
-  Response(
-    participant: testParticipants[1],
-    quality: 114.514,
-    painPoints: {0: "PAINTOS"},
-    notNeeded: [testParticipants[0]],
-    notPrepared: [testParticipants[0]],
-    feedback: "HOT PASSION 暑く強い思い",
-  ),
-];
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -59,12 +41,34 @@ class MyApp extends StatelessWidget {
       initialRoute: '/welcome_screen',
       routes: {
         '/welcome_screen': (_) => WelcomeScreen(),
-        '/review': (_) => Review(meeting: testMeeting),
-        '/dashboard_unassigned': (_) => DashboardUnassigned(),
-        '/dashboard_assigned': (_) => DashboardAssigned(),
-        '/create_meeting': (_) => CreateMeeting(),
-        '/summary': (_) =>
-            MeetingSummary(meeting: testMeeting, responses: testResponses),
+        RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
+        RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
+        RouteNames.createMeetings: (_) => CreateMeeting(),
+      },
+      onGenerateRoute: (routeSettings) {
+        switch (routeSettings.name) {
+          case RouteNames.review:
+            if (routeSettings.arguments.runtimeType != Meeting) {
+              throw Exception(
+                "ERROR: Did not pass a valid Meeting for Review page!",
+              );
+            }
+            return MaterialPageRoute(
+              builder: (_) =>
+                  Review(meeting: routeSettings.arguments as Meeting),
+            );
+          case RouteNames.summary:
+            if (routeSettings.arguments.runtimeType != Meeting) {
+              throw Exception(
+                "ERROR: Did not pass a valid Meeting for Summary page!",
+              );
+            }
+            return MaterialPageRoute(
+              builder: (_) => MeetingSummary(
+                meeting: routeSettings.arguments as Meeting,
+              ),
+            );
+        }
       },
     );
   }

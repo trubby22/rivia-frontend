@@ -4,11 +4,13 @@ class UITexts {
   static const sectionHeader = TextStyle(
     fontSize: FontSizes.sectionHeaderFontSize,
     fontWeight: FontWeight.bold,
+    color: Colors.black,
   );
 
   static const sectionSubheader = TextStyle(
     fontSize: FontSizes.sectionSubheaderFontSize,
     fontWeight: FontWeight.w500,
+    color: Colors.black,
   );
 }
 

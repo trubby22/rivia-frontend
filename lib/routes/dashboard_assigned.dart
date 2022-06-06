@@ -1,4 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:rivia/models/meeting.dart';
+import 'package:rivia/models/participant.dart';
+import 'package:rivia/utilities/meeting_entry.dart';
+
+Meeting _testMeeting = Meeting(
+  title: "Bar Meeting",
+  startTime: DateTime.now(),
+  endTime: DateTime.now(),
+  participants: [
+    Participant(name: "Jacen", surname: "Solo", email: "js@rt.cr"),
+    Participant(name: "Luke", surname: "Skywalker", email: "js@kc.tt"),
+  ],
+);
 
 class DashboardAssigned extends StatelessWidget {
   const DashboardAssigned({Key? key}) : super(key: key);
@@ -21,9 +34,7 @@ class DashboardAssigned extends StatelessWidget {
               child: Column(
                 children: [
                   Text('Meetings'),
-                  Column(
-                      children: List.generate(
-                          5, (index) => Card(child: Text('$index')))),
+                  Column(children: [MeetingEntry(meeting: _testMeeting)]),
                 ],
               ),
             ),

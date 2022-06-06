@@ -7,14 +7,36 @@ import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/bar_graph.dart';
 
+List<Participant> _testParticipants = [
+  Participant(name: "Jacen", surname: "Solo", email: "js@rt.cr"),
+  Participant(name: "Luke", surname: "Skywalker", email: "js@kc.tt"),
+];
+
+List<Response> _testResponses = [
+  Response(
+    participant: _testParticipants[0],
+    quality: 114.514,
+    painPoints: {0: "PAINTOS"},
+    notNeeded: List.of(_testParticipants),
+    notPrepared: List.of(_testParticipants),
+    feedback: "HOT PASSION 暑く強い思い",
+  ),
+  Response(
+    participant: _testParticipants[1],
+    quality: 114.514,
+    painPoints: {0: "PAINTOS"},
+    notNeeded: [_testParticipants[0]],
+    notPrepared: [_testParticipants[0]],
+    feedback: "HOT PASSION 暑く強い思い",
+  ),
+];
+
 class MeetingSummary extends StatelessWidget {
   final Meeting meeting;
-  final List<Response> responses;
 
   MeetingSummary({
     Key? key,
     required this.meeting,
-    required this.responses,
   }) : super(key: key);
 
   @override
@@ -22,7 +44,7 @@ class MeetingSummary extends StatelessWidget {
     Map<Participant, List<Participant>> notNeeded = {};
     Map<Participant, List<Participant>> notPrepared = {};
 
-    for (final response in responses) {
+    for (final response in _testResponses) {
       for (final participant in response.notNeeded) {
         if (notNeeded.containsKey(participant)) {
           notNeeded[participant]!.add(response.participant);
@@ -32,7 +54,7 @@ class MeetingSummary extends StatelessWidget {
       }
     }
 
-    for (final response in responses) {
+    for (final response in _testResponses) {
       for (final participant in response.notPrepared) {
         if (notPrepared.containsKey(participant)) {
           notPrepared[participant]!.add(response.participant);
