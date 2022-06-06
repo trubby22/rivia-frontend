@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/response.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
@@ -17,6 +19,7 @@ import 'models/meeting.dart';
 import 'models/participant.dart';
 
 void main() {
+  setUrlStrategy(PathUrlStrategy());
   runApp(const MyApp());
 }
 
@@ -44,7 +47,8 @@ class MyApp extends StatelessWidget {
         '/welcome_screen': (_) => WelcomeScreen(),
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
-        RouteNames.createMeetings: (_) => CreateMeeting(),
+        RouteNames.createMeeting: (_) => CreateMeeting(),
+        RouteNames.login: (_) => Login(),
       },
       onGenerateRoute: (routeSettings) {
         switch (routeSettings.name) {

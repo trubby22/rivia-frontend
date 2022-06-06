@@ -43,7 +43,10 @@ class DashboardAssigned extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                      onPressed: () {}, child: Text('Create new meeting')),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/create_meeting');
+                      },
+                      child: Text('Create new meeting')),
                 ],
               ),
             ),

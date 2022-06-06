@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rivia/helper_widgets/stateful_checkbox.dart';
 
 import '../models/meeting.dart';
 import '../models/participant.dart';
@@ -43,7 +44,7 @@ class Review extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Expanded(child: Text('not needed')),
                               Expanded(child: Text('unprepared')),
@@ -60,10 +61,10 @@ class Review extends StatelessWidget {
                             return Expanded(
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.start,
                                 children: [
-                                  Checkbox(value: false, onChanged: (_) {}),
-                                  Checkbox(value: false, onChanged: (_) {}),
+                                  StatefulCheckbox(),
+                                  StatefulCheckbox(),
                                   Text(participant.fullName),
                                 ],
                               ),
@@ -158,7 +159,9 @@ class Review extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ElevatedButton(onPressed: () {}, child: Text('Save all')),
+                  ElevatedButton(onPressed: () {
+                    Navigator.of(context).pop();
+                  }, child: Text('Submit review')),
                 ],
               ),
             ),
@@ -168,3 +171,4 @@ class Review extends StatelessWidget {
     );
   }
 }
+

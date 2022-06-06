@@ -32,7 +32,7 @@ class WelcomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(RouteNames.createMeetings);
+                    Navigator.of(context).pushNamed(RouteNames.createMeeting);
                   },
                   child: Text('create meeting')),
             ),

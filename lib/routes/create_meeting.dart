@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/helper_widgets/date_picker.dart';
+import 'package:rivia/helper_widgets/stateful_checkbox.dart';
 import 'package:rivia/helper_widgets/time_picker.dart';
 
 class CreateMeeting extends StatelessWidget {
@@ -45,15 +46,25 @@ class CreateMeeting extends StatelessWidget {
                         children: [
                           Expanded(child: Text('Participants:')),
                           Expanded(
-                            child: ListView(
-                              children: List.generate(10, (index) {
-                                return Row(
-                                  children: [
-                                    Checkbox(value: false, onChanged: (_) {}),
-                                    Text('Participant $index'),
-                                  ],
-                                );
-                              }),
+                            child: Column(
+                              children: [
+                                ElevatedButton(
+                                    onPressed: () {},
+                                    child: Text('select all')),
+                                SizedBox(height: 8.0),
+                                Expanded(
+                                  child: ListView(
+                                    children: List.generate(10, (index) {
+                                      return Row(
+                                        children: [
+                                          StatefulCheckbox(),
+                                          Text('Participant $index'),
+                                        ],
+                                      );
+                                    }),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -92,7 +103,10 @@ class CreateMeeting extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                        onPressed: () {}, child: Text('Create meeting')),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Create meeting')),
                   ],
                 ),
               ),

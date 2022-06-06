@@ -35,7 +35,9 @@ class Login extends StatelessWidget {
                 obscureText: true,
               ),
               const SizedBox(height: 12.0),
-              ElevatedButton(onPressed: () {}, child: Text('Log In / Sign Up')),
+              ElevatedButton(onPressed: () {
+                Navigator.of(context).pushNamed('/dashboard_assigned');
+              }, child: Text('Log In / Sign Up')),
             ],
           ),
         ),
