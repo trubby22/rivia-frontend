@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 
+import '../models/meeting.dart';
+import '../models/participant.dart';
+
 class Review extends StatelessWidget {
   final int participants_num = 6;
   final TextEditingController controller = TextEditingController();
+  final Meeting meeting;
 
-  Review({Key? key}) : super(key: key);
+  Review({
+    Key? key,
+    required this.meeting,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Meeting Title'),
+        title: Text(meeting.title),
         actions: [
           ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
         ],
@@ -26,8 +33,10 @@ class Review extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: List.generate(
-                        participants_num,
+                        meeting.participants.length,
                         (index) {
+                          Participant participant = meeting.participants[index];
+
                           return Row(
                             children: [
                               Card(
@@ -36,7 +45,9 @@ class Review extends StatelessWidget {
                               Card(
                                   child: Checkbox(
                                       value: false, onChanged: (_) {})),
-                              Card(child: Text('$index')),
+                              Card(
+                                  child: Text('${participant.name} '
+                                      '${participant.surname}')),
                             ],
                           );
                         },
