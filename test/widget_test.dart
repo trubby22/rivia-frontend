@@ -5,12 +5,12 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:clicker/models/meeting.dart';
-import 'package:clicker/models/participant.dart';
+import 'package:rivia/models/meeting.dart';
+import 'package:rivia/models/participant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:clicker/main.dart';
+import 'package:rivia/main.dart';
 
 List<Participant> testParticipants = [
   Participant(name: "Jacen", surname: "Solo", email: "js@rt.cr"),

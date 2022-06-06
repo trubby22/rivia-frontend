@@ -1,5 +1,5 @@
-import 'package:clicker/constants/fields.dart';
-import 'package:clicker/models/participant.dart';
+import 'package:rivia/constants/fields.dart';
+import 'package:rivia/models/participant.dart';
 
 /// The model for meetings.
 class Meeting {

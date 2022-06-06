@@ -1,4 +1,4 @@
-import 'package:clicker/constants/fields.dart';
+import 'package:rivia/constants/fields.dart';
 
 /// The model for meeting participants.
 class Participant {

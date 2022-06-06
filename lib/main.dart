@@ -1,4 +1,4 @@
-import 'package:clicker/routes/review.dart';
+import 'package:rivia/routes/review.dart';
 import 'package:flutter/material.dart';
 
 import 'models/meeting.dart';

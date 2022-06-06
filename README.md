@@ -1,4 +1,4 @@
-# clicker
+# rivia
 
 A new Flutter project.
 
