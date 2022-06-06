@@ -44,6 +44,7 @@ class Response {
         ),
         Fields.notNeeded: notNeeded.map((e) => e.toJson()).toList(),
         Fields.notPrepared: notPrepared.map((e) => e.toJson()).toList(),
+        if (feedback != null) Fields.feedback: feedback,
       };
 }
 
