@@ -1,21 +1,15 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:provider/provider.dart';
 
 import 'package:rivia/constants/route_names.dart';
-import 'package:rivia/models/response.dart';
-import 'package:rivia/routes/dashboard_assigned.dart';
-import 'package:rivia/routes/dashboard_unassigned.dart';
-import 'package:rivia/routes/review.dart';
-import 'package:rivia/routes/create_meeting.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
 import 'package:rivia/routes/login.dart';
 import 'package:rivia/routes/review.dart';
+import 'package:rivia/routes/create_meeting.dart';
 import 'package:rivia/routes/welcome_screen.dart';
 import 'package:rivia/routes/meeting_summary.dart';
-import 'package:rivia/utilities/http_requests.dart';
 
 import 'models/meeting.dart';
 import 'models/participant.dart';
@@ -52,7 +46,9 @@ class MyApp extends StatelessWidget {
           '/welcome_screen': (_) => WelcomeScreen(),
           RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
           RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
-          RouteNames.createMeeting: (_) => CreateMeeting(),
+          RouteNames.createMeeting: (_) => CreateMeeting(
+                allParticipants: testParticipants,
+              ),
           RouteNames.login: (_) => Login(),
         },
         onGenerateRoute: (routeSettings) {
