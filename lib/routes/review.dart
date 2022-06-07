@@ -16,7 +16,7 @@ class Review extends StatefulWidget {
   final Meeting meeting;
   final Participant participant;
 
-  Review({
+  const Review({
     Key? key,
     required this.meeting,
     required this.participant,
