@@ -60,8 +60,10 @@ class MyApp extends StatelessWidget {
               );
             }
             return MaterialPageRoute(
-              builder: (_) =>
-                  Review(meeting: routeSettings.arguments as Meeting),
+              builder: (_) => Review(
+                meeting: routeSettings.arguments as Meeting,
+                participant: testParticipants[0],
+              ),
             );
           case RouteNames.summary:
             if (routeSettings.arguments.runtimeType != Meeting) {

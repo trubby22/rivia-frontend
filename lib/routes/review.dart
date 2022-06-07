@@ -1,31 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:rivia/constants/pain_points.dart';
+import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/stateful_checkbox.dart';
 
 import '../models/meeting.dart';
 import '../models/participant.dart';
 
-List<String> painPoints = [
-  'meeting overran',
-  'meeting too short',
-  'I spoke too little and listened too long',
-  'too many people invited',
-];
-
-class Review extends StatelessWidget {
-  final int participants_num = 6;
-  final TextEditingController controller = TextEditingController();
+class Review extends StatefulWidget {
   final Meeting meeting;
+  final Participant participant;
 
   Review({
     Key? key,
     required this.meeting,
+    required this.participant,
   }) : super(key: key);
+
+  @override
+  State<Review> createState() => _ReviewState();
+}
+
+class _ReviewState extends State<Review> {
+  final TextEditingController _controller = TextEditingController();
+  late List<Participant> _participants = widget.meeting.participants;
+  late List<bool> _selectedRedundant =
+      List.generate(_participants.length, (_) => false);
+  late List<bool> _selectedUnprepared =
+      List.generate(_participants.length, (_) => false);
+  late List<bool> _selectedPainPoints =
+      List.generate(painPoints.length, (_) => false);
+  bool _selectAllRedundant = false;
+  bool _selectAllUnprepared = false;
+  double _quality = 0.5;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(meeting.title),
+        title: Text(widget.meeting.title),
         actions: [
           ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
         ],
@@ -54,30 +66,79 @@ class Review extends StatelessWidget {
                         ),
                         Expanded(
                           child: Row(
-                            children: List.generate(2, (index) {
-                              return Expanded(
+                            children: [
+                              Expanded(
                                 child: Column(
                                   children: [
                                     Expanded(child: Text('select all')),
-                                    Expanded(child: StatefulCheckbox()),
+                                    Expanded(
+                                      child: Checkbox(
+                                          value: _selectAllRedundant,
+                                          onChanged: (_) {
+                                            setState(() {
+                                              _selectAllRedundant =
+                                                  !_selectAllRedundant;
+                                              _selectedRedundant =
+                                                  _selectedRedundant
+                                                      .map((_) =>
+                                                          _selectAllRedundant)
+                                                      .toList();
+                                            });
+                                          }),
+                                    ),
                                   ],
                                 ),
-                              );
-                            }),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Expanded(child: Text('select all')),
+                                    Expanded(
+                                      child: Checkbox(
+                                          value: _selectAllUnprepared,
+                                          onChanged: (_) {
+                                            setState(() {
+                                              _selectAllUnprepared =
+                                                  !_selectAllUnprepared;
+                                              _selectedUnprepared =
+                                                  _selectedUnprepared
+                                                      .map((_) =>
+                                                          _selectAllUnprepared)
+                                                      .toList();
+                                            });
+                                          }),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         ...List.generate(
-                          meeting.participants.length,
+                          _participants.length,
                           (index) {
-                            Participant participant =
-                                meeting.participants[index];
+                            Participant participant = _participants[index];
 
                             return Expanded(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  StatefulCheckbox(),
-                                  StatefulCheckbox(),
+                                  Checkbox(
+                                      value: _selectedRedundant[index],
+                                      onChanged: (_) {
+                                        setState(() {
+                                          _selectedRedundant[index] =
+                                              !_selectedRedundant[index];
+                                        });
+                                      }),
+                                  Checkbox(
+                                      value: _selectedUnprepared[index],
+                                      onChanged: (_) {
+                                        setState(() {
+                                          _selectedUnprepared[index] =
+                                              !_selectedUnprepared[index];
+                                        });
+                                      }),
                                   Text(participant.fullName),
                                 ],
                               ),
@@ -162,7 +223,7 @@ class Review extends StatelessWidget {
                         filled: true,
                         labelText: 'Additional comments',
                       ),
-                      controller: controller,
+                      controller: _controller,
                     ),
                   ),
                 ],
@@ -175,6 +236,7 @@ class Review extends StatelessWidget {
                 children: [
                   ElevatedButton(
                       onPressed: () {
+                        submitReview();
                         Navigator.of(context).pop();
                       },
                       child: Text('Submit review')),
@@ -185,5 +247,51 @@ class Review extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void submitReview() {
+    String feedback = _controller.value.text;
+
+    List<Participant> redundant = [];
+    _participants.asMap().forEach((index, participant) {
+      if (_selectedRedundant[index]) {
+        redundant.add(participant);
+      }
+    });
+
+    List<Participant> unprepared = [];
+    _participants.asMap().forEach((index, participant) {
+      if (_selectedUnprepared[index]) {
+        unprepared.add(participant);
+      }
+    });
+
+    Map<int, String> selectedPainPoints = {};
+    painPoints.asMap().forEach((index, text) {
+      if (_selectedPainPoints[index]) {
+        selectedPainPoints[index] = text;
+      }
+    });
+
+    Participant participant = widget.participant;
+
+    Response response = Response(
+      participant: participant,
+      quality: _quality,
+      painPoints: selectedPainPoints,
+      notNeeded: redundant,
+      notPrepared: unprepared,
+      feedback: feedback,
+    );
+
+    postReviewOnBackend(response);
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Review saved: $response'),
+    ));
+  }
+
+  void postReviewOnBackend(Response response) {
+    //  TODO()
   }
 }
