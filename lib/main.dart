@@ -14,6 +14,7 @@ import 'package:rivia/routes/login.dart';
 import 'package:rivia/routes/review.dart';
 import 'package:rivia/routes/welcome_screen.dart';
 import 'package:rivia/routes/meeting_summary.dart';
+import 'package:rivia/utilities/http_requests.dart';
 
 import 'models/meeting.dart';
 import 'models/participant.dart';
@@ -47,8 +48,7 @@ class MyApp extends StatelessWidget {
         '/welcome_screen': (_) => WelcomeScreen(),
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
-        RouteNames.createMeeting: (_) =>
-            CreateMeeting(allParticipants: testParticipants),
+        RouteNames.createMeeting: (_) => CreateMeeting(),
         RouteNames.login: (_) => Login(),
       },
       onGenerateRoute: (routeSettings) {

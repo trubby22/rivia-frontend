@@ -6,32 +6,9 @@ import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/bar_graph.dart';
+import 'package:rivia/utilities/http_requests.dart';
 
-List<Participant> _testParticipants = [
-  Participant(name: "Jacen", surname: "Solo", email: "js@rt.cr"),
-  Participant(name: "Luke", surname: "Skywalker", email: "js@kc.tt"),
-];
-
-List<Response> _testResponses = [
-  Response(
-    participant: _testParticipants[0],
-    quality: 114.514,
-    painPoints: {'0': "PAINTOS"},
-    notNeeded: List.of(_testParticipants),
-    notPrepared: List.of(_testParticipants),
-    feedback: "HOT PASSION 暑く強い思い",
-  ),
-  Response(
-    participant: _testParticipants[1],
-    quality: 114.514,
-    painPoints: {'0': "PAINTOS"},
-    notNeeded: [_testParticipants[0]],
-    notPrepared: [_testParticipants[0]],
-    feedback: "HOT PASSION 暑く強い思い",
-  ),
-];
-
-class MeetingSummary extends StatelessWidget {
+class MeetingSummary extends StatefulWidget {
   final Meeting meeting;
 
   MeetingSummary({
@@ -40,11 +17,32 @@ class MeetingSummary extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<MeetingSummary> createState() => _MeetingSummaryState();
+}
+
+class _MeetingSummaryState extends State<MeetingSummary> {
+  List<Response> _responses = [];
+
+  @override
+  void initState() {
+    super.initState();
+    print('fetching responses');
+    fetchResponses();
+  }
+
+  void fetchResponses() async {
+    List<Response> tempResponses = await getMeetingSummary(widget.meeting);
+    setState(() {
+      _responses = tempResponses;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     Map<Participant, List<Participant>> notNeeded = {};
     Map<Participant, List<Participant>> notPrepared = {};
 
-    for (final response in _testResponses) {
+    for (final response in _responses) {
       for (final participant in response.notNeeded) {
         if (notNeeded.containsKey(participant)) {
           notNeeded[participant]!.add(response.participant);
@@ -54,7 +52,7 @@ class MeetingSummary extends StatelessWidget {
       }
     }
 
-    for (final response in _testResponses) {
+    for (final response in _responses) {
       for (final participant in response.notPrepared) {
         if (notPrepared.containsKey(participant)) {
           notPrepared[participant]!.add(response.participant);
@@ -65,7 +63,7 @@ class MeetingSummary extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(meeting.title)),
+      appBar: AppBar(title: Text(widget.meeting.title)),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 80.0),
         child: ListView(
@@ -78,7 +76,7 @@ class MeetingSummary extends StatelessWidget {
             ),
             const SizedBox(height: 12.0),
             Text(
-              '${LangText.aggregateParticipants.local}: ${meeting.participants.length}',
+              '${LangText.aggregateParticipants.local}: ${widget.meeting.participants.length}',
               style: UITexts.sectionSubheader,
             ),
             const SizedBox(height: 12.0),

@@ -3,6 +3,7 @@ import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/models/login_credentials.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:rivia/utilities/http_requests.dart';
 
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -109,12 +110,5 @@ class _LoginState extends State<Login> {
     ));
 
     postLoginCredentialsToBackend(loginCredentials);
-  }
-
-  void postLoginCredentialsToBackend(LoginCredentials loginCredentials) {
-    http.post(
-      Uri.parse(apiGateway + postLogin),
-      body: loginCredentials.toJson(),
-    );
   }
 }

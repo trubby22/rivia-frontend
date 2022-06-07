@@ -20,3 +20,18 @@ class MeetingDateAndTime extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class User extends ChangeNotifier {
+  String? _uuid;
+
+  String? get uuid => _uuid;
+
+  set uuid(String? uuid) {
+    _uuid = uuid;
+    notifyListeners();
+  }
+}
+
+class Meetings extends ChangeNotifier {
+
+}

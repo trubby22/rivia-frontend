@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/api_endpoints.dart';
+import 'package:rivia/constants/settings.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/date_picker.dart';
+import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/stateful_checkbox.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/time_picker.dart';
@@ -11,21 +13,32 @@ import 'package:rivia/utilities/time_picker.dart';
 import 'package:http/http.dart' as http;
 
 class CreateMeeting extends StatefulWidget {
-  final List<Participant> allParticipants;
-
-  CreateMeeting({
-    Key? key,
-    required this.allParticipants,
-  }) : super(key: key);
+  CreateMeeting({Key? key}) : super(key: key);
 
   @override
   State<CreateMeeting> createState() => _CreateMeetingState();
 }
 
 class _CreateMeetingState extends State<CreateMeeting> {
+  List<Participant> _allParticipants = [];
   TextEditingController _nameController = TextEditingController();
-  late List<bool> _selectedParticipants =
-      List.generate(widget.allParticipants.length, (_) => false);
+  late List<bool> _selectedParticipants;
+
+  @override
+  void initState() {
+    super.initState();
+    print('fetching organisation particiapnts');
+    fetchParticipants();
+  }
+
+  void fetchParticipants() async {
+    List<Participant> tempParticipants = await getOrganisationParticipants();
+    setState(() {
+      _allParticipants = tempParticipants;
+      _selectedParticipants =
+          List.generate(tempParticipants.length, (_) => false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +89,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
                                   Expanded(
                                     child: ListView(
                                       children: List.generate(
-                                          widget.allParticipants.length,
-                                          (index) {
+                                          _allParticipants.length, (index) {
                                         return Row(
                                           children: [
                                             Checkbox(
@@ -178,7 +190,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
   void createMeeting(MeetingDateAndTime meetingDateAndTime) {
     String meetingName = _nameController.value.text;
     List<Participant> participantList = [];
-    widget.allParticipants.asMap().forEach((index, participant) {
+    _allParticipants.asMap().forEach((index, participant) {
       if (_selectedParticipants[index]) {
         participantList.add(participant);
       }
@@ -201,12 +213,5 @@ class _CreateMeetingState extends State<CreateMeeting> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('Meeting created: $meeting'),
     ));
-  }
-
-  void postNewMeetingOnBackend(Meeting meeting) {
-    http.post(
-      Uri.parse(apiGateway + postMeeting),
-      body: meeting.toJson(),
-    );
   }
 }
