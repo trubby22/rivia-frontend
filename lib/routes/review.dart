@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -218,6 +220,7 @@ class _ReviewState extends State<Review> {
           height: MediaQuery.of(context).size.height,
           padding: const EdgeInsets.all(8.0),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(child: Column()),
               Expanded(
@@ -237,36 +240,44 @@ class _ReviewState extends State<Review> {
                       ),
                     ),
                     participantSelectionBuilder(context),
+                    const SizedBox(height: 12.0),
                     SizedBox(
-                      height: 500.0,
-                      child: GridView.count(
-                        crossAxisCount: 2,
-                        scrollDirection: Axis.horizontal,
-                        children: List.generate(
-                          widget.meeting.painPoints.length,
-                          (index) {
-                            return Selector<ResponseBuilder,
-                                Tuple2<int, Map<String, String>>>(
-                              selector: (_, data) => Tuple2(
-                                data.painPoints.length,
-                                data.painPoints,
-                              ),
-                              builder: (context, data, _) => SizedButton(
-                                child: Text(
-                                    widget.meeting.painPoints[ppl[index]]!),
-                                isSelected: data.value2.containsKey(ppl[index]),
-                                onPressed: (isSelected) {
-                                  if (isSelected) {
-                                    data.value2.remove(ppl[index]);
-                                  } else {
-                                    data.value2[ppl[index]] =
-                                        widget.meeting.painPoints[ppl[index]]!;
-                                  }
-                                  context.read<ResponseBuilder>().notify();
-                                },
-                              ),
-                            );
-                          },
+                      height: max(
+                        250.0,
+                        MediaQuery.of(context).size.height * 0.4,
+                      ),
+                      child: Center(
+                        child: GridView.count(
+                          crossAxisCount: 2,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          children: List.generate(
+                            widget.meeting.painPoints.length,
+                            (index) {
+                              return Selector<ResponseBuilder,
+                                  Tuple2<int, Map<String, String>>>(
+                                selector: (_, data) => Tuple2(
+                                  data.painPoints.length,
+                                  data.painPoints,
+                                ),
+                                builder: (context, data, _) => SizedButton(
+                                  child: Text(
+                                      widget.meeting.painPoints[ppl[index]]!),
+                                  isSelected:
+                                      data.value2.containsKey(ppl[index]),
+                                  onPressed: (isSelected) {
+                                    if (isSelected) {
+                                      data.value2.remove(ppl[index]);
+                                    } else {
+                                      data.value2[ppl[index]] = widget
+                                          .meeting.painPoints[ppl[index]]!;
+                                    }
+                                    context.read<ResponseBuilder>().notify();
+                                  },
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -283,14 +294,22 @@ class _ReviewState extends State<Review> {
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                        onPressed: () {
-                          submitReview(context);
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Submit review')),
+                    SizedButton(
+                      height: null,
+                      width: null,
+                      padding: const EdgeInsets.all(24.0),
+                      onPressed: (_) {
+                        submitReview(context);
+                        Navigator.of(context).pop();
+                      },
+                      isSelected: true,
+                      child: Text(
+                        'Submit review',
+                        style: UITexts.bigButtonText,
+                      ),
+                    ),
                   ],
                 ),
               ),
