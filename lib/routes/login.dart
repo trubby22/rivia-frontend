@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rivia/models/login_credentials.dart';
 
 class Login extends StatelessWidget {
   final TextEditingController _loginController = TextEditingController();
@@ -25,6 +26,7 @@ class Login extends StatelessWidget {
                   filled: true,
                   labelText: 'Email',
                 ),
+                controller: _loginController,
               ),
               const SizedBox(height: 12.0),
               TextField(
@@ -33,15 +35,37 @@ class Login extends StatelessWidget {
                   labelText: 'Password',
                 ),
                 obscureText: true,
+                controller: _passwordController,
               ),
               const SizedBox(height: 12.0),
-              ElevatedButton(onPressed: () {
-                Navigator.of(context).pushNamed('/dashboard_assigned');
-              }, child: Text('Log In / Sign Up')),
+              ElevatedButton(
+                  onPressed: () {
+                    login(context);
+                    Navigator.of(context).pushNamed('/dashboard_assigned');
+                  },
+                  child: Text('Log In / Sign Up')),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void login(BuildContext context) {
+    String login = _loginController.value.text;
+    String password = _passwordController.value.text;
+
+    LoginCredentials loginCredentials =
+        LoginCredentials(login: login, password: password);
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+          'Login data sent successfully: ${loginCredentials.loginHash}, '
+          '${loginCredentials.passwordHash}, ${loginCredentials.loginHash == loginCredentials.passwordHash}'),
+    ));
+  }
+
+  void postLoginCredentialsToBackend(LoginCredentials loginCredentials) {
+    //  TODO()
   }
 }
