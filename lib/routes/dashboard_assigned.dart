@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/meeting.dart';
-import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/meeting_entry.dart';
 
 class DashboardAssigned extends StatefulWidget {
-  DashboardAssigned({Key? key}) : super(key: key);
+  const DashboardAssigned({Key? key}) : super(key: key);
 
   @override
   State<DashboardAssigned> createState() => _DashboardAssignedState();
@@ -60,9 +59,10 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
                 children: [
                   Text('Meetings'),
                   Column(
-                      children: _meetings
-                          .map((meeting) => MeetingEntry(meeting: meeting))
-                          .toList()),
+                    children: _meetings
+                        .map((meeting) => MeetingEntry(meeting: meeting))
+                        .toList(),
+                  ),
                 ],
               ),
             ),
@@ -72,7 +72,9 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed('/create_meeting');
+                        Navigator.of(context).pushNamed(
+                          RouteNames.createMeeting,
+                        );
                       },
                       child: Text('Create new meeting')),
                 ],
