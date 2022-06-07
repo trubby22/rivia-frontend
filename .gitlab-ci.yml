@@ -10,6 +10,7 @@ build-job:
     - flutter build web
 
 test-job:
+  image: cirrusci/flutter:stable
   stage: test
   dependencies:
     - build-job

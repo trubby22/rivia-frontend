@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/constants/ui_texts.dart';
-import 'package:rivia/constants/pain_points.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
@@ -28,15 +27,6 @@ class Review extends StatefulWidget {
 
 class _ReviewState extends State<Review> {
   final TextEditingController _controller = TextEditingController();
-  // late List<bool> _selectedRedundant =
-  //     List.generate(_participants.length, (_) => false);
-  // late List<bool> _selectedUnprepared =
-  //     List.generate(_participants.length, (_) => false);
-  // // late List<bool> _selectedPainPoints =
-  // //     List.generate(painPoints.length, (_) => false);
-  // bool _selectAllRedundant = false;
-  // bool _selectAllUnprepared = false;
-  // double _quality = 0.5;
 
   /// Build the checkboxes that vote each participant not needed or not prepared.
   Widget participantSelectionBuilder(BuildContext context) {
@@ -195,7 +185,7 @@ class _ReviewState extends State<Review> {
 
   @override
   Widget build(BuildContext context) {
-    final ppl = painPoints.keys.toList();
+    final ppl = widget.meeting.painPoints.keys.toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -223,7 +213,7 @@ class _ReviewState extends State<Review> {
                         crossAxisCount: 2,
                         scrollDirection: Axis.horizontal,
                         children: List.generate(
-                          painPoints.length,
+                          widget.meeting.painPoints.length,
                           (index) {
                             return Selector<ResponseBuilder,
                                 Tuple2<int, Map<String, String>>>(
@@ -232,14 +222,15 @@ class _ReviewState extends State<Review> {
                                 data.painPoints,
                               ),
                               builder: (context, data, _) => SizedButton(
-                                child: Text(painPoints[ppl[index]]!),
+                                child: Text(
+                                    widget.meeting.painPoints[ppl[index]]!),
                                 isSelected: data.value2.containsKey(ppl[index]),
                                 onPressed: (isSelected) {
                                   if (isSelected) {
                                     data.value2.remove(ppl[index]);
                                   } else {
                                     data.value2[ppl[index]] =
-                                        painPoints[ppl[index]]!;
+                                        widget.meeting.painPoints[ppl[index]]!;
                                   }
                                   context.read<ResponseBuilder>().notify();
                                 },

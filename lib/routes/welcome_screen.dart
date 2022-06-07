@@ -11,6 +11,12 @@ Meeting _testMeeting = Meeting(
     Participant(name: "Jacen", surname: "Solo", email: "js@rt.cr"),
     Participant(name: "Luke", surname: "Skywalker", email: "js@kc.tt"),
   ],
+  painPoints: {
+    '1': 'meeting overran',
+    '2': 'meeting too short',
+    '3': 'I spoke too little and listened too long',
+    '4': 'too many people invited',
+  },
 );
 
 class WelcomeScreen extends StatelessWidget {
