@@ -12,9 +12,15 @@ class UITexts {
     fontWeight: FontWeight.w500,
     color: Colors.black,
   );
+
+  static const mediumText = TextStyle(
+    fontSize: FontSizes.mediumTextSize,
+    color: Colors.black,
+  );
 }
 
 class FontSizes {
-  static const sectionHeaderFontSize = 24.0;
-  static const sectionSubheaderFontSize = 18.0;
+  static const sectionHeaderFontSize = 26.0;
+  static const sectionSubheaderFontSize = 20.0;
+  static const mediumTextSize = 16.0;
 }

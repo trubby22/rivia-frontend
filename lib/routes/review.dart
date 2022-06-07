@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rivia/helper_widgets/stateful_checkbox.dart';
+import 'package:rivia/constants/ui_texts.dart';
+import 'package:rivia/helper_widgets/sized_button.dart';
 
 import '../models/meeting.dart';
 import '../models/participant.dart';
@@ -12,7 +13,6 @@ List<String> painPoints = [
 ];
 
 class Review extends StatelessWidget {
-  final int participants_num = 6;
   final TextEditingController controller = TextEditingController();
   final Meeting meeting;
 
@@ -44,89 +44,74 @@ class Review extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Expanded(child: Text('not needed')),
-                              Expanded(child: Text('unprepared')),
-                              Expanded(child: Text('participant')),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 100.0,
+                                    child: Center(
+                                      child: Text('Not Needed'),
+                                    ),
+                                  ),
+                                  ...List.generate(
+                                    meeting.participants.length,
+                                    (_) => const SizedButton(
+                                      child: Text("N"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 100.0,
+                                    child: Center(
+                                      child: Text('Not Prepared'),
+                                    ),
+                                  ),
+                                  ...List.generate(
+                                    meeting.participants.length,
+                                    (_) => const SizedButton(
+                                      child: Text("P"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'participant',
+                                      style: UITexts.sectionSubheader,
+                                    ),
+                                    ...List.generate(
+                                      meeting.participants.length,
+                                      (index) => SizedBox(
+                                        height: 48.0,
+                                        child: Center(
+                                          child: Text(
+                                            meeting
+                                                .participants[index].fullName,
+                                            style: UITexts.mediumText,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        ...List.generate(
-                          meeting.participants.length,
-                          (index) {
-                            Participant participant =
-                                meeting.participants[index];
-
-                            return Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.start,
-                                children: [
-                                  StatefulCheckbox(),
-                                  StatefulCheckbox(),
-                                  Text(participant.fullName),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
                       ],
                     ),
-                    //     Row(
-                    //   children: [
-                    //     Expanded(
-                    //       child: Row(
-                    //         children: [
-                    //           Expanded(
-                    //             child: Column(
-                    //               children: [
-                    //                 Expanded(child: Text('redundant')),
-                    //                 ...List.generate(
-                    //                     meeting.participants.length, (index) {
-                    //                   return Expanded(
-                    //                     child: Checkbox(
-                    //                         value: false, onChanged: (_) {}),
-                    //                   );
-                    //                 })
-                    //               ],
-                    //             ),
-                    //           ),
-                    //           Expanded(
-                    //             child: Column(
-                    //               children: [
-                    //                 Expanded(child: Text('unprepared')),
-                    //                 ...List.generate(
-                    //                     meeting.participants.length, (index) {
-                    //                   return Expanded(
-                    //                     child: Checkbox(
-                    //                         value: false, onChanged: (_) {}),
-                    //                   );
-                    //                 })
-                    //               ],
-                    //             ),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //     Expanded(
-                    //       child: Column(
-                    //         children: [
-                    //           Expanded(child: Text('participants')),
-                    //           ...List.generate(meeting.participants.length,
-                    //               (index) {
-                    //             Participant participant =
-                    //                 meeting.participants[index];
-                    //
-                    //             return Expanded(
-                    //               child: Text(participant.fullName),
-                    //             );
-                    //           })
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                   ),
                   Expanded(
                     child: GridView.count(
@@ -159,9 +144,11 @@ class Review extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ElevatedButton(onPressed: () {
-                    Navigator.of(context).pop();
-                  }, child: Text('Submit review')),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Submit review')),
                 ],
               ),
             ),
@@ -171,4 +158,3 @@ class Review extends StatelessWidget {
     );
   }
 }
-

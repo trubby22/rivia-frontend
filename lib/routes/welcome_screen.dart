@@ -4,7 +4,7 @@ import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 
 Meeting _testMeeting = Meeting(
-  title: "Bar Meeting",
+  title: "Foo Meeting",
   startTime: DateTime.now(),
   endTime: DateTime.now(),
   participants: [

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/helper_widgets/date_picker.dart';
-import 'package:rivia/helper_widgets/stateful_checkbox.dart';
+import 'package:rivia/helper_widgets/sized_button.dart';
 import 'package:rivia/helper_widgets/time_picker.dart';
 
 class CreateMeeting extends StatelessWidget {
@@ -57,7 +57,7 @@ class CreateMeeting extends StatelessWidget {
                                     children: List.generate(10, (index) {
                                       return Row(
                                         children: [
-                                          StatefulCheckbox(),
+                                          SizedButton(child: Text("foo")),
                                           Text('Participant $index'),
                                         ],
                                       );
