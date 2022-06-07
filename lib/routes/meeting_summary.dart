@@ -16,7 +16,7 @@ List<Response> _testResponses = [
   Response(
     participant: _testParticipants[0],
     quality: 114.514,
-    painPoints: {0: "PAINTOS"},
+    painPoints: {'0': "PAINTOS"},
     notNeeded: List.of(_testParticipants),
     notPrepared: List.of(_testParticipants),
     feedback: "HOT PASSION 暑く強い思い",
@@ -24,7 +24,7 @@ List<Response> _testResponses = [
   Response(
     participant: _testParticipants[1],
     quality: 114.514,
-    painPoints: {0: "PAINTOS"},
+    painPoints: {'0': "PAINTOS"},
     notNeeded: [_testParticipants[0]],
     notPrepared: [_testParticipants[0]],
     feedback: "HOT PASSION 暑く強い思い",

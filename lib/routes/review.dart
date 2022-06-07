@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/constants/pain_points.dart';
+import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/sized_button.dart';
-import 'package:rivia/utilities/stateful_checkbox.dart';
-
-import 'package:rivia/models/meeting.dart';
 
 class Review extends StatefulWidget {
   final Meeting meeting;
@@ -29,8 +27,8 @@ class _ReviewState extends State<Review> {
       List.generate(_participants.length, (_) => false);
   late List<bool> _selectedUnprepared =
       List.generate(_participants.length, (_) => false);
-  late List<bool> _selectedPainPoints =
-      List.generate(painPoints.length, (_) => false);
+  // late List<bool> _selectedPainPoints =
+  //     List.generate(painPoints.length, (_) => false);
   bool _selectAllRedundant = false;
   bool _selectAllUnprepared = false;
   double _quality = 0.5;
@@ -150,7 +148,7 @@ class _ReviewState extends State<Review> {
                         (index) {
                           return GestureDetector(
                             child: Card(
-                              child: Text(painPoints[index]),
+                              child: Text("painPoints[index]"),
                             ),
                             onTap: () {},
                           );
@@ -205,19 +203,19 @@ class _ReviewState extends State<Review> {
       }
     });
 
-    Map<int, String> selectedPainPoints = {};
-    painPoints.asMap().forEach((index, text) {
-      if (_selectedPainPoints[index]) {
-        selectedPainPoints[index] = text;
-      }
-    });
+    // Map<String, String> selectedPainPoints = {};
+    // painPoints.forEach((index, text) {
+    //   if (_selectedPainPoints[index]) {
+    //     selectedPainPoints[index] = text;
+    //   }
+    // });
 
     Participant participant = widget.participant;
 
     Response response = Response(
       participant: participant,
       quality: _quality,
-      painPoints: selectedPainPoints,
+      // painPoints: selectedPainPoints,
       notNeeded: redundant,
       notPrepared: unprepared,
       feedback: feedback,

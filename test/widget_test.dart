@@ -28,7 +28,7 @@ Meeting testMeeting = Meeting(
 Response testResponse = Response(
   participant: testParticipants[0],
   quality: 114.514,
-  painPoints: {0: "PAINTOS"},
+  painPoints: {'0': "PAINTOS"},
   notNeeded: List.of(testParticipants),
   notPrepared: List.of(testParticipants),
   feedback: "HOT PASSION 暑く強い思い",

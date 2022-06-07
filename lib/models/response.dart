@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:rivia/constants/fields.dart';
 import 'package:rivia/models/participant.dart';
 
@@ -5,7 +6,7 @@ import 'package:rivia/models/participant.dart';
 class Response {
   final Participant participant;
   final double quality;
-  final Map<int, String> painPoints;
+  final Map<String, String> painPoints;
   final List<Participant> notNeeded;
   final List<Participant> notPrepared;
   final String? feedback;
@@ -22,10 +23,9 @@ class Response {
   Response.fromJson(Map<String, dynamic> json)
       : participant = Participant.fromJson(json[Fields.participant]),
         quality = json[Fields.quality],
-        painPoints = (json[Fields.painPoints] as Map<String, dynamic>?)?.map(
-              (key, value) => MapEntry(int.parse(key), value),
-            ) ??
-            const {},
+        painPoints =
+            (json[Fields.painPoints] as Map<String, dynamic>?)?.cast() ??
+                const {},
         notNeeded = (json[Fields.notNeeded] as List<dynamic>?)
                 ?.map((e) => Participant.fromJson(e))
                 .toList() ??
@@ -49,10 +49,10 @@ class Response {
 }
 
 /// A builder for [Response].
-class ResponseBuilder {
+class ResponseBuilder with ChangeNotifier {
   late Participant participant;
   double quality = 0.5;
-  Map<int, String> painPoints = {};
+  Map<String, String> painPoints = {};
   final List<Participant> notNeeded = [];
   final List<Participant> notPrepared = [];
   String? feedback;
