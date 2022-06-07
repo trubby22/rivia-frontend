@@ -18,6 +18,11 @@ class UITexts {
     color: Colors.black,
   );
 
+  static const mediumButtonText = TextStyle(
+    fontSize: FontSizes.mediumTextSize,
+    fontWeight: FontWeight.bold,
+  );
+
   static const bigButtonText = TextStyle(
     fontSize: FontSizes.sectionSubheaderFontSize,
     fontWeight: FontWeight.bold,

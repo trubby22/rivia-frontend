@@ -1,11 +1,16 @@
+import 'dart:convert';
+
+import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/api_endpoints.dart';
+import 'package:rivia/constants/languages.dart';
+import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/date_picker.dart';
-import 'package:rivia/utilities/stateful_checkbox.dart';
 import 'package:rivia/models/participant.dart';
+import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/time_picker.dart';
 
 import 'package:http/http.dart' as http;
@@ -13,7 +18,7 @@ import 'package:http/http.dart' as http;
 class CreateMeeting extends StatefulWidget {
   final List<Participant> allParticipants;
 
-  CreateMeeting({
+  const CreateMeeting({
     Key? key,
     required this.allParticipants,
   }) : super(key: key);
@@ -23,190 +28,188 @@ class CreateMeeting extends StatefulWidget {
 }
 
 class _CreateMeetingState extends State<CreateMeeting> {
-  TextEditingController _nameController = TextEditingController();
-  late List<bool> _selectedParticipants =
-      List.generate(widget.allParticipants.length, (_) => false);
+  final _nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: Text(LangText.dashboard.local),
         actions: [
           ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
         ],
       ),
       body: ChangeNotifierProvider(
-        create: (_) => MeetingDateAndTime(),
+        create: (_) => MeetingBuilder(),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            alignment: Alignment.topCenter,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  labelText: 'Meeting name',
-                                ),
-                                controller: _nameController,
+          padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 80.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    filled: true,
+                    labelText: LangText.meetingName.local,
+                  ),
+                  controller: _nameController,
+                ),
+              ),
+              Text(
+                LangText.participants.local,
+                style: UITexts.sectionSubheader,
+              ),
+              Selector<MeetingBuilder, Tuple2<int, Set<Participant>>>(
+                selector: (_, data) =>
+                    Tuple2(data.participants.length, data.participants),
+                builder: (context, data, _) => SizedButton(
+                  child: Text(
+                    LangText.all.local,
+                    style: UITexts.mediumButtonText,
+                  ),
+                  isSelected: data.value1 == widget.allParticipants.length,
+                  onPressed: (isSelected) {
+                    if (isSelected) {
+                      data.value2.clear();
+                    } else {
+                      data.value2.addAll(widget.allParticipants);
+                    }
+                    context.read<MeetingBuilder>().notify();
+                  },
+                ),
+              ),
+              const SizedBox(height: 12.0),
+              Expanded(
+                child: ListView(
+                  children: List.generate(
+                    widget.allParticipants.length,
+                    (index) {
+                      return Row(
+                        children: [
+                          Selector<MeetingBuilder,
+                              Tuple2<int, Set<Participant>>>(
+                            selector: (_, data) => Tuple2(
+                                data.participants.length, data.participants),
+                            builder: (context, data, _) => Checkbox(
+                              value: data.value2.contains(
+                                widget.allParticipants[index],
                               ),
+                              onChanged: (isSelected) {
+                                if (isSelected ?? false) {
+                                  data.value2
+                                      .add(widget.allParticipants[index]);
+                                } else {
+                                  data.value2.remove(
+                                    widget.allParticipants[index],
+                                  );
+                                }
+                                context.read<MeetingBuilder>().notify();
+                              },
                             ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(child: Text('Participants:')),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  ElevatedButton(
-                                      onPressed: () {},
-                                      child: Text('select all')),
-                                  SizedBox(height: 8.0),
-                                  Expanded(
-                                    child: ListView(
-                                      children: List.generate(
-                                          widget.allParticipants.length,
-                                          (index) {
-                                        return Row(
-                                          children: [
-                                            Checkbox(
-                                              value:
-                                                  _selectedParticipants[index],
-                                              onChanged: (_) {
-                                                setState(() {
-                                                  _selectedParticipants[index] =
-                                                      !_selectedParticipants[
-                                                          index];
-                                                });
-                                              },
-                                            ),
-                                            Text('Participant $index'),
-                                          ],
-                                        );
-                                      }),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(child: Text('Date:')),
-                            Expanded(child: Consumer<MeetingDateAndTime>(
-                              builder: (context, meetingDateAndTime, child) {
-                                return DatePicker(
-                                  restorationId: 'meetingDate',
-                                  meetingDateAndTime: meetingDateAndTime,
-                                );
-                              },
-                            )),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(child: Text('Start:')),
-                            Expanded(child: Consumer<MeetingDateAndTime>(
-                              builder: (context, meetingDateAndTime, child) {
-                                return TimePicker(
-                                  startEnd: StartEnd.start,
-                                  meetingDateAndTime: meetingDateAndTime,
-                                );
-                              },
-                            )),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(child: Text('Start:')),
-                            Expanded(child: Consumer<MeetingDateAndTime>(
-                              builder: (context, meetingDateAndTime, child) {
-                                return TimePicker(
-                                  startEnd: StartEnd.end,
-                                  meetingDateAndTime: meetingDateAndTime,
-                                );
-                              },
-                            )),
-                          ],
-                        ),
-                      ),
-                    ],
+                          ),
+                          Text(widget.allParticipants[index].fullName),
+                        ],
+                      );
+                    },
                   ),
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Consumer<MeetingDateAndTime>(
-                          builder: (context, meetingDateAndTime, child) {
+              ),
+              const SizedBox(height: 12.0),
+              Row(
+                children: [
+                  Text(LangText.date.local, style: UITexts.sectionSubheader),
+                  Selector<MeetingBuilder, MeetingDateAndTime>(
+                    selector: (_, data) => data.meetingDateAndTime,
+                    builder: (context, data, _) => DatePicker(
+                      restorationId: 'meetingDate',
+                      meetingDateAndTime: data,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12.0),
+              Row(
+                children: [
+                  Text(
+                    LangText.startTime.local,
+                    style: UITexts.sectionSubheader,
+                  ),
+                  Selector<MeetingBuilder, MeetingDateAndTime>(
+                    selector: (_, data) => data.meetingDateAndTime,
+                    builder: (context, data, _) => TimePicker(
+                      startEnd: StartEnd.start,
+                      meetingDateAndTime: data,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12.0),
+              Row(
+                children: [
+                  Text(
+                    LangText.endTime.local,
+                    style: UITexts.sectionSubheader,
+                  ),
+                  Selector<MeetingBuilder, MeetingDateAndTime>(
+                    selector: (_, data) => data.meetingDateAndTime,
+                    builder: (context, data, _) => TimePicker(
+                      startEnd: StartEnd.end,
+                      meetingDateAndTime: data,
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Consumer<MeetingBuilder>(
+                      builder: (context, meetingDateAndTime, child) {
                         return ElevatedButton(
-                            onPressed: () {
-                              createMeeting(meetingDateAndTime);
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Create meeting'));
-                      }),
-                    ],
-                  ),
+                          onPressed: () async {
+                            await createMeeting(meetingDateAndTime, context);
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Create meeting'),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  void createMeeting(MeetingDateAndTime meetingDateAndTime) {
-    String meetingName = _nameController.value.text;
-    List<Participant> participantList = [];
-    widget.allParticipants.asMap().forEach((index, participant) {
-      if (_selectedParticipants[index]) {
-        participantList.add(participant);
-      }
-    });
+  Future<void> createMeeting(
+    MeetingBuilder meetingBuilder,
+    BuildContext context,
+  ) async {
+    context.read<MeetingBuilder>().title = _nameController.text;
+    Meeting meeting = context.read<MeetingBuilder>().build();
 
-    DateTime date = meetingDateAndTime.date ?? DateTime.now();
-    TimeOfDay startTime = meetingDateAndTime.startTime ?? TimeOfDay.now();
-    TimeOfDay endTime = meetingDateAndTime.endTime ?? TimeOfDay.now();
-
-    DateTime startDate = DateTime(
-        date.year, date.month, date.day, startTime.hour, startTime.minute);
-    DateTime endDate =
-        DateTime(date.year, date.month, date.day, endTime.hour, endTime.minute);
-
-    Meeting meeting =
-        Meeting(title: meetingName, startTime: startDate, endTime: endDate);
-
-    postNewMeetingOnBackend(meeting);
+    bool result = await postNewMeetingOnBackend(meeting);
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Meeting created: $meeting'),
+      content: Text(result
+          ? 'Meeting created: ${meeting.toJson()}'
+          : 'Create meeting failed: ${meeting.toJson()}'),
     ));
   }
 
-  void postNewMeetingOnBackend(Meeting meeting) {
-    http.post(
-      Uri.parse(apiGateway + postMeeting),
-      body: meeting.toJson(),
-    );
+  Future<bool> postNewMeetingOnBackend(Meeting meeting) async {
+    try {
+      final response = await http.post(
+        Uri.parse(apiGateway + postMeeting),
+        body: json.encode(meeting.toJson()),
+      );
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
+import 'package:rivia/utilities/sized_button.dart';
 
 enum StartEnd {
   start,
@@ -50,19 +51,14 @@ class _TimePickerState extends State<TimePicker> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          onPressed: () => _selectTime(context),
-          child: Text('SELECT TIME'),
-        ),
-        SizedBox(height: 8),
-        Text(
-          'Selected time: ${_time.format(context)}',
-        ),
-      ],
+    return SizedButton(
+      height: null,
+      width: null,
+      onPressed: (_) => _selectTime(context),
+      child: Text(_time.format(context)),
+      isSelected: true,
     );
   }
 }

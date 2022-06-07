@@ -55,7 +55,8 @@ class _ReviewState extends State<Review> {
                 data.notNeeded,
               ),
               builder: (context, data, _) => SizedButton(
-                child: Text(LangText.all.local, style: UITexts.bigButtonText),
+                child:
+                    Text(LangText.all.local, style: UITexts.mediumButtonText),
                 isSelected:
                     data.value2.length == widget.meeting.participants.length,
                 onPressed: (isSelected) {
@@ -114,7 +115,10 @@ class _ReviewState extends State<Review> {
                 data.notPrepared,
               ),
               builder: (context, data, _) => SizedButton(
-                child: Text(LangText.all.local, style: UITexts.bigButtonText),
+                child: Text(
+                  LangText.all.local,
+                  style: UITexts.mediumButtonText,
+                ),
                 isSelected:
                     data.value2.length == widget.meeting.participants.length,
                 onPressed: (isSelected) {

@@ -24,6 +24,13 @@ enum LangText {
   all,
   n,
   p,
+
+  dashboard,
+  meetingName,
+  participants,
+  date,
+  startTime,
+  endTime,
 }
 
 extension ExtendedLangText on LangText {
@@ -50,6 +57,12 @@ extension ExtendedLangText on LangText {
     LangText.all: ['ALL', '嗷'],
     LangText.n: ['N', '恩'],
     LangText.p: ['P', '屁'],
+    LangText.dashboard: ['Dashboard', ''],
+    LangText.meetingName: ['Meeting Name', ''],
+    LangText.participants: ['Participants', ''],
+    LangText.date: ['Date', ''],
+    LangText.startTime: ['Start Time', ''],
+    LangText.endTime: ['End Time', ''],
   };
 
   String get local => langTexts[this]![language.index];

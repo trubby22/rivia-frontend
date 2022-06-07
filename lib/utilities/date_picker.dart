@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
+import 'package:rivia/utilities/sized_button.dart';
 
 class DatePicker extends StatefulWidget {
   const DatePicker({
@@ -80,18 +81,16 @@ class _DatePickerState extends State<DatePicker> with RestorationMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            _restorableDatePickerRouteFuture.present();
-          },
-          child: const Text('Select Date'),
-        ),
-        SizedBox(height: 8),
-        Text(
-            'Selected date: ${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}'),
-      ],
+    return SizedButton(
+      onPressed: (_) {
+        _restorableDatePickerRouteFuture.present();
+      },
+      isSelected: true,
+      height: null,
+      width: null,
+      child: Text(
+        '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}',
+      ),
     );
   }
 }
