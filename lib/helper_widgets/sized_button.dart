@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class SizedButton extends StatefulWidget {
   const SizedButton({
     Key? key,
-    this.width = 48.0,
-    this.height = 48.0,
+    this.width = 64.0,
+    this.height = 64.0,
     this.primaryColour = Colors.lightBlue,
     this.backgroundColour = Colors.white,
     this.onPressedColour = Colors.blue,

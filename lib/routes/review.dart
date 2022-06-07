@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/helper_widgets/sized_button.dart';
 
-import '../models/meeting.dart';
-import '../models/participant.dart';
+import 'package:rivia/models/meeting.dart';
 
 List<String> painPoints = [
   'meeting overran',
@@ -30,111 +29,126 @@ class Review extends StatelessWidget {
           ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
         ],
       ),
-      body: Padding(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
             Expanded(child: Column()),
             Expanded(
               flex: 3,
-              child: Column(
+              child: ListView(
                 children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 100.0,
-                                    child: Center(
-                                      child: Text('Not Needed'),
-                                    ),
-                                  ),
-                                  ...List.generate(
-                                    meeting.participants.length,
-                                    (_) => const SizedButton(
-                                      child: Text("N"),
-                                    ),
-                                  ),
-                                ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 120.0,
+                            height: 40.0,
+                            child: Center(
+                              child: Text(
+                                'Not Needed',
+                                style: UITexts.mediumText,
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 100.0,
-                                    child: Center(
-                                      child: Text('Not Prepared'),
-                                    ),
-                                  ),
-                                  ...List.generate(
-                                    meeting.participants.length,
-                                    (_) => const SizedButton(
-                                      child: Text("P"),
-                                    ),
-                                  ),
-                                ],
+                            ),
+                          ),
+                          const SizedButton(
+                            child: Text("ALL"),
+                          ),
+                          ...List.generate(
+                            meeting.participants.length,
+                            (_) => const SizedButton(
+                              child: Text("N"),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 120.0,
+                            height: 40.0,
+                            child: Center(
+                              child: Text(
+                                'Not Prepared',
+                                style: UITexts.mediumText,
                               ),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'participant',
-                                      style: UITexts.sectionSubheader,
-                                    ),
-                                    ...List.generate(
-                                      meeting.participants.length,
-                                      (index) => SizedBox(
-                                        height: 48.0,
-                                        child: Center(
-                                          child: Text(
-                                            meeting
-                                                .participants[index].fullName,
-                                            style: UITexts.mediumText,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                            ),
+                          ),
+                          const SizedButton(
+                            child: Text("ALL"),
+                          ),
+                          ...List.generate(
+                            meeting.participants.length,
+                            (_) => const SizedButton(
+                              child: Text("P"),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 40.0,
+                              child: Center(
+                                child: Text(
+                                  'participant',
+                                  style: UITexts.sectionSubheader,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(height: 64.0),
+                            ...List.generate(
+                              meeting.participants.length,
+                              (index) => SizedBox(
+                                height: 64.0,
+                                child: Center(
+                                  child: Text(
+                                    meeting.participants[index].fullName,
+                                    style: UITexts.mediumText,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Expanded(
+                  SizedBox(
+                    height: 500.0,
                     child: GridView.count(
                       crossAxisCount: 2,
                       scrollDirection: Axis.horizontal,
-                      children: List.generate(painPoints.length, (index) {
-                        return GestureDetector(
-                          child: Card(
-                            child: Text(painPoints[index]),
-                          ),
-                          onTap: () {},
-                        );
-                      }),
+                      children: List.generate(
+                        painPoints.length,
+                        (index) {
+                          return GestureDetector(
+                            child: Card(
+                              child: Text(painPoints[index]),
+                            ),
+                            onTap: () {},
+                          );
+                        },
+                      ),
                     ),
                   ),
-                  Expanded(
-                    child: TextField(
-                      decoration: const InputDecoration(
-                        filled: true,
-                        labelText: 'Additional comments',
-                      ),
-                      controller: controller,
+                  TextField(
+                    decoration: const InputDecoration(
+                      filled: true,
+                      labelText: 'Additional comments',
                     ),
+                    controller: controller,
                   ),
                 ],
               ),
