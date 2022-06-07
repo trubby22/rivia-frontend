@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:rivia/utilities/change_notifiers.dart';
 
 class DatePicker extends StatefulWidget {
-  const DatePicker({Key? key, this.restorationId}) : super(key: key);
+  const DatePicker({
+    Key? key,
+    required this.restorationId,
+    required this.meetingDateAndTime,
+  }) : super(key: key);
 
   final String? restorationId;
+  final MeetingDateAndTime meetingDateAndTime;
 
   @override
   State<DatePicker> createState() => _DatePickerState();
@@ -58,9 +64,16 @@ class _DatePickerState extends State<DatePicker> with RestorationMixin {
       setState(() {
         _selectedDate.value = newSelectedDate;
       });
+      widget.meetingDateAndTime.setDate(newSelectedDate);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
             'Selected date: ${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}'),
+        action: SnackBarAction(
+          label: 'hide',
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
       ));
     }
   }

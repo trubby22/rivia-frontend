@@ -47,7 +47,8 @@ class MyApp extends StatelessWidget {
         '/welcome_screen': (_) => WelcomeScreen(),
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
-        RouteNames.createMeeting: (_) => CreateMeeting(),
+        RouteNames.createMeeting: (_) =>
+            CreateMeeting(allParticipants: testParticipants),
         RouteNames.login: (_) => Login(),
       },
       onGenerateRoute: (routeSettings) {
@@ -59,8 +60,10 @@ class MyApp extends StatelessWidget {
               );
             }
             return MaterialPageRoute(
-              builder: (_) =>
-                  Review(meeting: routeSettings.arguments as Meeting),
+              builder: (_) => Review(
+                meeting: routeSettings.arguments as Meeting,
+                participant: testParticipants[0],
+              ),
             );
           case RouteNames.summary:
             if (routeSettings.arguments.runtimeType != Meeting) {

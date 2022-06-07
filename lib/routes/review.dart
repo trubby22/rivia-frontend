@@ -1,30 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/ui_texts.dart';
-import 'package:rivia/helper_widgets/sized_button.dart';
+import 'package:rivia/constants/pain_points.dart';
+import 'package:rivia/models/participant.dart';
+import 'package:rivia/models/response.dart';
+import 'package:rivia/utilities/sized_button.dart';
+import 'package:rivia/utilities/stateful_checkbox.dart';
 
 import 'package:rivia/models/meeting.dart';
 
-List<String> painPoints = [
-  'meeting overran',
-  'meeting too short',
-  'I spoke too little and listened too long',
-  'too many people invited',
-];
-
-class Review extends StatelessWidget {
-  final TextEditingController controller = TextEditingController();
+class Review extends StatefulWidget {
   final Meeting meeting;
+  final Participant participant;
 
   Review({
     Key? key,
     required this.meeting,
+    required this.participant,
   }) : super(key: key);
+
+  @override
+  State<Review> createState() => _ReviewState();
+}
+
+class _ReviewState extends State<Review> {
+  final TextEditingController _controller = TextEditingController();
+  late List<Participant> _participants = widget.meeting.participants;
+  late List<bool> _selectedRedundant =
+      List.generate(_participants.length, (_) => false);
+  late List<bool> _selectedUnprepared =
+      List.generate(_participants.length, (_) => false);
+  late List<bool> _selectedPainPoints =
+      List.generate(painPoints.length, (_) => false);
+  bool _selectAllRedundant = false;
+  bool _selectAllUnprepared = false;
+  double _quality = 0.5;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(meeting.title),
+        title: Text(widget.meeting.title),
         actions: [
           ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
         ],
@@ -61,7 +76,7 @@ class Review extends StatelessWidget {
                             child: Text("ALL"),
                           ),
                           ...List.generate(
-                            meeting.participants.length,
+                            widget.meeting.participants.length,
                             (_) => const SizedButton(
                               child: Text("N"),
                             ),
@@ -86,7 +101,7 @@ class Review extends StatelessWidget {
                             child: Text("ALL"),
                           ),
                           ...List.generate(
-                            meeting.participants.length,
+                            widget.meeting.participants.length,
                             (_) => const SizedButton(
                               child: Text("P"),
                             ),
@@ -109,12 +124,12 @@ class Review extends StatelessWidget {
                             ),
                             const SizedBox(height: 64.0),
                             ...List.generate(
-                              meeting.participants.length,
+                              widget.meeting.participants.length,
                               (index) => SizedBox(
                                 height: 64.0,
                                 child: Center(
                                   child: Text(
-                                    meeting.participants[index].fullName,
+                                    widget.meeting.participants[index].fullName,
                                     style: UITexts.mediumText,
                                   ),
                                 ),
@@ -148,7 +163,7 @@ class Review extends StatelessWidget {
                       filled: true,
                       labelText: 'Additional comments',
                     ),
-                    controller: controller,
+                    controller: _controller,
                   ),
                 ],
               ),
@@ -160,6 +175,7 @@ class Review extends StatelessWidget {
                 children: [
                   ElevatedButton(
                       onPressed: () {
+                        submitReview();
                         Navigator.of(context).pop();
                       },
                       child: Text('Submit review')),
@@ -170,5 +186,51 @@ class Review extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void submitReview() {
+    String feedback = _controller.value.text;
+
+    List<Participant> redundant = [];
+    _participants.asMap().forEach((index, participant) {
+      if (_selectedRedundant[index]) {
+        redundant.add(participant);
+      }
+    });
+
+    List<Participant> unprepared = [];
+    _participants.asMap().forEach((index, participant) {
+      if (_selectedUnprepared[index]) {
+        unprepared.add(participant);
+      }
+    });
+
+    Map<int, String> selectedPainPoints = {};
+    painPoints.asMap().forEach((index, text) {
+      if (_selectedPainPoints[index]) {
+        selectedPainPoints[index] = text;
+      }
+    });
+
+    Participant participant = widget.participant;
+
+    Response response = Response(
+      participant: participant,
+      quality: _quality,
+      painPoints: selectedPainPoints,
+      notNeeded: redundant,
+      notPrepared: unprepared,
+      feedback: feedback,
+    );
+
+    postReviewOnBackend(response);
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Review saved: $response'),
+    ));
+  }
+
+  void postReviewOnBackend(Response response) {
+    //  TODO()
   }
 }
