@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
+import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/language_switcher.dart';
 import 'package:rivia/utilities/meeting_entry.dart';
+import 'package:rivia/utilities/sized_button.dart';
 
 class DashboardAssigned extends StatefulWidget {
   const DashboardAssigned({Key? key}) : super(key: key);
@@ -58,11 +60,13 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Spacer(),
-            Expanded(
+            const Expanded(child: SizedBox()),
+            Container(
+              width: 400,
               child: Column(
                 children: [
-                  Text('Meetings'),
+                  Text('Meetings', style: UITexts.sectionHeader),
+                  const SizedBox(height: 16.0),
                   Column(
                     children: _meetings
                         .map((meeting) => MeetingEntry(meeting: meeting))
@@ -75,13 +79,22 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(
-                          RouteNames.createMeeting,
-                        );
-                      },
-                      child: Text('Create new meeting')),
+                  SizedButton(
+                    width: null,
+                    height: null,
+                    onPressed: (_) {
+                      Navigator.of(context).pushNamed(
+                        RouteNames.createMeeting,
+                      );
+                    },
+                    isSelected: true,
+                    child: Text(
+                      'Create new meeting',
+                      style: UITexts.mediumButtonText,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ],
               ),
             ),
