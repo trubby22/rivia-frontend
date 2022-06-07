@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/models/login_credentials.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 
 class Login extends StatefulWidget {
@@ -68,12 +70,16 @@ class _LoginState extends State<Login> {
                 controller: _passwordController,
               ),
               const SizedBox(height: 12.0),
-              ElevatedButton(
-                  onPressed: () {
-                    login(context);
-                    Navigator.of(context).pushNamed('/dashboard_assigned');
-                  },
-                  child: Text(_signup ? 'Sign Up' : 'Log In')),
+              Consumer<User>(
+                builder: (context, user, child) {
+                  return ElevatedButton(
+                      onPressed: () {
+                        login(context, user);
+                        Navigator.of(context).pushNamed('/dashboard_assigned');
+                      },
+                      child: Text(_signup ? 'Sign Up' : 'Log In'));
+                },
+              ),
               const SizedBox(height: 12.0),
               ElevatedButton(
                   onPressed: () {
@@ -90,11 +96,15 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void login(BuildContext context) {
+  void login(BuildContext context, User user) {
     String login = _loginController.value.text;
     String password = _passwordController.value.text;
     String firstName = _firstNameController.value.text;
     String surname = _surnameController.value.text;
+    _loginController.clear();
+    _passwordController.clear();
+    _firstNameController.clear();
+    _surnameController.clear();
 
     LoginCredentials loginCredentials = LoginCredentials(
       login: login,
@@ -104,11 +114,10 @@ class _LoginState extends State<Login> {
     );
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(
-          'Login data sent successfully: ${loginCredentials.login}, '
+      content: Text('Login data sent successfully: ${loginCredentials.login}, '
           '${loginCredentials.passwordHash}, ${loginCredentials.login == loginCredentials.passwordHash}'),
     ));
 
-    postLoginCredentialsToBackend(loginCredentials);
+    postLoginCredentialsToBackend(loginCredentials, user);
   }
 }
