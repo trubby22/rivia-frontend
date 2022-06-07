@@ -31,7 +31,3 @@ class User extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-class Meetings extends ChangeNotifier {
-
-}

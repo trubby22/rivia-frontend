@@ -9,10 +9,11 @@ import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
 import 'package:rivia/routes/meeting_summary.dart';
 import 'package:rivia/routes/review.dart';
+import 'package:rivia/utilities/change_notifiers.dart';
 
 // GET
 
-Future<List<Meeting>> getMeetings() async {
+Future<List<Meeting>> getMeetings({String? uuid}) async {
   if (testMode) {
     return Future(() => [testMeeting]);
   }
@@ -22,7 +23,7 @@ Future<List<Meeting>> getMeetings() async {
   return jsonList.map((e) => Meeting.fromJson(e)).toList();
 }
 
-Future<List<Participant>> getOrganisationParticipants() async {
+Future<List<Participant>> getOrganisationParticipants({String? uuid}) async {
   if (testMode) {
     return Future(() => testParticipants);
   }
@@ -32,7 +33,8 @@ Future<List<Participant>> getOrganisationParticipants() async {
   return jsonList.map((e) => Participant.fromJson(e)).toList();
 }
 
-Future<List<Response>> getMeetingSummary(Meeting meeting) async {
+Future<List<Response>> getMeetingSummary(Meeting meeting,
+    {String? uuid}) async {
   if (testMode) {
     return Future(() => testResponses);
   }
@@ -44,30 +46,32 @@ Future<List<Response>> getMeetingSummary(Meeting meeting) async {
 
 // POST
 
-void postNewMeetingOnBackend(Meeting meeting) {
+void postNewMeetingOnBackend(Meeting meeting, {String? uuid}) async {
   if (!testMode) {
-    http.post(
+    await http.post(
       Uri.parse(apiGateway + postMeeting),
       body: meeting.toJson(),
     );
   }
 }
 
-void postLoginCredentialsToBackend(LoginCredentials loginCredentials) {
+void postLoginCredentialsToBackend(
+    LoginCredentials loginCredentials, User user) async {
   if (!testMode) {
-    http.post(
+    http.Response response = await http.post(
       Uri.parse(apiGateway + postLogin),
       body: loginCredentials.toJson(),
     );
+    user.uuid = response.body;
   }
 }
 
-void postReviewOnBackend(Response response) {
+void postReviewOnBackend(Response review) async {
   if (!testMode) {
-    final json = response.toJson();
+    final json = review.toJson();
     json[Fields.painPoints] =
         (json[Fields.painPoints] as Map<String, String>).keys.toList();
-    http.post(
+    http.Response response = await http.post(
       Uri.parse(apiGateway + postReview),
       body: json,
     );
