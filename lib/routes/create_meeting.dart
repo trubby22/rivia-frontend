@@ -32,6 +32,12 @@ class _CreateMeetingState extends State<CreateMeeting> {
   final _nameController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    getLang();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

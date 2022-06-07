@@ -29,6 +29,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
   @override
   void initState() {
     super.initState();
+    getLang();
     print('fetching responses');
     fetchResponses();
   }

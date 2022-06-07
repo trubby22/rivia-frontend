@@ -1,4 +1,20 @@
+import 'package:rivia/constants/fields.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 Lang language = Lang.en;
+
+Future<void> getLang() async {
+  language = Lang.values[
+      (await SharedPreferences.getInstance()).getInt(Fields.lang) ??
+          language.index];
+  print(language);
+}
+
+Future<void> setLang(Lang value) async {
+  language = value;
+  (await SharedPreferences.getInstance()).setInt(Fields.lang, value.index);
+  print(language);
+}
 
 enum Lang {
   en,
@@ -40,7 +56,10 @@ extension ExtendedLangText on LangText {
     LangText.langCode: ['EN', 'РУ'],
     LangText.hi: ['Hi', 'Привет'],
     LangText.aggregateStats: ['Aggregate Stats', 'Совокупная статистика'],
-    LangText.aggregateParticipants: ['Number of participants', 'Число участников'],
+    LangText.aggregateParticipants: [
+      'Number of participants',
+      'Число участников'
+    ],
     LangText.aggregateNotNeeded: [
       'Number of people voted as not needed for at least once',
       'Количество людей, хотя бы раз проголосовавших за ненадобность',
@@ -50,10 +69,22 @@ extension ExtendedLangText on LangText {
       'Количество человек, хотя бы раз проголосовавших за неподготовленность',
     ],
     LangText.detailedStats: ['Detailed Stats', 'Подробная статистика'],
-    LangText.detailedNotNeeded: ['People voted as not needed', 'Люди проголосовали за ненадобность'],
-    LangText.detailedNotPrepared: ['People voted as not prepared', 'Люди проголосовали как не готовые'],
-    LangText.noOneNotNeeded: ['No one voted as not needed', 'Никто не проголосовал за ненадобность'],
-    LangText.noOneNotPrepared: ['No one voted as not prepared', 'Никто не проголосовал как не готовый'],
+    LangText.detailedNotNeeded: [
+      'People voted as not needed',
+      'Люди проголосовали за ненадобность'
+    ],
+    LangText.detailedNotPrepared: [
+      'People voted as not prepared',
+      'Люди проголосовали как не готовые'
+    ],
+    LangText.noOneNotNeeded: [
+      'No one voted as not needed',
+      'Никто не проголосовал за ненадобность'
+    ],
+    LangText.noOneNotPrepared: [
+      'No one voted as not prepared',
+      'Никто не проголосовал как не готовый'
+    ],
     LangText.voters: ['Voters', 'Избиратели'],
     LangText.notNeeded: ['Not Needed', 'Не нужно'],
     LangText.notPrepared: ['Not Prepared', 'Не готово'],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 
@@ -8,6 +9,8 @@ class DashboardUnassigned extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getLang();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard'),

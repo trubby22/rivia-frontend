@@ -31,11 +31,10 @@ class _LoginState extends State<Login> {
             ElevatedButton(
               onPressed: () {
                 if (language == Lang.en) {
-                  language = Lang.ru;
+                  setLang(Lang.ru);
                 } else {
-                  language = Lang.en;
+                  setLang(Lang.en);
                 }
-                setState(() {});
               },
               child: Text(LangText.langCode.local),
             ),

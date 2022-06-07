@@ -194,6 +194,12 @@ class _ReviewState extends State<Review> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getLang();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final ppl = widget.meeting.painPoints.keys.toList();
 

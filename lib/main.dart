@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:provider/provider.dart';
+import 'package:rivia/constants/fields.dart';
+import 'package:rivia/constants/languages.dart';
 
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
@@ -11,18 +13,37 @@ import 'package:rivia/routes/create_meeting.dart';
 import 'package:rivia/routes/welcome_screen.dart';
 import 'package:rivia/routes/meeting_summary.dart';
 
-import 'constants/test_data.dart';
-import 'models/meeting.dart';
-import 'models/participant.dart';
-import 'utilities/change_notifiers.dart';
+import 'package:rivia/constants/test_data.dart';
+import 'package:rivia/models/meeting.dart';
+import 'package:rivia/utilities/change_notifiers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   setUrlStrategy(PathUrlStrategy());
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Future<void> setUpSharedPref() async {
+    final sharedPref = await SharedPreferences.getInstance();
+    if (sharedPref.getInt(Fields.lang) == null) {
+      sharedPref.setInt(Fields.lang, Lang.en.index);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setUpSharedPref();
+    getLang();
+  }
 
   @override
   Widget build(BuildContext context) {
