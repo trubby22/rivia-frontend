@@ -9,6 +9,18 @@ build-job:
   script:
     - flutter build web
 
+test-job:
+  stage: test
+  dependencies:
+    - build-job
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+    - when: manual
+  artifacts:
+    untracked: true
+  script:
+    flutter test test/widget_test.dart 
+
 deploy-job:
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   stage: deploy

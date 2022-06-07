@@ -23,6 +23,7 @@ Meeting testMeeting = Meeting(
   startTime: DateTime.now(),
   endTime: DateTime.now(),
   participants: List.of(testParticipants),
+  painPoints: {'0': "PAINTOS"},
 );
 
 Response testResponse = Response(

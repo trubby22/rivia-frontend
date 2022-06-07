@@ -39,9 +39,7 @@ class Response {
   Map<String, dynamic> toJson() => {
         Fields.participant: participant.toJson(),
         Fields.quality: quality,
-        Fields.painPoints: painPoints.map(
-          (key, value) => MapEntry("$key", value),
-        ),
+        Fields.painPoints: painPoints,
         Fields.notNeeded: notNeeded.map((e) => e.toJson()).toList(),
         Fields.notPrepared: notPrepared.map((e) => e.toJson()).toList(),
         if (feedback != null) Fields.feedback: feedback,
