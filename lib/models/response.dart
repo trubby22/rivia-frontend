@@ -53,8 +53,8 @@ class ResponseBuilder with ChangeNotifier {
   late Participant participant;
   double quality = 0.5;
   Map<String, String> painPoints = {};
-  final List<Participant> notNeeded = [];
-  final List<Participant> notPrepared = [];
+  final Set<Participant> notNeeded = {};
+  final Set<Participant> notPrepared = {};
   String? feedback;
 
   /// Build to [Response].
@@ -62,8 +62,13 @@ class ResponseBuilder with ChangeNotifier {
         participant: participant,
         quality: quality,
         painPoints: painPoints,
-        notNeeded: notNeeded,
-        notPrepared: notPrepared,
-        feedback: feedback,
+        notNeeded: notNeeded.toList(),
+        notPrepared: notPrepared.toList(),
+        feedback: feedback?.trim(),
       );
+
+  /// Notify the listeners.
+  void notify() {
+    notifyListeners();
+  }
 }

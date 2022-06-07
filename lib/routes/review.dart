@@ -1,4 +1,7 @@
+import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/constants/pain_points.dart';
 import 'package:rivia/models/meeting.dart';
@@ -22,19 +25,175 @@ class Review extends StatefulWidget {
 
 class _ReviewState extends State<Review> {
   final TextEditingController _controller = TextEditingController();
-  late List<Participant> _participants = widget.meeting.participants;
-  late List<bool> _selectedRedundant =
-      List.generate(_participants.length, (_) => false);
-  late List<bool> _selectedUnprepared =
-      List.generate(_participants.length, (_) => false);
-  // late List<bool> _selectedPainPoints =
-  //     List.generate(painPoints.length, (_) => false);
-  bool _selectAllRedundant = false;
-  bool _selectAllUnprepared = false;
-  double _quality = 0.5;
+  // late List<bool> _selectedRedundant =
+  //     List.generate(_participants.length, (_) => false);
+  // late List<bool> _selectedUnprepared =
+  //     List.generate(_participants.length, (_) => false);
+  // // late List<bool> _selectedPainPoints =
+  // //     List.generate(painPoints.length, (_) => false);
+  // bool _selectAllRedundant = false;
+  // bool _selectAllUnprepared = false;
+  // double _quality = 0.5;
+
+  /// Build the checkboxes that vote each participant not needed or not prepared.
+  Widget participantSelectionBuilder(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 120.0,
+              height: 40.0,
+              child: Center(
+                child: Text(
+                  LangText.notNeeded.local,
+                  style: UITexts.mediumText,
+                ),
+              ),
+            ),
+            Selector<ResponseBuilder, Tuple2<int, Set<Participant>>>(
+              selector: (_, data) => Tuple2(
+                data.notNeeded.length,
+                data.notNeeded,
+              ),
+              builder: (context, data, _) => SizedButton(
+                child: Text(LangText.all.local, style: UITexts.bigButtonText),
+                isSelected:
+                    data.value2.length == widget.meeting.participants.length,
+                onPressed: (isSelected) {
+                  if (isSelected) {
+                    data.value2.clear();
+                  } else {
+                    data.value2.addAll(widget.meeting.participants);
+                  }
+                  context.read<ResponseBuilder>().notify();
+                },
+              ),
+            ),
+            ...List.generate(
+              widget.meeting.participants.length,
+              (index) =>
+                  Selector<ResponseBuilder, Tuple2<int, Set<Participant>>>(
+                selector: (_, data) => Tuple2(
+                  data.notNeeded.length,
+                  data.notNeeded,
+                ),
+                builder: (context, data, _) => SizedButton(
+                  child: Text(LangText.n.local, style: UITexts.bigButtonText),
+                  isSelected: data.value2.contains(
+                    widget.meeting.participants[index],
+                  ),
+                  onPressed: (isSelected) {
+                    if (isSelected) {
+                      data.value2.remove(widget.meeting.participants[index]);
+                    } else {
+                      data.value2.add(widget.meeting.participants[index]);
+                    }
+                    context.read<ResponseBuilder>().notify();
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 120.0,
+              height: 40.0,
+              child: Center(
+                child: Text(
+                  LangText.notPrepared.local,
+                  style: UITexts.mediumText,
+                ),
+              ),
+            ),
+            Selector<ResponseBuilder, Tuple2<int, Set<Participant>>>(
+              selector: (_, data) => Tuple2(
+                data.notPrepared.length,
+                data.notPrepared,
+              ),
+              builder: (context, data, _) => SizedButton(
+                child: Text(LangText.all.local, style: UITexts.bigButtonText),
+                isSelected:
+                    data.value2.length == widget.meeting.participants.length,
+                onPressed: (isSelected) {
+                  if (isSelected) {
+                    data.value2.clear();
+                  } else {
+                    data.value2.addAll(widget.meeting.participants);
+                  }
+                  context.read<ResponseBuilder>().notify();
+                },
+              ),
+            ),
+            ...List.generate(
+              widget.meeting.participants.length,
+              (index) =>
+                  Selector<ResponseBuilder, Tuple2<int, Set<Participant>>>(
+                selector: (_, data) => Tuple2(
+                  data.notPrepared.length,
+                  data.notPrepared,
+                ),
+                builder: (context, data, _) => SizedButton(
+                  child: Text(LangText.p.local, style: UITexts.bigButtonText),
+                  isSelected: data.value2.contains(
+                    widget.meeting.participants[index],
+                  ),
+                  onPressed: (isSelected) {
+                    if (isSelected) {
+                      data.value2.remove(widget.meeting.participants[index]);
+                    } else {
+                      data.value2.add(widget.meeting.participants[index]);
+                    }
+                    context.read<ResponseBuilder>().notify();
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 40.0,
+                child: Center(
+                  child: Text('participant', style: UITexts.sectionSubheader),
+                ),
+              ),
+              const SizedBox(height: 64.0),
+              ...List.generate(
+                widget.meeting.participants.length,
+                (index) => SizedBox(
+                  height: 64.0,
+                  child: Center(
+                    child: Text(
+                      widget.meeting.participants[index].fullName,
+                      style: UITexts.mediumText,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final ppl = painPoints.keys.toList();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.meeting.title),
@@ -42,166 +201,98 @@ class _ReviewState extends State<Review> {
           ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
         ],
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Expanded(child: Column()),
-            Expanded(
-              flex: 3,
-              child: ListView(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 120.0,
-                            height: 40.0,
-                            child: Center(
-                              child: Text(
-                                'Not Needed',
-                                style: UITexts.mediumText,
+      body: ChangeNotifierProvider(
+        create: (_) => ResponseBuilder(),
+        builder: (context, _) => Container(
+          height: MediaQuery.of(context).size.height,
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(child: Column()),
+              Expanded(
+                flex: 3,
+                child: ListView(
+                  children: [
+                    participantSelectionBuilder(context),
+                    SizedBox(
+                      height: 500.0,
+                      child: GridView.count(
+                        crossAxisCount: 2,
+                        scrollDirection: Axis.horizontal,
+                        children: List.generate(
+                          painPoints.length,
+                          (index) {
+                            return Selector<ResponseBuilder,
+                                Tuple2<int, Map<String, String>>>(
+                              selector: (_, data) => Tuple2(
+                                data.painPoints.length,
+                                data.painPoints,
                               ),
-                            ),
-                          ),
-                          const SizedButton(
-                            child: Text("ALL"),
-                          ),
-                          ...List.generate(
-                            widget.meeting.participants.length,
-                            (_) => const SizedButton(
-                              child: Text("N"),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 120.0,
-                            height: 40.0,
-                            child: Center(
-                              child: Text(
-                                'Not Prepared',
-                                style: UITexts.mediumText,
+                              builder: (context, data, _) => SizedButton(
+                                child: Text(painPoints[ppl[index]]!),
+                                isSelected: data.value2.containsKey(ppl[index]),
+                                onPressed: (isSelected) {
+                                  if (isSelected) {
+                                    data.value2.remove(ppl[index]);
+                                  } else {
+                                    data.value2[ppl[index]] =
+                                        painPoints[ppl[index]]!;
+                                  }
+                                  context.read<ResponseBuilder>().notify();
+                                },
                               ),
-                            ),
-                          ),
-                          const SizedButton(
-                            child: Text("ALL"),
-                          ),
-                          ...List.generate(
-                            widget.meeting.participants.length,
-                            (_) => const SizedButton(
-                              child: Text("P"),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: 40.0,
-                              child: Center(
-                                child: Text(
-                                  'participant',
-                                  style: UITexts.sectionSubheader,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 64.0),
-                            ...List.generate(
-                              widget.meeting.participants.length,
-                              (index) => SizedBox(
-                                height: 64.0,
-                                child: Center(
-                                  child: Text(
-                                    widget.meeting.participants[index].fullName,
-                                    style: UITexts.mediumText,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 500.0,
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      scrollDirection: Axis.horizontal,
-                      children: List.generate(
-                        painPoints.length,
-                        (index) {
-                          return GestureDetector(
-                            child: Card(
-                              child: Text("painPoints[index]"),
-                            ),
-                            onTap: () {},
-                          );
-                        },
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        filled: true,
+                        labelText: 'Additional comments',
                       ),
+                      controller: _controller,
                     ),
-                  ),
-                  TextField(
-                    decoration: const InputDecoration(
-                      filled: true,
-                      labelText: 'Additional comments',
-                    ),
-                    controller: _controller,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        submitReview();
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Submit review')),
-                ],
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          submitReview(context);
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Submit review')),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  void submitReview() {
-    String feedback = _controller.value.text;
+  void submitReview(BuildContext context) {
+    context.read<ResponseBuilder>().participant = widget.participant;
+    context.read<ResponseBuilder>().feedback = _controller.text;
+    // List<Participant> redundant = [];
+    // _participants.asMap().forEach((index, participant) {
+    //   if (_selectedRedundant[index]) {
+    //     redundant.add(participant);
+    //   }
+    // });
 
-    List<Participant> redundant = [];
-    _participants.asMap().forEach((index, participant) {
-      if (_selectedRedundant[index]) {
-        redundant.add(participant);
-      }
-    });
-
-    List<Participant> unprepared = [];
-    _participants.asMap().forEach((index, participant) {
-      if (_selectedUnprepared[index]) {
-        unprepared.add(participant);
-      }
-    });
+    // List<Participant> unprepared = [];
+    // _participants.asMap().forEach((index, participant) {
+    //   if (_selectedUnprepared[index]) {
+    //     unprepared.add(participant);
+    //   }
+    // });
 
     // Map<String, String> selectedPainPoints = {};
     // painPoints.forEach((index, text) {
@@ -212,20 +303,13 @@ class _ReviewState extends State<Review> {
 
     Participant participant = widget.participant;
 
-    Response response = Response(
-      participant: participant,
-      quality: _quality,
-      // painPoints: selectedPainPoints,
-      notNeeded: redundant,
-      notPrepared: unprepared,
-      feedback: feedback,
-    );
+    Response response = context.read<ResponseBuilder>().build();
 
     postReviewOnBackend(response);
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Review saved: $response'),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Review saved: ${response.toJson()}')),
+    );
   }
 
   void postReviewOnBackend(Response response) {
