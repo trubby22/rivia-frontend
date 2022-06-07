@@ -229,15 +229,18 @@ class _ReviewState extends State<Review> {
                   children: [
                     Selector<ResponseBuilder, double>(
                       selector: (_, data) => data.quality,
-                      builder: (context, quality, _) => Slider(
-                        value: quality,
-                        min: 0,
-                        max: 1,
-                        divisions: 4,
-                        onChanged: (value) {
-                          context.read<ResponseBuilder>().quality = value;
-                        },
-                      ),
+                      builder: (context, quality, _) => Column(children: [
+                        Text('rate meeting quality'),
+                        Slider(
+                          value: quality,
+                          min: 0,
+                          max: 1,
+                          divisions: 4,
+                          onChanged: (value) {
+                            context.read<ResponseBuilder>().quality = value;
+                          },
+                        ),
+                      ]),
                     ),
                     participantSelectionBuilder(context),
                     const SizedBox(height: 12.0),
