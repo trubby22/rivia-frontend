@@ -6,7 +6,7 @@ enum Lang {
 }
 
 enum LangText {
-  hi,
+  langCode,
 
   aggregateStats,
   aggregateParticipants,
@@ -35,7 +35,7 @@ enum LangText {
 
 extension ExtendedLangText on LangText {
   static const langTexts = {
-    LangText.hi: ['Hi', 'Привет'],
+    LangText.langCode: ['EN', 'РУ'],
     LangText.aggregateStats: ['Aggregate Stats', '嘿嘿啊哈哈哈哈'],
     LangText.aggregateParticipants: ['Number of participants', '嘿嘿啊哈哈哈哈'],
     LangText.aggregateNotNeeded: [

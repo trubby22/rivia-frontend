@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rivia/constants/api_endpoints.dart';
+import 'package:rivia/constants/languages.dart';
 import 'package:rivia/models/login_credentials.dart';
 
-import 'package:http/http.dart' as http;
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 
@@ -27,7 +26,17 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         title: Text('Dashboard'),
         actions: [
-          ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
+          ElevatedButton(
+            onPressed: () {
+              if (language == Lang.en) {
+                language = Lang.ru;
+              } else {
+                language = Lang.en;
+              }
+              setState(() {});
+            },
+            child: Text(LangText.langCode.local),
+          ),
         ],
       ),
       body: Padding(
