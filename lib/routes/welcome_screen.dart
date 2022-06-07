@@ -1,23 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/route_names.dart';
+import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
-
-Meeting _testMeeting = Meeting(
-  title: "Foo Meeting",
-  startTime: DateTime.now(),
-  endTime: DateTime.now(),
-  participants: [
-    Participant(name: "Jacen", surname: "Solo", email: "js@rt.cr"),
-    Participant(name: "Luke", surname: "Skywalker", email: "js@kc.tt"),
-  ],
-  painPoints: {
-    '1': 'meeting overran',
-    '2': 'meeting too short',
-    '3': 'I spoke too little and listened too long',
-    '4': 'too many people invited',
-  },
-);
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -47,7 +32,7 @@ class WelcomeScreen extends StatelessWidget {
               child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context)
-                        .pushNamed(RouteNames.review, arguments: _testMeeting);
+                        .pushNamed(RouteNames.review, arguments: testMeeting2);
                   },
                   child: Text('review meeting')),
             ),
@@ -74,7 +59,7 @@ class WelcomeScreen extends StatelessWidget {
               child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context)
-                        .pushNamed(RouteNames.summary, arguments: _testMeeting);
+                        .pushNamed(RouteNames.summary, arguments: testMeeting2);
                   },
                   child: Text('summary')),
             ),

@@ -9,6 +9,7 @@ import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/date_picker.dart';
+import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/time_picker.dart';
@@ -36,6 +37,16 @@ class _CreateMeetingState extends State<CreateMeeting> {
       appBar: AppBar(
         title: Text(LangText.dashboard.local),
         actions: [
+          Consumer<User>(
+            builder: (context, user, child) {
+              return ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(RouteNames.login);
+                    user.uuid = null;
+                  },
+                  child: Icon(Icons.logout));
+            },
+          ),
           ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
         ],
       ),
