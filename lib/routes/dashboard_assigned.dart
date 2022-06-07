@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
+import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/meeting_entry.dart';
 
-Meeting _testMeeting = Meeting(
-  title: "Bar Meeting",
-  startTime: DateTime.now(),
-  endTime: DateTime.now(),
-  participants: [
-    Participant(name: "Jacen", surname: "Solo", email: "js@rt.cr"),
-    Participant(name: "Luke", surname: "Skywalker", email: "js@kc.tt"),
-  ],
-);
+class DashboardAssigned extends StatefulWidget {
+  DashboardAssigned({Key? key}) : super(key: key);
 
-class DashboardAssigned extends StatelessWidget {
-  const DashboardAssigned({Key? key}) : super(key: key);
+  @override
+  State<DashboardAssigned> createState() => _DashboardAssignedState();
+}
+
+class _DashboardAssignedState extends State<DashboardAssigned> {
+  List<Meeting> _meetings = [];
+
+  @override
+  void initState() {
+    super.initState();
+    print('Fetching meetings');
+    fetchMeetings();
+  }
+
+  void fetchMeetings() async {
+    List<Meeting> tempMeetings = await getMeetings();
+    setState(() {
+      _meetings = tempMeetings;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +46,10 @@ class DashboardAssigned extends StatelessWidget {
               child: Column(
                 children: [
                   Text('Meetings'),
-                  Column(children: [MeetingEntry(meeting: _testMeeting)]),
+                  Column(
+                      children: _meetings
+                          .map((meeting) => MeetingEntry(meeting: meeting))
+                          .toList()),
                 ],
               ),
             ),

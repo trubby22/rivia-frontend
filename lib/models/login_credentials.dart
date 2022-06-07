@@ -25,7 +25,7 @@ class LoginCredentials {
   Map<String, dynamic> toJson() => {
         Fields.email: login,
         Fields.password: passwordHash,
-        Fields.name: firstName,
-        Fields.surname: surname,
+        if (firstName != null) Fields.name: firstName,
+        if (surname != null) Fields.surname: surname,
       };
 }

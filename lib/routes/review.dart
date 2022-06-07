@@ -8,6 +8,7 @@ import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
+import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/sized_button.dart';
 
 import 'package:http/http.dart' as http;
@@ -320,16 +321,6 @@ class _ReviewState extends State<Review> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Review saved: ${response.toJson()}')),
-    );
-  }
-
-  void postReviewOnBackend(Response response) {
-    final json = response.toJson();
-    json[Fields.painPoints] =
-        (json[Fields.painPoints] as Map<String, String>).keys.toList();
-    http.post(
-      Uri.parse(apiGateway + postReview),
-      body: json,
     );
   }
 }
