@@ -104,8 +104,8 @@ class _LoginState extends State<Login> {
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
-          'Login data sent successfully: ${loginCredentials.loginHash}, '
-          '${loginCredentials.passwordHash}, ${loginCredentials.loginHash == loginCredentials.passwordHash}'),
+          'Login data sent successfully: ${loginCredentials.login}, '
+          '${loginCredentials.passwordHash}, ${loginCredentials.login == loginCredentials.passwordHash}'),
     ));
 
     postLoginCredentialsToBackend(loginCredentials);

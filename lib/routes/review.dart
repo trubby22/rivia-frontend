@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/constants/ui_texts.dart';
@@ -28,6 +29,7 @@ class Review extends StatefulWidget {
 
 class _ReviewState extends State<Review> {
   final TextEditingController _controller = TextEditingController();
+
   // late List<bool> _selectedRedundant =
   //     List.generate(_participants.length, (_) => false);
   // late List<bool> _selectedUnprepared =
@@ -36,7 +38,7 @@ class _ReviewState extends State<Review> {
   // //     List.generate(painPoints.length, (_) => false);
   // bool _selectAllRedundant = false;
   // bool _selectAllUnprepared = false;
-  // double _quality = 0.5;
+  double _quality = 0.5;
 
   /// Build the checkboxes that vote each participant not needed or not prepared.
   Widget participantSelectionBuilder(BuildContext context) {
@@ -216,6 +218,17 @@ class _ReviewState extends State<Review> {
                 flex: 3,
                 child: ListView(
                   children: [
+                    Slider(
+                      value: _quality,
+                      min: 0,
+                      max: 1,
+                      divisions: 4,
+                      onChanged: (value) {
+                        setState(() {
+                          _quality = value;
+                        });
+                      },
+                    ),
                     participantSelectionBuilder(context),
                     SizedBox(
                       height: 500.0,
@@ -316,9 +329,12 @@ class _ReviewState extends State<Review> {
   }
 
   void postReviewOnBackend(Response response) {
+    final json = response.toJson();
+    json[Fields.painPoints] = (json[Fields.painPoints] as Map<String,
+        String>).keys.toList();
     http.post(
       Uri.parse(apiGateway + postReview),
-      body: response.toJson(),
+      body: json,
     );
   }
 }
