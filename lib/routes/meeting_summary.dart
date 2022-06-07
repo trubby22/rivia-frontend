@@ -82,7 +82,8 @@ class _MeetingSummaryState extends State<MeetingSummary> {
               );
             },
           ),
-          const LanguageSwitcher(),
+          // ignore: prefer_const_constructors
+          LanguageSwitcher(),
         ],
       ),
       body: Padding(

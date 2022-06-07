@@ -13,7 +13,7 @@ class MeetingEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300.0,
+      width: 500.0,
       height: 150.0,
       color: Colors.amber.shade100,
       child: TextButton(

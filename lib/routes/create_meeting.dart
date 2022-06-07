@@ -55,7 +55,8 @@ class _CreateMeetingState extends State<CreateMeeting> {
               );
             },
           ),
-          const LanguageSwitcher(),
+          // ignore: prefer_const_constructors
+          LanguageSwitcher(),
         ],
       ),
       body: ChangeNotifierProvider(

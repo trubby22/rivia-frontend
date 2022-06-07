@@ -50,7 +50,8 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
               );
             },
           ),
-          const LanguageSwitcher(),
+          // ignore: prefer_const_constructors
+          LanguageSwitcher(),
         ],
       ),
       body: Padding(

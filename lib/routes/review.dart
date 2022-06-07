@@ -219,7 +219,8 @@ class _ReviewState extends State<Review> {
               );
             },
           ),
-          const LanguageSwitcher(),
+          // ignore: prefer_const_constructors
+          LanguageSwitcher(),
         ],
       ),
       body: ChangeNotifierProvider(

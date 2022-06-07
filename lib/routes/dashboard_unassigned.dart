@@ -27,7 +27,8 @@ class DashboardUnassigned extends StatelessWidget {
               );
             },
           ),
-          const LanguageSwitcher(),
+          // ignore: prefer_const_constructors
+          LanguageSwitcher(),
         ],
       ),
       body: Padding(
