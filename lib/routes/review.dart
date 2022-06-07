@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rivia/helper_widgets/stateful_checkbox.dart';
+import 'package:rivia/utilities/stateful_checkbox.dart';
 
 import '../models/meeting.dart';
 import '../models/participant.dart';
@@ -52,6 +52,20 @@ class Review extends StatelessWidget {
                             ],
                           ),
                         ),
+                        Expanded(
+                          child: Row(
+                            children: List.generate(2, (index) {
+                              return Expanded(
+                                child: Column(
+                                  children: [
+                                    Expanded(child: Text('select all')),
+                                    Expanded(child: StatefulCheckbox()),
+                                  ],
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
                         ...List.generate(
                           meeting.participants.length,
                           (index) {
@@ -60,8 +74,7 @@ class Review extends StatelessWidget {
 
                             return Expanded(
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   StatefulCheckbox(),
                                   StatefulCheckbox(),
@@ -133,11 +146,12 @@ class Review extends StatelessWidget {
                       crossAxisCount: 2,
                       scrollDirection: Axis.horizontal,
                       children: List.generate(painPoints.length, (index) {
-                        return GestureDetector(
-                          child: Card(
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            onPressed: () {},
                             child: Text(painPoints[index]),
                           ),
-                          onTap: () {},
                         );
                       }),
                     ),
@@ -159,9 +173,11 @@ class Review extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ElevatedButton(onPressed: () {
-                    Navigator.of(context).pop();
-                  }, child: Text('Submit review')),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Submit review')),
                 ],
               ),
             ),
@@ -171,4 +187,3 @@ class Review extends StatelessWidget {
     );
   }
 }
-

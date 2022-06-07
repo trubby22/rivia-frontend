@@ -47,7 +47,8 @@ class MyApp extends StatelessWidget {
         '/welcome_screen': (_) => WelcomeScreen(),
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
-        RouteNames.createMeeting: (_) => CreateMeeting(),
+        RouteNames.createMeeting: (_) =>
+            CreateMeeting(allParticipants: testParticipants),
         RouteNames.login: (_) => Login(),
       },
       onGenerateRoute: (routeSettings) {
