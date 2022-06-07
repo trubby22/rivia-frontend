@@ -3,10 +3,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Lang language = Lang.en;
 
-Future<void> getLang() async {
+Future<void> getLang(Function()? callback) async {
   language = Lang.values[
       (await SharedPreferences.getInstance()).getInt(Fields.lang) ??
           language.index];
+  callback?.call();
 }
 
 Future<void> setLang(Lang value) async {
@@ -21,6 +22,7 @@ enum Lang {
 
 enum LangText {
   langCode,
+  langSwitchMsg,
 
   aggregateStats,
   aggregateParticipants,
@@ -45,18 +47,19 @@ enum LangText {
   date,
   startTime,
   endTime,
-
-  hi,
 }
 
 extension ExtendedLangText on LangText {
   static const langTexts = {
     LangText.langCode: ['EN', 'РУ'],
-    LangText.hi: ['Hi', 'Привет'],
+    LangText.langSwitchMsg: [
+      'Language switched, please refresh',
+      'Language switched, please refresh',
+    ],
     LangText.aggregateStats: ['Aggregate Stats', 'Совокупная статистика'],
     LangText.aggregateParticipants: [
       'Number of participants',
-      'Число участников'
+      'Число участников',
     ],
     LangText.aggregateNotNeeded: [
       'Number of people voted as not needed for at least once',

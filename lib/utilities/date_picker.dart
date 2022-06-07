@@ -66,16 +66,18 @@ class _DatePickerState extends State<DatePicker> with RestorationMixin {
         _selectedDate.value = newSelectedDate;
       });
       widget.meetingDateAndTime.setDate(newSelectedDate);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-            'Selected date: ${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}'),
-        action: SnackBarAction(
-          label: 'hide',
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'Selected date: ${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}'),
+          action: SnackBarAction(
+            label: 'hide',
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            },
+          ),
         ),
-      ));
+      );
     }
   }
 

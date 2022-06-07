@@ -5,6 +5,7 @@ import 'package:rivia/models/login_credentials.dart';
 
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
+import 'package:rivia/utilities/language_switcher.dart';
 
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -21,24 +22,19 @@ class _LoginState extends State<Login> {
   bool _signup = false;
 
   @override
+  void initState() {
+    super.initState();
+    getLang(() => setState(() {}));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
           title: Text('Dashboard'),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                if (language == Lang.en) {
-                  setLang(Lang.ru);
-                } else {
-                  setLang(Lang.en);
-                }
-              },
-              child: Text(LangText.langCode.local),
-            ),
-          ],
+          actions: const [LanguageSwitcher()],
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),

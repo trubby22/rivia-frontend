@@ -3,13 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
+import 'package:rivia/utilities/language_switcher.dart';
 
 class DashboardUnassigned extends StatelessWidget {
   const DashboardUnassigned({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    getLang();
+    getLang(null);
 
     return Scaffold(
       appBar: AppBar(
@@ -18,14 +19,15 @@ class DashboardUnassigned extends StatelessWidget {
           Consumer<User>(
             builder: (context, user, child) {
               return ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(RouteNames.login);
-                    user.uuid = null;
-                  },
-                  child: Icon(Icons.logout));
+                onPressed: () {
+                  Navigator.of(context).pushNamed(RouteNames.login);
+                  user.uuid = null;
+                },
+                child: Icon(Icons.logout),
+              );
             },
           ),
-          ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
+          const LanguageSwitcher(),
         ],
       ),
       body: Padding(

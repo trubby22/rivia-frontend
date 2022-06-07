@@ -5,6 +5,7 @@ import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
+import 'package:rivia/utilities/language_switcher.dart';
 import 'package:rivia/utilities/meeting_entry.dart';
 
 class DashboardAssigned extends StatefulWidget {
@@ -20,7 +21,7 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
   @override
   void initState() {
     super.initState();
-    getLang();
+    getLang(() => setState(() {}));
     print('Fetching meetings');
     fetchMeetings();
   }
@@ -41,14 +42,15 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
           Consumer<User>(
             builder: (context, user, child) {
               return ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(RouteNames.login);
-                    user.uuid = null;
-                  },
-                  child: Icon(Icons.logout));
+                onPressed: () {
+                  Navigator.of(context).pushNamed(RouteNames.login);
+                  user.uuid = null;
+                },
+                child: Icon(Icons.logout),
+              );
             },
           ),
-          ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
+          const LanguageSwitcher(),
         ],
       ),
       body: Padding(

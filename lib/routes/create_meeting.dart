@@ -11,6 +11,7 @@ import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/date_picker.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/participant.dart';
+import 'package:rivia/utilities/language_switcher.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/time_picker.dart';
 
@@ -34,7 +35,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
   @override
   void initState() {
     super.initState();
-    getLang();
+    getLang(() => setState(() {}));
   }
 
   @override
@@ -46,14 +47,15 @@ class _CreateMeetingState extends State<CreateMeeting> {
           Consumer<User>(
             builder: (context, user, child) {
               return ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(RouteNames.login);
-                    user.uuid = null;
-                  },
-                  child: Icon(Icons.logout));
+                onPressed: () {
+                  Navigator.of(context).pushNamed(RouteNames.login);
+                  user.uuid = null;
+                },
+                child: Icon(Icons.logout),
+              );
             },
           ),
-          ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
+          const LanguageSwitcher(),
         ],
       ),
       body: ChangeNotifierProvider(

@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/test_data.dart';
+import 'package:rivia/utilities/language_switcher.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    getLang();
+    getLang(null);
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard'),
-        actions: [
-          ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
-        ],
+        actions: const [LanguageSwitcher()],
       ),
       body: Center(
         child: Column(
