@@ -22,83 +22,87 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Dashboard'),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              if (language == Lang.en) {
-                language = Lang.ru;
-              } else {
-                language = Lang.en;
-              }
-              setState(() {});
-            },
-            child: Text(LangText.langCode.local),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Column(
-            children: [
-              if (_signup) ...[
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Dashboard'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                if (language == Lang.en) {
+                  language = Lang.ru;
+                } else {
+                  language = Lang.en;
+                }
+                setState(() {});
+              },
+              child: Text(LangText.langCode.local),
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Column(
+              children: [
+                if (_signup) ...[
+                  TextField(
+                    decoration: const InputDecoration(
+                      filled: true,
+                      labelText: 'First Name',
+                    ),
+                    controller: _firstNameController,
+                  ),
+                  const SizedBox(height: 12.0),
+                  TextField(
+                    decoration: const InputDecoration(
+                      filled: true,
+                      labelText: 'Surname',
+                    ),
+                    controller: _surnameController,
+                  ),
+                  const SizedBox(height: 12.0),
+                ],
                 TextField(
                   decoration: const InputDecoration(
                     filled: true,
-                    labelText: 'First Name',
+                    labelText: 'Email',
                   ),
-                  controller: _firstNameController,
+                  controller: _loginController,
                 ),
                 const SizedBox(height: 12.0),
                 TextField(
                   decoration: const InputDecoration(
                     filled: true,
-                    labelText: 'Surname',
+                    labelText: 'Password',
                   ),
-                  controller: _surnameController,
+                  obscureText: true,
+                  controller: _passwordController,
                 ),
                 const SizedBox(height: 12.0),
-              ],
-              TextField(
-                decoration: const InputDecoration(
-                  filled: true,
-                  labelText: 'Email',
-                ),
-                controller: _loginController,
-              ),
-              const SizedBox(height: 12.0),
-              TextField(
-                decoration: const InputDecoration(
-                  filled: true,
-                  labelText: 'Password',
-                ),
-                obscureText: true,
-                controller: _passwordController,
-              ),
-              const SizedBox(height: 12.0),
-              Consumer<User>(
-                builder: (context, user, child) {
-                  return ElevatedButton(
-                      onPressed: () {
-                        login(context, user);
-                        Navigator.of(context).pushNamed('/dashboard_assigned');
-                      },
-                      child: Text(_signup ? 'Sign Up' : 'Log In'));
-                },
-              ),
-              const SizedBox(height: 12.0),
-              ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _signup = !_signup;
-                    });
+                Consumer<User>(
+                  builder: (context, user, child) {
+                    return ElevatedButton(
+                        onPressed: () {
+                          login(context, user);
+                          Navigator.of(context)
+                              .pushNamed('/dashboard_assigned');
+                        },
+                        child: Text(_signup ? 'Sign Up' : 'Log In'));
                   },
-                  child: Text(
-                      'Click here to ${_signup ? 'Log In' : 'Sign Up'} instead')),
-            ],
+                ),
+                const SizedBox(height: 12.0),
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _signup = !_signup;
+                      });
+                    },
+                    child: Text(
+                        'Click here to ${_signup ? 'Log In' : 'Sign Up'} instead')),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rivia/constants/route_names.dart';
+import 'package:rivia/utilities/change_notifiers.dart';
 
 class DashboardUnassigned extends StatelessWidget {
   const DashboardUnassigned({Key? key}) : super(key: key);
@@ -9,6 +12,16 @@ class DashboardUnassigned extends StatelessWidget {
       appBar: AppBar(
         title: Text('Dashboard'),
         actions: [
+          Consumer<User>(
+            builder: (context, user, child) {
+              return ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(RouteNames.login);
+                    user.uuid = null;
+                  },
+                  child: Icon(Icons.logout));
+            },
+          ),
           ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
         ],
       ),

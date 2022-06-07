@@ -4,10 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/api_endpoints.dart';
+import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
+import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/sized_button.dart';
 
@@ -197,6 +199,16 @@ class _ReviewState extends State<Review> {
       appBar: AppBar(
         title: Text(widget.meeting.title),
         actions: [
+          Consumer<User>(
+            builder: (context, user, child) {
+              return ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(RouteNames.login);
+                    user.uuid = null;
+                  },
+                  child: Icon(Icons.logout));
+            },
+          ),
           ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
         ],
       ),

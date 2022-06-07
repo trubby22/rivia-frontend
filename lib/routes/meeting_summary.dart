@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
+import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/ui_texts.dart';
 
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/bar_graph.dart';
+import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 
 class MeetingSummary extends StatefulWidget {
@@ -63,7 +66,22 @@ class _MeetingSummaryState extends State<MeetingSummary> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.meeting.title)),
+      appBar: AppBar(
+        title: Text(widget.meeting.title),
+        actions: [
+          Consumer<User>(
+            builder: (context, user, child) {
+              return ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(RouteNames.login);
+                    user.uuid = null;
+                  },
+                  child: Icon(Icons.logout));
+            },
+          ),
+          ElevatedButton(onPressed: () {}, child: Icon(Icons.flag)),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 80.0),
         child: ListView(
