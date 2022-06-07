@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/date_picker.dart';
 import 'package:rivia/utilities/stateful_checkbox.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/time_picker.dart';
+
+import 'package:http/http.dart' as http;
 
 class CreateMeeting extends StatefulWidget {
   final List<Participant> allParticipants;
@@ -201,6 +204,9 @@ class _CreateMeetingState extends State<CreateMeeting> {
   }
 
   void postNewMeetingOnBackend(Meeting meeting) {
-//  TODO()
+    http.post(
+      Uri.parse(apiGateway + postMeeting),
+      body: meeting.toJson(),
+    );
   }
 }

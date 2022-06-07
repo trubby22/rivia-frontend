@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/models/login_credentials.dart';
+
+import 'package:http/http.dart' as http;
 
 class Login extends StatelessWidget {
   final TextEditingController _loginController = TextEditingController();
@@ -66,6 +69,9 @@ class Login extends StatelessWidget {
   }
 
   void postLoginCredentialsToBackend(LoginCredentials loginCredentials) {
-    //  TODO()
+    http.post(
+      Uri.parse(apiGateway + postLogin),
+      body: loginCredentials.toJson(),
+    );
   }
 }

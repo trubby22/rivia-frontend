@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/constants/pain_points.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/sized_button.dart';
+
+import 'package:http/http.dart' as http;
 
 class Review extends StatefulWidget {
   final Meeting meeting;
@@ -229,6 +232,9 @@ class _ReviewState extends State<Review> {
   }
 
   void postReviewOnBackend(Response response) {
-    //  TODO()
+    http.post(
+      Uri.parse(apiGateway + postReview),
+      body: response.toJson(),
+    );
   }
 }
