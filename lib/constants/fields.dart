@@ -9,6 +9,7 @@ class Fields {
   static String startTime = "start";
   static String endTime = "end";
   static String participants = "participants";
+  static String meetingId = "meeting_id";
 
   static String participant = "participant";
   static String quality = "quality";

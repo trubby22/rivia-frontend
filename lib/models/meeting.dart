@@ -4,6 +4,7 @@ import 'package:rivia/models/participant.dart';
 
 /// The model for meetings.
 class Meeting {
+  final String? meetingId;
   final String title;
   final DateTime startTime;
   final DateTime endTime;
@@ -11,6 +12,7 @@ class Meeting {
   final Map<String, String> painPoints;
 
   Meeting({
+    this.meetingId,
     required this.title,
     required this.startTime,
     required this.endTime,
@@ -20,6 +22,7 @@ class Meeting {
 
   Meeting.fromJson(Map<String, dynamic> json)
       : title = json[Fields.title],
+        meetingId = json[Fields.meetingId],
         startTime = DateTimeJson.fromJSON(json[Fields.startTime]),
         endTime = DateTimeJson.fromJSON(json[Fields.endTime]),
         participants = (json[Fields.participantId] as List<dynamic>?)
@@ -36,5 +39,6 @@ class Meeting {
         Fields.endTime: endTime.toJSON(),
         Fields.painPoints: painPoints,
         Fields.participants: participants.map((e) => e.toJson()).toList(),
+        if (meetingId != null) Fields.meetingId: meetingId,
       };
 }
