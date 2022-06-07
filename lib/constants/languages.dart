@@ -7,13 +7,11 @@ Future<void> getLang() async {
   language = Lang.values[
       (await SharedPreferences.getInstance()).getInt(Fields.lang) ??
           language.index];
-  print(language);
 }
 
 Future<void> setLang(Lang value) async {
   language = value;
   (await SharedPreferences.getInstance()).setInt(Fields.lang, value.index);
-  print(language);
 }
 
 enum Lang {
