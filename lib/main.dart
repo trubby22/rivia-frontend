@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/welcome_screen',
+      initialRoute: RouteNames.login,
       routes: {
         '/welcome_screen': (_) => WelcomeScreen(),
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),

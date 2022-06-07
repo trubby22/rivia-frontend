@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/constants/ui_texts.dart';
@@ -206,6 +207,18 @@ class _ReviewState extends State<Review> {
                 flex: 3,
                 child: ListView(
                   children: [
+                    Selector<ResponseBuilder, double>(
+                      selector: (_, data) => data.quality,
+                      builder: (context, quality, _) => Slider(
+                        value: quality,
+                        min: 0,
+                        max: 1,
+                        divisions: 4,
+                        onChanged: (value) {
+                          context.read<ResponseBuilder>().quality = value;
+                        },
+                      ),
+                    ),
                     participantSelectionBuilder(context),
                     SizedBox(
                       height: 500.0,
@@ -307,9 +320,12 @@ class _ReviewState extends State<Review> {
   }
 
   void postReviewOnBackend(Response response) {
+    final json = response.toJson();
+    json[Fields.painPoints] =
+        (json[Fields.painPoints] as Map<String, String>).keys.toList();
     http.post(
       Uri.parse(apiGateway + postReview),
-      body: response.toJson(),
+      body: json,
     );
   }
 }

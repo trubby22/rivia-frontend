@@ -49,11 +49,17 @@ class Response {
 /// A builder for [Response].
 class ResponseBuilder with ChangeNotifier {
   late Participant participant;
-  double quality = 0.5;
+  double _quality = 0.5;
   Map<String, String> painPoints = {};
   final Set<Participant> notNeeded = {};
   final Set<Participant> notPrepared = {};
   String? feedback;
+
+  double get quality => _quality;
+  set quality(double value) {
+    _quality = value;
+    notifyListeners();
+  }
 
   /// Build to [Response].
   Response build() => Response(
