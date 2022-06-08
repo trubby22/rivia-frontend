@@ -223,7 +223,7 @@ class _ReviewState extends State<Review> {
         create: (_) => ResponseBuilder(),
         builder: (context, _) => Container(
           height: MediaQuery.of(context).size.height,
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 24.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -242,10 +242,9 @@ class _ReviewState extends State<Review> {
                         SliderTheme(
                           data: SliderTheme.of(context).copyWith(
                             trackHeight: 16.0,
-                            trackShape: const RoundedRectSliderTrackShape(),
-                            thumbShape: PolygonSliderThumb(
-                              thumbRadius: 16.0,
-                              sliderValue: quality,
+                            trackShape: const BiColourSliderTrackShape(),
+                            thumbShape: const RoundSliderThumbShape(
+                              enabledThumbRadius: 16.0,
                             ),
                             overlayShape: const RoundSliderOverlayShape(
                               overlayRadius: 32.0,
@@ -253,11 +252,7 @@ class _ReviewState extends State<Review> {
                           ),
                           child: Slider(
                             value: quality,
-                            activeColor: Color.alphaBlend(
-                              Colors.red
-                                  .withAlpha((255 - quality * 255).toInt()),
-                              Colors.green.withAlpha((quality * 255).toInt()),
-                            ),
+                            activeColor: Colors.grey,
                             min: 0,
                             max: 1,
                             divisions: null,
@@ -386,90 +381,96 @@ class _ReviewState extends State<Review> {
   }
 }
 
-class PolygonSliderThumb extends SliderComponentShape {
-  final double thumbRadius;
-  final double sliderValue;
-
-  const PolygonSliderThumb({
-    required this.thumbRadius,
-    required this.sliderValue,
+class BiColourSliderTrackShape extends SliderTrackShape
+    with BaseSliderTrackShape {
+  const BiColourSliderTrackShape({
+    this.gradient = const LinearGradient(
+      colors: [
+        Colors.red,
+        Colors.yellow,
+      ],
+    ),
+    this.darkenInactive = true,
   });
 
-  @override
-  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
-    return Size.fromRadius(thumbRadius);
-  }
+  final LinearGradient gradient;
+  final bool darkenInactive;
 
   @override
   void paint(
     PaintingContext context,
-    Offset center, {
-    required Animation<double> activationAnimation,
-    required Animation<double> enableAnimation,
-    required bool isDiscrete,
-    required TextPainter labelPainter,
+    Offset offset, {
     required RenderBox parentBox,
     required SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
     required TextDirection textDirection,
-    required double value,
-    required double textScaleFactor,
-    required Size sizeWithOverflow,
+    required Offset thumbCenter,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    double additionalActiveTrackHeight = 2,
   }) {
-    final Canvas canvas = context.canvas;
-
-    int sides = 4;
-    double innerPolygonRadius = thumbRadius * 1.2;
-    double outerPolygonRadius = thumbRadius * 1.4;
-    double angle = (pi * 2) / sides;
-
-    final outerPathColor = Paint()
-      ..color = Colors.amber
-      ..style = PaintingStyle.fill;
-
-    var outerPath = Path();
-
-    Offset startPoint2 = Offset(
-      outerPolygonRadius * cos(0.0),
-      outerPolygonRadius * sin(0.0),
+    final Rect trackRect = getPreferredRect(
+      parentBox: parentBox,
+      offset: offset,
+      sliderTheme: sliderTheme,
+      isEnabled: isEnabled,
+      isDiscrete: isDiscrete,
     );
 
-    outerPath.moveTo(
-      startPoint2.dx + center.dx,
-      startPoint2.dy + center.dy,
+    // Assign the track segment paints, which are leading: active and
+    // trailing: inactive.
+    final ColorTween activeTrackColorTween = ColorTween(
+        begin: sliderTheme.disabledActiveTrackColor,
+        end: sliderTheme.activeTrackColor);
+    final ColorTween inactiveTrackColorTween = darkenInactive
+        ? ColorTween(
+            begin: sliderTheme.disabledInactiveTrackColor,
+            end: sliderTheme.inactiveTrackColor)
+        : activeTrackColorTween;
+    final Paint redPaint = Paint()..color = Colors.red;
+    final Paint greenPaint = Paint()..color = Colors.green;
+    final Paint inactivePaint = Paint()
+      ..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
+
+    final Radius trackRadius = Radius.circular(trackRect.height / 2);
+    final Radius activeTrackRadius = Radius.circular(trackRect.height / 2 + 1);
+
+    context.canvas.drawRRect(
+      RRect.fromLTRBAndCorners(
+        trackRect.left,
+        trackRect.top,
+        trackRect.right,
+        trackRect.bottom,
+        topLeft: trackRadius,
+        bottomLeft: trackRadius,
+        topRight: trackRadius,
+        bottomRight: trackRadius,
+      ),
+      inactivePaint,
     );
 
-    for (int i = 1; i <= sides; i++) {
-      double x = outerPolygonRadius * cos(angle * i) + center.dx;
-      double y = outerPolygonRadius * sin(angle * i) + center.dy;
-      outerPath.lineTo(x, y);
+    if ((trackRect.left + trackRect.right) / 2 < thumbCenter.dx) {
+      context.canvas.drawRRect(
+        RRect.fromLTRBAndCorners(
+          (trackRect.left + trackRect.right) / 2,
+          trackRect.top - (additionalActiveTrackHeight / 2),
+          thumbCenter.dx,
+          trackRect.bottom + (additionalActiveTrackHeight / 2),
+        ),
+        greenPaint,
+      );
     }
 
-    outerPath.close();
-    canvas.drawPath(outerPath, outerPathColor);
-
-    final innerPathColor = Paint()
-      ..color = sliderTheme.thumbColor ?? Colors.black
-      ..style = PaintingStyle.fill;
-
-    var innerPath = Path();
-
-    Offset startPoint = Offset(
-      innerPolygonRadius * cos(0.0),
-      innerPolygonRadius * sin(0.0),
-    );
-
-    innerPath.moveTo(
-      startPoint.dx + center.dx,
-      startPoint.dy + center.dy,
-    );
-
-    for (int i = 1; i <= sides; i++) {
-      double x = innerPolygonRadius * cos(angle * i) + center.dx;
-      double y = innerPolygonRadius * sin(angle * i) + center.dy;
-      innerPath.lineTo(x, y);
+    if ((trackRect.left + trackRect.right) / 2 > thumbCenter.dx) {
+      context.canvas.drawRRect(
+        RRect.fromLTRBAndCorners(
+          thumbCenter.dx,
+          trackRect.top - (additionalActiveTrackHeight / 2),
+          (trackRect.left + trackRect.right) / 2,
+          trackRect.bottom + (additionalActiveTrackHeight / 2),
+        ),
+        redPaint,
+      );
     }
-
-    innerPath.close();
-    canvas.drawPath(innerPath, innerPathColor);
   }
 }
