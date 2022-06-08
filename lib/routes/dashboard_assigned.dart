@@ -24,7 +24,6 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
   void initState() {
     super.initState();
     getLang(() => setState(() {}));
-    print('Fetching meetings');
     fetchMeetings();
   }
 
@@ -39,6 +38,7 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(LangText.dashboard.local),
         actions: [
           Consumer<User>(

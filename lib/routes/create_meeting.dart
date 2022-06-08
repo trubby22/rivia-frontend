@@ -43,6 +43,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(LangText.createMeeting.local),
         actions: [
           Consumer<User>(

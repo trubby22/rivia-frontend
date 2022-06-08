@@ -31,7 +31,6 @@ class _MeetingSummaryState extends State<MeetingSummary> {
   void initState() {
     super.initState();
     getLang(() => setState(() {}));
-    print('fetching responses');
     fetchResponses();
   }
 
@@ -69,6 +68,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(widget.meeting.title),
         actions: [
           Consumer<User>(

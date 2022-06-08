@@ -14,6 +14,7 @@ class DashboardUnassigned extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(LangText.dashboard.local),
         actions: [
           Consumer<User>(

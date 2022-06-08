@@ -206,6 +206,7 @@ class _ReviewState extends State<Review> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(widget.meeting.title),
         actions: [
           Consumer<User>(

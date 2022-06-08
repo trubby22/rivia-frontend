@@ -13,6 +13,7 @@ class WelcomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Dashboard'),
         // ignore: prefer_const_constructors, prefer_const_literals_to_create_immutables
         actions: [LanguageSwitcher()],
