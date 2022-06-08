@@ -277,7 +277,10 @@ class _ReviewState extends State<Review> {
                           ),
                       child: Center(
                         child: GridView.count(
+                          childAspectRatio: 0.6,
                           crossAxisCount: 2,
+                          mainAxisSpacing: 16.0,
+                          crossAxisSpacing: 12.0,
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           children: List.generate(
@@ -290,8 +293,11 @@ class _ReviewState extends State<Review> {
                                   data.painPoints,
                                 ),
                                 builder: (context, data, _) => SizedButton(
+                                  radius: 32.0,
                                   child: Text(
-                                      widget.meeting.painPoints[ppl[index]]!),
+                                    widget.meeting.painPoints[ppl[index]]!,
+                                    textAlign: TextAlign.center,
+                                  ),
                                   isSelected:
                                       data.value2.containsKey(ppl[index]),
                                   onPressed: (isSelected) {

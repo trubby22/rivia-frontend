@@ -25,7 +25,7 @@ Future<List<Meeting>> getMeetings({String? uuid}) async {
 /// Get the full content of one [Meeting] based on its id.
 Future<Meeting> getMeetingContent(String meetingId) async {
   if (testMode) {
-    return Future(() => testMeeting);
+    return Future(() => testMeeting2);
   }
 
   final response =
@@ -72,8 +72,7 @@ Future<String> postSignUpCredentialsToBackend(
   if (!testMode) {
     http.Response response = await http.post(
       Uri.parse(apiGateway + postSignUp),
-      body:
-          r'{"email":"shokubutsukenteinin@morioh.jp","password":"$5$yNwYRfX9mxQ-An#8$QLebyRDtxaQgabL.wevWVk.8FxuKuip5UPYtOEHIXFA","name":"Mamezuku","surname":"Rai"}',
+      body: loginCredentials.toJson(),
     );
     user.uuid = response.body;
 

@@ -10,6 +10,7 @@ class SizedButton extends StatelessWidget {
     this.backgroundColour = Colors.white,
     this.onPressedColour = Colors.lightBlue,
     this.padding = const EdgeInsets.all(8.0),
+    this.radius = 8.0,
     required this.child,
     this.onPressed,
   }) : super(key: key);
@@ -21,6 +22,7 @@ class SizedButton extends StatelessWidget {
   final Color backgroundColour;
   final Color onPressedColour;
   final Widget child;
+  final double radius;
   final EdgeInsets? padding;
   final Function(bool)? onPressed;
 
@@ -37,8 +39,11 @@ class SizedButton extends StatelessWidget {
           primary: isSelected ? backgroundColour : primaryColour,
           padding: padding,
           splashFactory: NoSplash.splashFactory,
-          side: BorderSide(
-            color: isSelected ? backgroundColour : onPressedColour,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radius),
+            side: BorderSide(
+              color: isSelected ? backgroundColour : onPressedColour,
+            ),
           ),
         ).merge(
           ButtonStyle(

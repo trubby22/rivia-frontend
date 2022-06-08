@@ -247,9 +247,9 @@ class _LoginState extends State<Login> {
           context: context,
           text: "Register Successful, UUID: ${user.uuid}",
         );
-        // (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
-        //   RouteNames.dashboardAssigned,
-        // );
+        (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
+          RouteNames.dashboardAssigned,
+        );
       } else {
         showToast(context: context, text: errorMsg);
       }
@@ -259,11 +259,5 @@ class _LoginState extends State<Login> {
         RouteNames.dashboardAssigned,
       );
     }
-
-    // showToast(
-    //   context: context,
-    //   text: 'Login data sent successfully: ${loginCredentials.login}, '
-    //       '${loginCredentials.passwordHash}, ${loginCredentials.login == loginCredentials.passwordHash}',
-    // );
   }
 }

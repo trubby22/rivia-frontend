@@ -48,7 +48,7 @@ Meeting testMeeting2 = Meeting(
   painPoints: {
     '1': 'meeting overran',
     '2': 'meeting too short',
-    '3': 'I spoke too little and listened too long',
+    '3': 'I spoke too little and listened too much',
     '4': 'too many people invited',
   },
 );
