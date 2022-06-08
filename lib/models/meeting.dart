@@ -31,15 +31,16 @@ class Meeting {
                 ?.map((e) => Participant.fromJson(e))
                 .toList() ??
             const [],
-        painPoints =
-            (json[Fields.painPoints] as Map<String, dynamic>?)?.cast() ??
-                const {};
+        painPoints = {}
+            // (json[Fields.painPoints] as Map<String, dynamic>?)?.cast() ??
+            //     const {}
+  ;
 
   Map<String, dynamic> toJson() => {
         Fields.title: title,
         Fields.startTime: startTime.toJSON(),
         Fields.endTime: endTime.toJSON(),
-        Fields.painPoints: painPoints,
+        // Fields.painPoints: painPoints,
         Fields.participants: participants.map((e) => e.toJson()).toList(),
         if (meetingId != null) Fields.meetingId: meetingId,
       };

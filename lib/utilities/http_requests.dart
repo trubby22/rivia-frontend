@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/constants/fields.dart';
@@ -14,12 +16,11 @@ import 'package:rivia/utilities/change_notifiers.dart';
 // GET
 
 Future<List<Meeting>> getMeetings({String? uuid}) async {
-  if (testMode) {
-    return Future(() => [testMeeting]);
-  }
-  List<Map<String, dynamic>> jsonList =
-      (await http.get(Uri.parse(apiGateway + getAllMeetings)))
-          as List<Map<String, dynamic>>;
+  // if (testMode) {
+  //   return Future.delayed(const Duration(seconds: 1), () => [testMeeting]);
+  // }
+  http.Response response = await http.get(Uri.parse(apiGateway + getDashboard));
+  var jsonList = jsonDecode(response.body) as List<dynamic>;
   return jsonList.map((e) => Meeting.fromJson(e)).toList();
 }
 
