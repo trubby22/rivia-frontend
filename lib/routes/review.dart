@@ -3,9 +3,7 @@ import 'dart:math';
 import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
-import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
@@ -15,8 +13,6 @@ import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/language_switcher.dart';
 import 'package:rivia/utilities/sized_button.dart';
-
-import 'package:http/http.dart' as http;
 
 class Review extends StatefulWidget {
   final Meeting meeting;
@@ -239,25 +235,47 @@ class _ReviewState extends State<Review> {
                     Selector<ResponseBuilder, double>(
                       selector: (_, data) => data.quality,
                       builder: (context, quality, _) => Column(children: [
-                        Text('rate meeting quality'),
-                        Slider(
-                          value: quality,
-                          min: 0,
-                          max: 1,
-                          divisions: 4,
-                          onChanged: (value) {
-                            context.read<ResponseBuilder>().quality = value;
-                          },
+                        Text(
+                          'Rate the meeting quality',
+                          style: UITexts.sectionSubheader,
+                        ),
+                        SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            trackHeight: 16.0,
+                            trackShape: const RoundedRectSliderTrackShape(),
+                            thumbShape: PolygonSliderThumb(
+                              thumbRadius: 16.0,
+                              sliderValue: quality,
+                            ),
+                            overlayShape: const RoundSliderOverlayShape(
+                              overlayRadius: 32.0,
+                            ),
+                          ),
+                          child: Slider(
+                            value: quality,
+                            activeColor: Color.alphaBlend(
+                              Colors.red
+                                  .withAlpha((255 - quality * 255).toInt()),
+                              Colors.green.withAlpha((quality * 255).toInt()),
+                            ),
+                            min: 0,
+                            max: 1,
+                            divisions: null,
+                            onChanged: (value) {
+                              context.read<ResponseBuilder>().quality = value;
+                            },
+                          ),
                         ),
                       ]),
                     ),
                     participantSelectionBuilder(context),
                     const SizedBox(height: 12.0),
                     SizedBox(
-                      height: max(
-                        250.0,
-                        MediaQuery.of(context).size.height * 0.4,
-                      ),
+                      height: min(widget.meeting.painPoints.length, 2) *
+                          max(
+                            125.0,
+                            MediaQuery.of(context).size.height * 0.18,
+                          ),
                       child: Center(
                         child: GridView.count(
                           crossAxisCount: 2,
@@ -365,5 +383,93 @@ class _ReviewState extends State<Review> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Review saved: ${response.toJson()}')),
     );
+  }
+}
+
+class PolygonSliderThumb extends SliderComponentShape {
+  final double thumbRadius;
+  final double sliderValue;
+
+  const PolygonSliderThumb({
+    required this.thumbRadius,
+    required this.sliderValue,
+  });
+
+  @override
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
+    return Size.fromRadius(thumbRadius);
+  }
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    required bool isDiscrete,
+    required TextPainter labelPainter,
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required TextDirection textDirection,
+    required double value,
+    required double textScaleFactor,
+    required Size sizeWithOverflow,
+  }) {
+    final Canvas canvas = context.canvas;
+
+    int sides = 4;
+    double innerPolygonRadius = thumbRadius * 1.2;
+    double outerPolygonRadius = thumbRadius * 1.4;
+    double angle = (pi * 2) / sides;
+
+    final outerPathColor = Paint()
+      ..color = Colors.amber
+      ..style = PaintingStyle.fill;
+
+    var outerPath = Path();
+
+    Offset startPoint2 = Offset(
+      outerPolygonRadius * cos(0.0),
+      outerPolygonRadius * sin(0.0),
+    );
+
+    outerPath.moveTo(
+      startPoint2.dx + center.dx,
+      startPoint2.dy + center.dy,
+    );
+
+    for (int i = 1; i <= sides; i++) {
+      double x = outerPolygonRadius * cos(angle * i) + center.dx;
+      double y = outerPolygonRadius * sin(angle * i) + center.dy;
+      outerPath.lineTo(x, y);
+    }
+
+    outerPath.close();
+    canvas.drawPath(outerPath, outerPathColor);
+
+    final innerPathColor = Paint()
+      ..color = sliderTheme.thumbColor ?? Colors.black
+      ..style = PaintingStyle.fill;
+
+    var innerPath = Path();
+
+    Offset startPoint = Offset(
+      innerPolygonRadius * cos(0.0),
+      innerPolygonRadius * sin(0.0),
+    );
+
+    innerPath.moveTo(
+      startPoint.dx + center.dx,
+      startPoint.dy + center.dy,
+    );
+
+    for (int i = 1; i <= sides; i++) {
+      double x = innerPolygonRadius * cos(angle * i) + center.dx;
+      double y = innerPolygonRadius * sin(angle * i) + center.dy;
+      innerPath.lineTo(x, y);
+    }
+
+    innerPath.close();
+    canvas.drawPath(innerPath, innerPathColor);
   }
 }
