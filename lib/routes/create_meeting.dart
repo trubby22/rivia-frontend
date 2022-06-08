@@ -63,23 +63,26 @@ class _CreateMeetingState extends State<CreateMeeting> {
       body: ChangeNotifierProvider(
         create: (_) => MeetingBuilder(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 80.0),
+          padding: EdgeInsets.symmetric(
+            vertical: 24.0,
+            horizontal: MediaQuery.of(context).size.width * 0.3,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    labelText: LangText.meetingName.local,
-                  ),
-                  controller: _nameController,
+              TextField(
+                decoration: InputDecoration(
+                  filled: true,
+                  labelText: LangText.meetingName.local,
                 ),
+                controller: _nameController,
               ),
+              const SizedBox(height: 12.0),
               Text(
                 LangText.participants.local,
                 style: UITexts.sectionSubheader,
               ),
+              const SizedBox(height: 12.0),
               Selector<MeetingBuilder, Tuple2<int, Set<Participant>>>(
                 selector: (_, data) =>
                     Tuple2(data.participants.length, data.participants),
@@ -135,7 +138,6 @@ class _CreateMeetingState extends State<CreateMeeting> {
                   ),
                 ),
               ),
-              const SizedBox(height: 12.0),
               Row(
                 children: [
                   Text(LangText.date.local, style: UITexts.sectionSubheader),
@@ -180,22 +182,24 @@ class _CreateMeetingState extends State<CreateMeeting> {
                   ),
                 ],
               ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Consumer<MeetingBuilder>(
-                      builder: (context, meetingDateAndTime, child) {
-                        return ElevatedButton(
-                          onPressed: () async {
-                            await createMeeting(meetingDateAndTime, context);
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(LangText.createMeeting.local),
-                        );
+              Center(
+                child: Consumer<MeetingBuilder>(
+                  builder: (context, meetingDateAndTime, child) {
+                    return SizedButton(
+                      width: null,
+                      height: null,
+                      isSelected: true,
+                      padding: const EdgeInsets.all(16.0),
+                      onPressed: (_) async {
+                        await createMeeting(meetingDateAndTime, context);
+                        Navigator.of(context).pop();
                       },
-                    ),
-                  ],
+                      child: Text(
+                        LangText.createMeeting.local,
+                        style: UITexts.bigButtonText,
+                      ),
+                    );
+                  },
                 ),
               ),
             ],

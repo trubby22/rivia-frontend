@@ -13,16 +13,16 @@ void showToast({
     padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(25.0),
-      color: Colors.grey.shade100,
+      color: Colors.grey.shade700,
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         success
-            ? const Icon(Icons.check_outlined)
-            : const Icon(Icons.error_outline),
+            ? const Icon(Icons.check_outlined, color: Colors.white)
+            : const Icon(Icons.error_outline, color: Colors.white),
         const SizedBox(width: 12.0),
-        Text(text),
+        Text(text, style: const TextStyle(color: Colors.white)),
       ],
     ),
   );

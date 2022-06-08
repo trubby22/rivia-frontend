@@ -85,6 +85,7 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
                   SizedButton(
                     width: null,
                     height: null,
+                    padding: const EdgeInsets.all(16.0),
                     onPressed: (_) {
                       Navigator.of(context).pushNamed(
                         RouteNames.createMeeting,
@@ -93,7 +94,7 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
                     isSelected: true,
                     child: Text(
                       LangText.createMeeting.local,
-                      style: UITexts.mediumButtonText,
+                      style: UITexts.bigButtonText,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
