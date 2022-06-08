@@ -68,7 +68,7 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
               width: 400,
               child: Column(
                 children: [
-                  Text('Meetings', style: UITexts.sectionHeader),
+                  Text(LangText.meetings.local, style: UITexts.sectionHeader),
                   const SizedBox(height: 16.0),
                   Column(
                     children: _meetings

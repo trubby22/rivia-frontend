@@ -44,6 +44,7 @@ enum LangText {
   additionalComments,
   submitReview,
 
+  meetings,
   dashboard,
   meetingName,
   participants,
@@ -112,6 +113,7 @@ extension ExtendedLangText on LangText {
       'Дополнительные комментарии',
     ],
     LangText.submitReview: ['Submit Review', 'Добавить отзыв'],
+    LangText.meetings: ['Meetings', 'Встречи'],
     LangText.dashboard: ['Dashboard', 'Приборная доска'],
     LangText.meetingName: ['Meeting Name', 'Название встречи'],
     LangText.participants: ['Participants', 'Участники'],
