@@ -13,14 +13,12 @@ import 'package:rivia/utilities/change_notifiers.dart';
 
 // GET
 
-/// Get a list of all [Meeting]s with their names and times.
-Future<List<Meeting>> getMeetings() async {
-  if (testMode) {
-    return Future(() => [testMeeting]);
-  }
-
-  List<Map<String, dynamic>> jsonList = (await http
-      .get(Uri.parse(apiGateway + getMeeting))) as List<Map<String, dynamic>>;
+Future<List<Meeting>> getMeetings({String? uuid}) async {
+  // if (testMode) {
+  //   return Future.delayed(const Duration(seconds: 1), () => [testMeeting]);
+  // }
+  http.Response response = await http.get(Uri.parse(apiGateway + getDashboard));
+  var jsonList = jsonDecode(response.body) as List<dynamic>;
   return jsonList.map((e) => Meeting.fromJson(e)).toList();
 }
 
@@ -72,14 +70,11 @@ void postNewMeetingOnBackend(Meeting meeting, {String? uuid}) async {
 Future<String> postSignUpCredentialsToBackend(
     LoginCredentials loginCredentials, User user) async {
   if (!testMode) {
-    print("PRE");
     http.Response response = await http.post(
       Uri.parse(apiGateway + postSignUp),
       body:
           r'{"email":"shokubutsukenteinin@morioh.jp","password":"$5$yNwYRfX9mxQ-An#8$QLebyRDtxaQgabL.wevWVk.8FxuKuip5UPYtOEHIXFA","name":"Mamezuku","surname":"Rai"}',
     );
-    print(response.statusCode);
-    print(response.body);
     user.uuid = response.body;
 
     if (user.uuid == null) {
