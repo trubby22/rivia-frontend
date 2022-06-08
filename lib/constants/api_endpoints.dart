@@ -1,4 +1,5 @@
-String apiGateway = 'https://vbc48le64j.execute-api.eu-west-2.amazonaws.com/api';
+String apiGateway =
+    'https://vbc48le64j.execute-api.eu-west-2.amazonaws.com/api';
 
 String getSummary = '/summary';
 String getReview = '/review';

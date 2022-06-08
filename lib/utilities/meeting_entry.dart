@@ -5,6 +5,7 @@ import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
+import 'package:rivia/utilities/http_requests.dart';
 
 /// A [Widget] showing the snapshot of a [Meeting] in the calendar.
 class MeetingEntry extends StatelessWidget {
@@ -18,11 +19,20 @@ class MeetingEntry extends StatelessWidget {
       height: 150.0,
       color: Colors.amber.shade100,
       child: TextButton(
-        onPressed: () => Navigator.pushNamed(
-          context,
-          RouteNames.review,
-          arguments: meeting,
-        ),
+        onPressed: () async {
+          if (meeting.meetingId == null) {
+            debugPrint("Bad meeting without ID!");
+            return;
+          }
+
+          final meetingContent = await getMeetingContent(meeting.meetingId!);
+
+          Navigator.pushNamed(
+            context,
+            RouteNames.review,
+            arguments: meetingContent,
+          );
+        },
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(12.0),

@@ -28,6 +28,7 @@ List<Response> testResponses = [
 
 Meeting testMeeting = Meeting(
   title: "Bar Meeting",
+  meetingId: "114514-1919810",
   startTime: DateTime.now(),
   endTime: DateTime.now(),
   participants: [

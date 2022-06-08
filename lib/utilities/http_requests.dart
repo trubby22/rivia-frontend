@@ -9,19 +9,31 @@ import 'package:rivia/models/login_credentials.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
-import 'package:rivia/routes/meeting_summary.dart';
-import 'package:rivia/routes/review.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 
 // GET
 
-Future<List<Meeting>> getMeetings({String? uuid}) async {
-  // if (testMode) {
-  //   return Future.delayed(const Duration(seconds: 1), () => [testMeeting]);
-  // }
-  http.Response response = await http.get(Uri.parse(apiGateway + getDashboard));
-  var jsonList = jsonDecode(response.body) as List<dynamic>;
+/// Get a list of all [Meeting]s with their names and times.
+Future<List<Meeting>> getMeetings() async {
+  if (testMode) {
+    return Future(() => [testMeeting]);
+  }
+
+  List<Map<String, dynamic>> jsonList = (await http
+      .get(Uri.parse(apiGateway + getMeeting))) as List<Map<String, dynamic>>;
   return jsonList.map((e) => Meeting.fromJson(e)).toList();
+}
+
+/// Get the full content of one [Meeting] based on its id.
+Future<Meeting> getMeetingContent(String meetingId) async {
+  if (testMode) {
+    return Future(() => testMeeting);
+  }
+
+  final response =
+      (await http.get(Uri.parse(apiGateway + getMeeting + '/' + meetingId)))
+          as Map<String, dynamic>;
+  return Meeting.fromJson(response);
 }
 
 Future<List<Participant>> getOrganisationParticipants({String? uuid}) async {
