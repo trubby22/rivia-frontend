@@ -23,6 +23,7 @@ enum Lang {
 enum LangText {
   langCode,
   langSwitchMsg,
+  rivia,
 
   aggregateStats,
   aggregateParticipants,
@@ -67,6 +68,10 @@ extension ExtendedLangText on LangText {
     LangText.langSwitchMsg: [
       'Language switched, please refresh the page',
       'Язык изменен, обновите страницу',
+    ],
+    LangText.rivia: [
+      'RIVIA',
+      'РИВИЯ',
     ],
     LangText.aggregateStats: ['Aggregate Stats', 'Совокупная статистика'],
     LangText.aggregateParticipants: [

@@ -68,7 +68,29 @@ void postNewMeetingOnBackend(Meeting meeting, {String? uuid}) async {
   }
 }
 
-void postLoginCredentialsToBackend(
+/// Sign the user up. Returns non-empty error [String] if there is an error.
+Future<String> postSignUpCredentialsToBackend(
+    LoginCredentials loginCredentials, User user) async {
+  if (!testMode) {
+    print("PRE");
+    http.Response response = await http.post(
+      Uri.parse(apiGateway + postSignUp),
+      body:
+          r'{"email":"shokubutsukenteinin@morioh.jp","password":"$5$yNwYRfX9mxQ-An#8$QLebyRDtxaQgabL.wevWVk.8FxuKuip5UPYtOEHIXFA","name":"Mamezuku","surname":"Rai"}',
+    );
+    print(response.statusCode);
+    print(response.body);
+    user.uuid = response.body;
+
+    if (user.uuid == null) {
+      return "The email has already been used!";
+    }
+  }
+
+  return "";
+}
+
+Future<void> postLoginCredentialsToBackend(
     LoginCredentials loginCredentials, User user) async {
   if (!testMode) {
     http.Response response = await http.post(

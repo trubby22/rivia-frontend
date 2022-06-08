@@ -76,10 +76,7 @@ class _LoginState extends State<Login> {
                 child: Column(
                   children: [
                     const SizedBox(height: 32.0),
-                    Text(
-                      _signup ? LangText.signUp.local : LangText.login.local,
-                      style: UITexts.sectionHeader,
-                    ),
+                    Text(LangText.rivia.local, style: UITexts.iconHeader),
                     SizedBox(
                       height: (_signup ? 0.6 : 0.5) * height,
                       child: Column(
@@ -186,11 +183,8 @@ class _LoginState extends State<Login> {
                           width: max(350,
                                   MediaQuery.of(context).size.width * 0.25) *
                               0.7,
-                          onPressed: (_) {
-                            login(context, user);
-                            Navigator.of(context).pushNamed(
-                              RouteNames.dashboardAssigned,
-                            );
+                          onPressed: (_) async {
+                            await login(context, user);
                           },
                           child: Text(
                             _signup
@@ -228,7 +222,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void login(BuildContext context, User user) {
+  Future<void> login(BuildContext context, User user) async {
     String login = _loginController.value.text;
     String password = _passwordController.value.text;
     String firstName = _firstNameController.value.text;
@@ -245,12 +239,31 @@ class _LoginState extends State<Login> {
       surname: _signup ? surname : null,
     );
 
-    showToast(
-      context: context,
-      text: 'Login data sent successfully: ${loginCredentials.login}, '
-          '${loginCredentials.passwordHash}, ${loginCredentials.login == loginCredentials.passwordHash}',
-    );
+    if (_signup) {
+      String errorMsg =
+          await postSignUpCredentialsToBackend(loginCredentials, user);
+      if (errorMsg.isEmpty) {
+        showToast(
+          context: context,
+          text: "Register Successful, UUID: ${user.uuid}",
+        );
+        // (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
+        //   RouteNames.dashboardAssigned,
+        // );
+      } else {
+        showToast(context: context, text: errorMsg);
+      }
+    } else {
+      await postLoginCredentialsToBackend(loginCredentials, user);
+      (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
+        RouteNames.dashboardAssigned,
+      );
+    }
 
-    postLoginCredentialsToBackend(loginCredentials, user);
+    // showToast(
+    //   context: context,
+    //   text: 'Login data sent successfully: ${loginCredentials.login}, '
+    //       '${loginCredentials.passwordHash}, ${loginCredentials.login == loginCredentials.passwordHash}',
+    // );
   }
 }

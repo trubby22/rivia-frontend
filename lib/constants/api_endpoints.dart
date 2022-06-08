@@ -7,7 +7,7 @@ String getAllMeetings = '/api/meetings';
 String getDashboard = '/api/dashboard';
 String getParticipants = '/api/participants';
 
-String postMeeting = '/new-meeting';
-String postLogin = '/login';
-String postSignup = '/create-account';
-String postReview = '/review';
+String postMeeting = '/api/new-meeting';
+String postLogin = '/api/login';
+String postSignUp = '/api/create-account';
+String postReview = '/api/review';

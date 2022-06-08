@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
 class UITexts {
+  static const iconHeader = TextStyle(
+    fontSize: FontSizes.iconHeaderFontSize,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  );
+
   static const sectionHeader = TextStyle(
     fontSize: FontSizes.sectionHeaderFontSize,
     fontWeight: FontWeight.bold,
@@ -30,6 +36,7 @@ class UITexts {
 }
 
 class FontSizes {
+  static const iconHeaderFontSize = 32.0;
   static const sectionHeaderFontSize = 26.0;
   static const sectionSubheaderFontSize = 20.0;
   static const mediumTextSize = 16.0;

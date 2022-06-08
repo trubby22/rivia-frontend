@@ -22,7 +22,9 @@ void showToast({
             ? const Icon(Icons.check_outlined, color: Colors.white)
             : const Icon(Icons.error_outline, color: Colors.white),
         const SizedBox(width: 12.0),
-        Text(text, style: const TextStyle(color: Colors.white)),
+        SizedBox(
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: Text(text, style: const TextStyle(color: Colors.white))),
       ],
     ),
   );
