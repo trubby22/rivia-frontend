@@ -39,15 +39,6 @@ class _TimePickerState extends State<TimePicker> {
       } else {
         widget.meetingDateAndTime.setEndTime(newTime);
       }
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Selected time: ${_time.format(context)}'),
-        action: SnackBarAction(
-          label: 'hide',
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
     }
   }
 

@@ -16,6 +16,7 @@ import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/time_picker.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:rivia/utilities/toast.dart';
 
 class CreateMeeting extends StatefulWidget {
   final List<Participant> allParticipants;
@@ -213,11 +214,15 @@ class _CreateMeetingState extends State<CreateMeeting> {
 
     bool result = await postNewMeetingOnBackend(meeting);
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(result
-          ? 'Meeting created: ${meeting.toJson()}'
-          : 'Create meeting failed: ${meeting.toJson()}'),
-    ));
+    if (result) {
+      showToast(context: context, text: 'Meeting created: ${meeting.toJson()}');
+    } else {
+      showToast(
+        context: context,
+        text: 'Create meeting failed: ${meeting.toJson()}',
+        success: false,
+      );
+    }
   }
 
   Future<bool> postNewMeetingOnBackend(Meeting meeting) async {

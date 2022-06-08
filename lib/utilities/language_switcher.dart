@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
+import 'package:rivia/utilities/toast.dart';
 
 class LanguageSwitcher extends StatelessWidget {
   const LanguageSwitcher({Key? key}) : super(key: key);
@@ -13,17 +14,8 @@ class LanguageSwitcher extends StatelessWidget {
         } else {
           await setLang(Lang.en);
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Language switched, please refresh'),
-            action: SnackBarAction(
-              label: 'hide',
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-            ),
-          ),
-        );
+
+        showToast(context: context, text: 'Language switched, please refresh');
       },
       child: Text(LangText.langCode.local),
     );

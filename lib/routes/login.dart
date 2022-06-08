@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/login_credentials.dart';
-
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/language_switcher.dart';
+import 'package:rivia/utilities/toast.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -128,12 +128,11 @@ class _LoginState extends State<Login> {
       surname: _signup ? surname : null,
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(
-        'Login data sent successfully: ${loginCredentials.login}, '
-        '${loginCredentials.passwordHash}, ${loginCredentials.login == loginCredentials.passwordHash}',
-      ),
-    ));
+    showToast(
+      context: context,
+      text: 'Login data sent successfully: ${loginCredentials.login}, '
+          '${loginCredentials.passwordHash}, ${loginCredentials.login == loginCredentials.passwordHash}',
+    );
 
     postLoginCredentialsToBackend(loginCredentials, user);
   }
