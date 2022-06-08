@@ -15,7 +15,7 @@ import 'package:rivia/utilities/language_switcher.dart';
 class MeetingSummary extends StatefulWidget {
   final Meeting meeting;
 
-  MeetingSummary({
+  const MeetingSummary({
     Key? key,
     required this.meeting,
   }) : super(key: key);

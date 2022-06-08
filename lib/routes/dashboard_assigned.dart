@@ -39,13 +39,16 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: Text(LangText.dashboard.local),
         actions: [
           Consumer<User>(
             builder: (context, user, child) {
               return ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(RouteNames.login);
+                  (Navigator.of(context)..popUntil((route) => route.isFirst))
+                      .popAndPushNamed(
+                    RouteNames.login,
+                  );
                   user.uuid = null;
                 },
                 child: Icon(Icons.logout),
@@ -89,7 +92,7 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
                     },
                     isSelected: true,
                     child: Text(
-                      'Create new meeting',
+                      LangText.createMeeting.local,
                       style: UITexts.mediumButtonText,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,

@@ -42,7 +42,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(LangText.dashboard.local),
+        title: Text(LangText.createMeeting.local),
         actions: [
           Consumer<User>(
             builder: (context, user, child) {
@@ -190,7 +190,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
                             await createMeeting(meetingDateAndTime, context);
                             Navigator.of(context).pop();
                           },
-                          child: Text('Create meeting'),
+                          child: Text(LangText.createMeeting.local),
                         );
                       },
                     ),

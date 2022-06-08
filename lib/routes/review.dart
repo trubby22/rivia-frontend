@@ -167,7 +167,10 @@ class _ReviewState extends State<Review> {
               SizedBox(
                 height: 40.0,
                 child: Center(
-                  child: Text('participant', style: UITexts.sectionSubheader),
+                  child: Text(
+                    LangText.participants.local,
+                    style: UITexts.sectionSubheader,
+                  ),
                 ),
               ),
               const SizedBox(height: 64.0),
@@ -236,7 +239,7 @@ class _ReviewState extends State<Review> {
                       selector: (_, data) => data.quality,
                       builder: (context, quality, _) => Column(children: [
                         Text(
-                          'Rate the meeting quality',
+                          LangText.rateQuality.local,
                           style: UITexts.sectionSubheader,
                         ),
                         SliderTheme(
@@ -307,9 +310,9 @@ class _ReviewState extends State<Review> {
                       ),
                     ),
                     TextField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         filled: true,
-                        labelText: 'Additional comments',
+                        labelText: LangText.additionalComments.local,
                       ),
                       controller: _controller,
                     ),
@@ -331,7 +334,7 @@ class _ReviewState extends State<Review> {
                       },
                       isSelected: true,
                       child: Text(
-                        'Submit review',
+                        LangText.submitReview.local,
                         style: UITexts.bigButtonText,
                       ),
                     ),
@@ -348,28 +351,6 @@ class _ReviewState extends State<Review> {
   void submitReview(BuildContext context) {
     context.read<ResponseBuilder>().participant = widget.participant;
     context.read<ResponseBuilder>().feedback = _controller.text;
-    // List<Participant> redundant = [];
-    // _participants.asMap().forEach((index, participant) {
-    //   if (_selectedRedundant[index]) {
-    //     redundant.add(participant);
-    //   }
-    // });
-
-    // List<Participant> unprepared = [];
-    // _participants.asMap().forEach((index, participant) {
-    //   if (_selectedUnprepared[index]) {
-    //     unprepared.add(participant);
-    //   }
-    // });
-
-    // Map<String, String> selectedPainPoints = {};
-    // painPoints.forEach((index, text) {
-    //   if (_selectedPainPoints[index]) {
-    //     selectedPainPoints[index] = text;
-    //   }
-    // });
-
-    Participant participant = widget.participant;
 
     Response response = context.read<ResponseBuilder>().build();
 
@@ -433,7 +414,6 @@ class BiColourSliderTrackShape extends SliderTrackShape
       ..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
 
     final Radius trackRadius = Radius.circular(trackRect.height / 2);
-    final Radius activeTrackRadius = Radius.circular(trackRect.height / 2 + 1);
 
     context.canvas.drawRRect(
       RRect.fromLTRBAndCorners(

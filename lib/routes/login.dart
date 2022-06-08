@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
+import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/login_credentials.dart';
 
 import 'package:rivia/utilities/change_notifiers.dart';
@@ -8,7 +9,7 @@ import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/language_switcher.dart';
 
 class Login extends StatefulWidget {
-  Login({Key? key}) : super(key: key);
+  const Login({Key? key}) : super(key: key);
 
   @override
   State<Login> createState() => _LoginState();
@@ -33,7 +34,7 @@ class _LoginState extends State<Login> {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Dashboard'),
+          title: Text(_signup ? LangText.signUp.local : LangText.login.local),
           // ignore: prefer_const_constructors, prefer_const_literals_to_create_immutables
           actions: [LanguageSwitcher()],
         ),
@@ -44,34 +45,34 @@ class _LoginState extends State<Login> {
               children: [
                 if (_signup) ...[
                   TextField(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       filled: true,
-                      labelText: 'First Name',
+                      labelText: LangText.firstName.local,
                     ),
                     controller: _firstNameController,
                   ),
                   const SizedBox(height: 12.0),
                   TextField(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       filled: true,
-                      labelText: 'Surname',
+                      labelText: LangText.surname.local,
                     ),
                     controller: _surnameController,
                   ),
                   const SizedBox(height: 12.0),
                 ],
                 TextField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     filled: true,
-                    labelText: 'Email',
+                    labelText: LangText.email.local,
                   ),
                   controller: _loginController,
                 ),
                 const SizedBox(height: 12.0),
                 TextField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     filled: true,
-                    labelText: 'Password',
+                    labelText: LangText.password.local,
                   ),
                   obscureText: true,
                   controller: _passwordController,
@@ -80,23 +81,28 @@ class _LoginState extends State<Login> {
                 Consumer<User>(
                   builder: (context, user, child) {
                     return ElevatedButton(
-                        onPressed: () {
-                          login(context, user);
-                          Navigator.of(context)
-                              .pushNamed('/dashboard_assigned');
-                        },
-                        child: Text(_signup ? 'Sign Up' : 'Log In'));
+                      onPressed: () {
+                        login(context, user);
+                        Navigator.of(context).pushNamed(
+                          RouteNames.dashboardAssigned,
+                        );
+                      },
+                      child: Text(
+                        _signup ? LangText.signUp.local : LangText.login.local,
+                      ),
+                    );
                   },
                 ),
                 const SizedBox(height: 12.0),
                 ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _signup = !_signup;
-                      });
-                    },
-                    child: Text(
-                        'Click here to ${_signup ? 'Log In' : 'Sign Up'} instead')),
+                  onPressed: () {
+                    setState(() {
+                      _signup = !_signup;
+                    });
+                  },
+                  child: Text(
+                      'Click here to ${_signup ? 'Log In' : 'Sign Up'} instead'),
+                ),
               ],
             ),
           ),
@@ -123,8 +129,10 @@ class _LoginState extends State<Login> {
     );
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Login data sent successfully: ${loginCredentials.login}, '
-          '${loginCredentials.passwordHash}, ${loginCredentials.login == loginCredentials.passwordHash}'),
+      content: Text(
+        'Login data sent successfully: ${loginCredentials.login}, '
+        '${loginCredentials.passwordHash}, ${loginCredentials.login == loginCredentials.passwordHash}',
+      ),
     ));
 
     postLoginCredentialsToBackend(loginCredentials, user);
