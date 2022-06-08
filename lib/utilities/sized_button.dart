@@ -17,9 +17,9 @@ class SizedButton extends StatelessWidget {
   final bool isSelected;
   final double? width;
   final double? height;
-  final Color? primaryColour;
-  final Color? backgroundColour;
-  final Color? onPressedColour;
+  final Color primaryColour;
+  final Color backgroundColour;
+  final Color onPressedColour;
   final Widget child;
   final EdgeInsets? padding;
   final Function(bool)? onPressed;
@@ -37,7 +37,9 @@ class SizedButton extends StatelessWidget {
           primary: isSelected ? backgroundColour : primaryColour,
           padding: padding,
           splashFactory: NoSplash.splashFactory,
-          side: BorderSide(color: isSelected ? Colors.white : Colors.lightBlue),
+          side: BorderSide(
+            color: isSelected ? backgroundColour : onPressedColour,
+          ),
         ).merge(
           ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith(

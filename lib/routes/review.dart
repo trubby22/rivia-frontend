@@ -256,7 +256,7 @@ class _ReviewState extends State<Review> {
                           ),
                           child: Slider(
                             value: quality,
-                            activeColor: Colors.grey,
+                            activeColor: Colors.grey.shade400,
                             min: 0,
                             max: 1,
                             divisions: null,
@@ -363,18 +363,7 @@ class _ReviewState extends State<Review> {
 
 class BiColourSliderTrackShape extends SliderTrackShape
     with BaseSliderTrackShape {
-  const BiColourSliderTrackShape({
-    this.gradient = const LinearGradient(
-      colors: [
-        Colors.red,
-        Colors.yellow,
-      ],
-    ),
-    this.darkenInactive = true,
-  });
-
-  final LinearGradient gradient;
-  final bool darkenInactive;
+  const BiColourSliderTrackShape();
 
   @override
   void paint(
@@ -399,16 +388,11 @@ class BiColourSliderTrackShape extends SliderTrackShape
 
     // Assign the track segment paints, which are leading: active and
     // trailing: inactive.
-    final ColorTween activeTrackColorTween = ColorTween(
-        begin: sliderTheme.disabledActiveTrackColor,
-        end: sliderTheme.activeTrackColor);
-    final ColorTween inactiveTrackColorTween = darkenInactive
-        ? ColorTween(
-            begin: sliderTheme.disabledInactiveTrackColor,
-            end: sliderTheme.inactiveTrackColor)
-        : activeTrackColorTween;
-    final Paint redPaint = Paint()..color = Colors.red;
-    final Paint greenPaint = Paint()..color = Colors.green;
+    final ColorTween inactiveTrackColorTween = ColorTween(
+      begin: sliderTheme.disabledInactiveTrackColor,
+      end: sliderTheme.inactiveTrackColor,
+    );
+
     final Paint inactivePaint = Paint()
       ..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
 
@@ -436,7 +420,7 @@ class BiColourSliderTrackShape extends SliderTrackShape
           thumbCenter.dx,
           trackRect.bottom + (additionalActiveTrackHeight / 2),
         ),
-        greenPaint,
+        Paint()..color = Colors.green,
       );
     }
 
@@ -448,7 +432,7 @@ class BiColourSliderTrackShape extends SliderTrackShape
           (trackRect.left + trackRect.right) / 2,
           trackRect.bottom + (additionalActiveTrackHeight / 2),
         ),
-        redPaint,
+        Paint()..color = Colors.red,
       );
     }
   }

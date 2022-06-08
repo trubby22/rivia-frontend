@@ -1,11 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
+import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/login_credentials.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
-import 'package:rivia/utilities/language_switcher.dart';
+import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/toast.dart';
 
 class Login extends StatefulWidget {
@@ -30,82 +33,196 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final height = (_signup ? 1.15 : 1.0) *
+        max(450.0, MediaQuery.of(context).size.height * 0.55);
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(_signup ? LangText.signUp.local : LangText.login.local),
-          // ignore: prefer_const_constructors, prefer_const_literals_to_create_immutables
-          actions: [LanguageSwitcher()],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: Column(
-              children: [
-                if (_signup) ...[
-                  TextField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      labelText: LangText.firstName.local,
-                    ),
-                    controller: _firstNameController,
-                  ),
-                  const SizedBox(height: 12.0),
-                  TextField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      labelText: LangText.surname.local,
-                    ),
-                    controller: _surnameController,
-                  ),
-                  const SizedBox(height: 12.0),
-                ],
-                TextField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    labelText: LangText.email.local,
-                  ),
-                  controller: _loginController,
+        backgroundColor: const Color.fromRGBO(244, 242, 234, 1),
+        body: Stack(
+          children: [
+            Positioned(
+              right: 64.0,
+              top: 24.0,
+              child: SizedButton(
+                backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
+                primaryColour: Colors.black,
+                onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
+                height: 48.0,
+                width: 100.0,
+                onPressed: (_) async {
+                  if (language == Lang.en) {
+                    await setLang(Lang.ru);
+                  } else {
+                    await setLang(Lang.en);
+                  }
+                  setState(() {});
+                },
+                child: Text(
+                  LangText.langCode.local,
+                  style: UITexts.mediumButtonText,
                 ),
-                const SizedBox(height: 12.0),
-                TextField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    labelText: LangText.password.local,
-                  ),
-                  obscureText: true,
-                  controller: _passwordController,
+              ),
+            ),
+            Center(
+              child: Container(
+                width: max(350, MediaQuery.of(context).size.width * 0.25),
+                height: height,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(32.0)),
+                  color: Colors.blue.shade100,
                 ),
-                const SizedBox(height: 12.0),
-                Consumer<User>(
-                  builder: (context, user, child) {
-                    return ElevatedButton(
-                      onPressed: () {
-                        login(context, user);
-                        Navigator.of(context).pushNamed(
-                          RouteNames.dashboardAssigned,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 32.0),
+                    Text(
+                      _signup ? LangText.signUp.local : LangText.login.local,
+                      style: UITexts.sectionHeader,
+                    ),
+                    SizedBox(
+                      height: (_signup ? 0.6 : 0.5) * height,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (_signup) ...[
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 32.0),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color.fromRGBO(190, 150, 100, 1),
+                                    ),
+                                  ),
+                                  border: const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black),
+                                  ),
+                                  filled: true,
+                                  labelText: LangText.firstName.local,
+                                ),
+                                controller: _firstNameController,
+                              ),
+                            ),
+                            const SizedBox(height: 24.0),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 32.0),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color.fromRGBO(190, 150, 100, 1),
+                                    ),
+                                  ),
+                                  border: const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black),
+                                  ),
+                                  filled: true,
+                                  labelText: LangText.surname.local,
+                                ),
+                                controller: _surnameController,
+                              ),
+                            ),
+                            const SizedBox(height: 24.0),
+                          ],
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 32.0),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromRGBO(190, 150, 100, 1),
+                                  ),
+                                ),
+                                border: const OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                ),
+                                filled: true,
+                                labelText: LangText.email.local,
+                              ),
+                              controller: _loginController,
+                            ),
+                          ),
+                          const SizedBox(height: 24.0),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 32.0),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromRGBO(190, 150, 100, 1),
+                                  ),
+                                ),
+                                border: const OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black),
+                                ),
+                                filled: true,
+                                labelText: LangText.password.local,
+                              ),
+                              obscureText: true,
+                              controller: _passwordController,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Consumer<User>(
+                      builder: (context, user, child) {
+                        return SizedButton(
+                          backgroundColour:
+                              const Color.fromRGBO(239, 198, 135, 1),
+                          primaryColour: Colors.black,
+                          onPressedColour:
+                              const Color.fromRGBO(239, 198, 135, 1),
+                          height: 64.0,
+                          width: max(350,
+                                  MediaQuery.of(context).size.width * 0.25) *
+                              0.7,
+                          onPressed: (_) {
+                            login(context, user);
+                            Navigator.of(context).pushNamed(
+                              RouteNames.dashboardAssigned,
+                            );
+                          },
+                          child: Text(
+                            _signup
+                                ? LangText.signUp.local
+                                : LangText.login.local,
+                            style: UITexts.mediumButtonText,
+                          ),
+                        );
+                      },
+                    ),
+                    SizedButton(
+                      primaryColour: Colors.black,
+                      height: null,
+                      width:
+                          max(350, MediaQuery.of(context).size.width * 0.25) *
+                              0.7,
+                      onPressed: (_) {
+                        setState(
+                          () {
+                            _signup = !_signup;
+                          },
                         );
                       },
                       child: Text(
-                        _signup ? LangText.signUp.local : LangText.login.local,
+                        'Click here to ${_signup ? 'Log In' : 'Sign Up'} instead',
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 12.0),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _signup = !_signup;
-                    });
-                  },
-                  child: Text(
-                      'Click here to ${_signup ? 'Log In' : 'Sign Up'} instead'),
-                ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
