@@ -245,7 +245,7 @@ class _LoginState extends State<Login> {
       if (errorMsg.isEmpty) {
         showToast(
           context: context,
-          text: "Register Successful, UUID: ${user.uuid}",
+          text: "Register Successful",
         );
         (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
           RouteNames.dashboardAssigned,

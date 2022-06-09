@@ -72,13 +72,14 @@ Future<String> postSignUpCredentialsToBackend(
   if (!testMode) {
     http.Response response = await http.post(
       Uri.parse(apiGateway + postSignUp),
-      body: loginCredentials.toJson(),
+      body: json.encode(loginCredentials.toJson()),
     );
-    user.uuid = response.body;
 
-    if (user.uuid == null) {
-      return "The email has already been used!";
-    }
+    final String? errMsg =
+        ((json.decode(response.body) as Map<String, dynamic>?) ??
+            {})['message'];
+
+    return errMsg ?? "";
   }
 
   return "";
@@ -89,7 +90,7 @@ Future<void> postLoginCredentialsToBackend(
   if (!testMode) {
     http.Response response = await http.post(
       Uri.parse(apiGateway + postLogin),
-      body: loginCredentials.toJson(),
+      body: json.encode(loginCredentials.toJson()),
     );
     user.uuid = response.body;
   }
