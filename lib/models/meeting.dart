@@ -22,6 +22,17 @@ class Meeting {
     this.painPoints = const {},
   });
 
+  /// Flatten a JSON before translating it into a [Meeting].
+  static Map<String, dynamic> flatten(Map<String, dynamic> json) {
+    if (json[Fields.meeting] != null) {
+      json[Fields.title] = json[Fields.meeting]![Fields.title];
+      json[Fields.startTime] = json[Fields.meeting]![Fields.startTime];
+      json[Fields.endTime] = json[Fields.meeting]![Fields.endTime];
+    }
+
+    return json;
+  }
+
   Meeting.fromJson(Map<String, dynamic> json)
       : title = json[Fields.title],
         meetingId = json[Fields.meetingId],
@@ -31,10 +42,9 @@ class Meeting {
                 ?.map((e) => Participant.fromJson(e))
                 .toList() ??
             const [],
-        painPoints = {}
-            // (json[Fields.painPoints] as Map<String, dynamic>?)?.cast() ??
-            //     const {}
-  ;
+        painPoints =
+            (json[Fields.painPoints] as Map<String, dynamic>?)?.cast() ??
+                const {};
 
   Map<String, dynamic> toJson() => {
         Fields.title: title,

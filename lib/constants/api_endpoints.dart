@@ -4,7 +4,7 @@ String apiGateway =
 String getSummary = '/summary';
 String getReview = '/review';
 String getMeetingReviews = '/reviews';
-String getMeeting = '/meetings';
+String getMeeting = '/meeting';
 String getDashboard = '/dashboard';
 String getParticipants = '/participants';
 

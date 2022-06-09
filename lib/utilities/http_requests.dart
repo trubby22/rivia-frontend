@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/constants/fields.dart';
@@ -13,13 +14,16 @@ import 'package:rivia/utilities/change_notifiers.dart';
 
 // GET
 
-Future<List<Meeting>> getMeetings({String? uuid}) async {
+/// Get the list of [Meeting]s.
+Future<List<Meeting>> getMeetings() async {
   // if (testMode) {
   //   return Future.delayed(const Duration(seconds: 1), () => [testMeeting]);
   // }
   http.Response response = await http.get(Uri.parse(apiGateway + getDashboard));
-  var jsonList = jsonDecode(response.body) as List<dynamic>;
-  return jsonList.map((e) => Meeting.fromJson(e)).toList();
+  var jsonList = (jsonDecode(response.body)
+      as Map<String, dynamic>)[Fields.meetings] as List<dynamic>;
+  print(Meeting.flatten(jsonList[0]));
+  return jsonList.map((e) => Meeting.fromJson(Meeting.flatten(e))).toList();
 }
 
 /// Get the full content of one [Meeting] based on its id.
@@ -28,9 +32,25 @@ Future<Meeting> getMeetingContent(String meetingId) async {
     return Future(() => testMeeting2);
   }
 
-  final response =
-      (await http.get(Uri.parse(apiGateway + getMeeting + '/' + meetingId)))
-          as Map<String, dynamic>;
+  print(apiGateway + getMeeting + '/' + meetingId + getReview);
+  final response = Meeting.flatten(
+    json.decode(
+      (await http.get(
+        Uri.parse(apiGateway + getMeeting + '/' + meetingId + getReview),
+      ))
+          .body,
+    ) as Map<String, dynamic>,
+  );
+
+  if (response[Fields.meetingId] == null) {
+    response[Fields.meetingId] == meetingId;
+  } else if (response[Fields.meetingId] != meetingId) {
+    debugPrint(
+      "The meeting id from the response differs from the provided one! Using the latter.",
+    );
+    response[Fields.meetingId] == meetingId;
+  }
+
   return Meeting.fromJson(response);
 }
 
@@ -91,6 +111,7 @@ Future<void> postLoginCredentialsToBackend(
   }
 }
 
+/// Post the review to the database.
 void postReviewOnBackend(Response review) async {
   if (!testMode) {
     final json = review.toJson();

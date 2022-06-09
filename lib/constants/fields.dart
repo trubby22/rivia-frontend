@@ -6,10 +6,12 @@ class Fields {
   static String participantId = 'participant_id';
 
   static String title = 'title';
-  static String startTime = 'startTime';
-  static String endTime = 'endTime';
+  static String startTime = 'start_time';
+  static String endTime = 'end_time';
   static String participants = 'participants';
-  static String meetingId = 'meetingId';
+  static String meeting = 'meeting';
+  static String meetings = 'meetings';
+  static String meetingId = 'meeting-id';
   static String organisation = 'organisation';
   static String reviews = 'reviews';
 
