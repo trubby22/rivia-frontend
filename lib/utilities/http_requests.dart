@@ -69,20 +69,15 @@ void postNewMeetingOnBackend(Meeting meeting, {String? uuid}) async {
 /// Sign the user up. Returns non-empty error [String] if there is an error.
 Future<String> postSignUpCredentialsToBackend(
     LoginCredentials loginCredentials, User user) async {
-  if (!testMode) {
-    http.Response response = await http.post(
-      Uri.parse(apiGateway + postSignUp),
-      body: json.encode(loginCredentials.toJson()),
-    );
+  http.Response response = await http.post(
+    Uri.parse(apiGateway + postSignUp),
+    body: json.encode(loginCredentials.toJson()),
+  );
 
-    final String? errMsg =
-        ((json.decode(response.body) as Map<String, dynamic>?) ??
-            {})['message'];
+  final String? errMsg =
+      ((json.decode(response.body) as Map<String, dynamic>?) ?? {})['message'];
 
-    return errMsg ?? "";
-  }
-
-  return "";
+  return errMsg ?? "";
 }
 
 Future<void> postLoginCredentialsToBackend(

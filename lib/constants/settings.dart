@@ -1,1 +1,1 @@
-bool testMode = false;
+bool testMode = true;
