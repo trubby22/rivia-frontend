@@ -28,9 +28,6 @@ final _headers = {
 
 /// Get the list of [Meeting]s.
 Future<List<Meeting>> getMeetings() async {
-  // if (testMode) {
-  //   return Future.delayed(const Duration(seconds: 1), () => [testMeeting]);
-  // }
   http.Response response = await _httpClient.get(Uri.parse(API.getDashboard()));
   var jsonList = (jsonDecode(response.body)
       as Map<String, dynamic>)[Fields.meetings] as List<dynamic>;
@@ -39,10 +36,6 @@ Future<List<Meeting>> getMeetings() async {
 
 /// Get the full content of one [Meeting] based on its id.
 Future<Meeting?> getMeetingContent(String meetingId) async {
-  // if (testMode) {
-  //   return Future(() => testMeeting2);
-  // }
-
   final meetingResponse = json.decode((await http.get(
     Uri.parse(API.meeting(meetingId)),
   ))
@@ -68,12 +61,9 @@ Future<Meeting?> getMeetingContent(String meetingId) async {
 }
 
 Future<List<Participant>> getOrganisationParticipants({String? uuid}) async {
-  // if (testMode) {
-  //   return Future(() => testParticipants);
-  // }
   final foo = (await http.get(Uri.parse(API.getParticipants())));
   Map<String, dynamic> bar = json.decode(foo.body);
-  List<dynamic> jsonList = bar["participants"];
+  List<dynamic> jsonList = bar[Fields.participants];
   return jsonList.map((e) => Participant.fromJson(e)).toList();
 }
 
@@ -95,21 +85,19 @@ Future<List<Response>> getMeetingSummary(Meeting meeting,
 Future<bool> postNewMeetingOnBackend(Meeting meeting) async {
   try {
     final foo = meeting.toJson();
-    foo['meeting'] = {
-      'title': foo['title'],
-      'start_time': foo['start_time'],
-      'end_time': foo['end_time'],
+    foo[Fields.meeting] = {
+      Fields.title: foo[Fields.title],
+      Fields.startTime: foo[Fields.startTime],
+      Fields.endTime: foo[Fields.endTime],
     };
     foo[Fields.participants] = (foo[Fields.participants] as List<dynamic>)
         .map((e) => (e as Map<String, dynamic>)[Fields.participantId])
         .toList();
-    print(json.encode(foo));
     final response = await http.post(
       Uri.parse(API.postMeeting()),
       headers: _headers,
       body: json.encode(foo),
     );
-    print(response.body);
     return true;
   } catch (e) {
     debugPrint(e.toString());
@@ -158,5 +146,4 @@ void postReviewOnBackend(String meetingId, Response review) async {
     headers: _headers,
     body: jsonEncode(json),
   );
-  // print(response.body);
 }

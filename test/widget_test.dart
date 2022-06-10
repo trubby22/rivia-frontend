@@ -1,17 +1,12 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:rivia/models/response.dart';
+import 'package:rivia/utilities/http_requests.dart';
 
 List<Participant> testParticipants = [
   Participant(name: "Mamezuku", surname: "Rai", email: "js@rt.cr"),
@@ -35,17 +30,33 @@ Response testResponse = Response(
   feedback: "HOT PASSION 暑く強い思い",
 );
 
-void main() {
-  testWidgets('Can encode Meeting', (WidgetTester tester) async {
+void main() async {
+  test('Can encode Meeting', () {
     final jason = json.encode(testMeeting.toJson());
-    print(jason);
-    print(Meeting.fromJson(json.decode(jason)));
+    debugPrint(jason);
+    debugPrint(Meeting.fromJson(json.decode(jason)).toString());
   });
 
-  testWidgets('Can encode Response', (WidgetTester tester) async {
+  test('Can encode Response', () {
     final jason = json.encode(testResponse.toJson());
-    print(jason);
-    print(Response.fromJson(json.decode(jason)));
+    debugPrint(jason);
+    debugPrint(Response.fromJson(json.decode(jason)).toString());
+  });
+
+  test('Can GET list of Meetings', () async {
+    final meetings = await getMeetings();
+    debugPrint("Meetings successfully fetched:");
+    for (var meeting in meetings) {
+      debugPrint(json.encode(meeting.toJson()));
+    }
+  });
+
+  test('Can GET list of Participants', () async {
+    final participants = await getOrganisationParticipants();
+    debugPrint("participants successfully fetched:");
+    for (var participant in participants) {
+      debugPrint(json.encode(participant.toJson()));
+    }
   });
 
   // testWidgets('Can encode Meeting', (WidgetTester tester) async {
