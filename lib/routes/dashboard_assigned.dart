@@ -86,9 +86,10 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
                     width: null,
                     height: null,
                     padding: const EdgeInsets.all(16.0),
-                    onPressed: (_) {
+                    onPressed: (_) async {
                       Navigator.of(context).pushNamed(
                         RouteNames.createMeeting,
+                        arguments: await getOrganisationParticipants(),
                       );
                     },
                     isSelected: true,

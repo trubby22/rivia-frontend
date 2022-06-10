@@ -362,9 +362,12 @@ class _ReviewState extends State<Review> {
 
     Response response = context.read<ResponseBuilder>().build();
 
-    postReviewOnBackend(response);
-
-    showToast(context: context, text: 'Review saved: ${response.toJson()}');
+    if (widget.meeting.meetingId == null) {
+      debugPrint("Bad meeting: NO ID!");
+    } else {
+      postReviewOnBackend(widget.meeting.meetingId!, response);
+      showToast(context: context, text: 'Review saved: ${response.toJson()}');
+    }
   }
 }
 

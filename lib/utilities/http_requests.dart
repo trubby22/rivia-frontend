@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/browser_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/constants/fields.dart';
@@ -19,20 +20,21 @@ Future<List<Meeting>> getMeetings() async {
   // if (testMode) {
   //   return Future.delayed(const Duration(seconds: 1), () => [testMeeting]);
   // }
-  http.Response response = await http.get(Uri.parse(apiGateway + getDashboard));
+  http.Response response = await http.get(
+    Uri.parse(apiGateway + getDashboard),
+    headers: {"cookie": "session=0"},
+  );
   var jsonList = (jsonDecode(response.body)
       as Map<String, dynamic>)[Fields.meetings] as List<dynamic>;
-  print(Meeting.flatten(jsonList[0]));
   return jsonList.map((e) => Meeting.fromJson(Meeting.flatten(e))).toList();
 }
 
 /// Get the full content of one [Meeting] based on its id.
 Future<Meeting> getMeetingContent(String meetingId) async {
-  if (testMode) {
-    return Future(() => testMeeting2);
-  }
+  // if (testMode) {
+  //   return Future(() => testMeeting2);
+  // }
 
-  print(apiGateway + getMeeting + '/' + meetingId + getReview);
   final response = Meeting.flatten(
     json.decode(
       (await http.get(
@@ -41,7 +43,7 @@ Future<Meeting> getMeetingContent(String meetingId) async {
           .body,
     ) as Map<String, dynamic>,
   );
-
+  response[Fields.meetingId] = meetingId;
   if (response[Fields.meetingId] == null) {
     response[Fields.meetingId] == meetingId;
   } else if (response[Fields.meetingId] != meetingId) {
@@ -58,9 +60,9 @@ Future<List<Participant>> getOrganisationParticipants({String? uuid}) async {
   if (testMode) {
     return Future(() => testParticipants);
   }
-  List<Map<String, dynamic>> jsonList =
-      (await http.get(Uri.parse(apiGateway + getParticipants)))
-          as List<Map<String, dynamic>>;
+  final foo = (await http.get(Uri.parse(apiGateway + getParticipants)));
+  Map<String, dynamic> bar = json.decode(foo.body);
+  List<dynamic> jsonList = bar["participants"];
   return jsonList.map((e) => Participant.fromJson(e)).toList();
 }
 
@@ -77,11 +79,16 @@ Future<List<Response>> getMeetingSummary(Meeting meeting,
 
 // POST
 
+/// Create a new meeting.
 void postNewMeetingOnBackend(Meeting meeting, {String? uuid}) async {
+  final foo = meeting.toJson();
+  foo[Fields.participants] = (foo[Fields.participants] as List<dynamic>)
+      .map((e) => (e as Map<String, dynamic>)[Fields.participantId]);
+
   if (!testMode) {
     await http.post(
       Uri.parse(apiGateway + postMeeting),
-      body: meeting.toJson(),
+      body: foo,
     );
   }
 }
@@ -96,7 +103,6 @@ Future<String> postSignUpCredentialsToBackend(
 
   final String? errMsg =
       ((json.decode(response.body) as Map<String, dynamic>?) ?? {})['message'];
-
   return errMsg ?? "";
 }
 
@@ -107,19 +113,33 @@ Future<void> postLoginCredentialsToBackend(
       Uri.parse(apiGateway + postLogin),
       body: json.encode(loginCredentials.toJson()),
     );
-    user.uuid = response.body;
   }
 }
 
 /// Post the review to the database.
-void postReviewOnBackend(Response review) async {
+void postReviewOnBackend(String meetingId, Response review) async {
   if (!testMode) {
     final json = review.toJson();
     json[Fields.painPoints] =
         (json[Fields.painPoints] as Map<String, String>).keys.toList();
+    json[Fields.notNeeded] =
+        (json[Fields.notNeeded] as List<Map<String, dynamic>>)
+            .map((e) => e[Fields.participantId])
+            .toList();
+    json[Fields.notPrepared] =
+        (json[Fields.notPrepared] as List<Map<String, dynamic>>)
+            .map((e) => e[Fields.participantId])
+            .toList();
+    // print(json);
+    // print(apiGateway + getMeeting + '/$meetingId' + postReview);
     http.Response response = await http.post(
-      Uri.parse(apiGateway + postReview),
-      body: json,
+      Uri.parse(apiGateway + getMeeting + '/$meetingId' + postReview),
+      headers: {
+        'accept': 'application/json',
+        'content-type': 'application/json',
+      },
+      body: jsonEncode(json),
     );
+    // print(response.body);
   }
 }

@@ -38,13 +38,13 @@ class Meeting {
         meetingId = json[Fields.meetingId],
         startTime = DateTimeJson.fromJSON(json[Fields.startTime]),
         endTime = DateTimeJson.fromJSON(json[Fields.endTime]),
-        participants = (json[Fields.participantId] as List<dynamic>?)
+        participants = (json[Fields.participants] as List<dynamic>?)
                 ?.map((e) => Participant.fromJson(e))
                 .toList() ??
             const [],
-        painPoints =
-            (json[Fields.painPoints] as Map<String, dynamic>?)?.cast() ??
-                const {};
+        painPoints = Map.fromEntries((json[Fields.painPoints] as List<dynamic>?)
+                ?.map((e) => MapEntry(e['preset_q_id'], e['preset_q_text'])) ??
+            const []);
 
   Map<String, dynamic> toJson() => {
         Fields.title: title,

@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/api_endpoints.dart';
+import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
@@ -232,10 +233,25 @@ class _CreateMeetingState extends State<CreateMeeting> {
 
   Future<bool> postNewMeetingOnBackend(Meeting meeting) async {
     try {
+      final foo = meeting.toJson();
+      foo['meeting'] = {
+        'title': foo['title'],
+        'start_time': foo['start_time'],
+        'end_time': foo['end_time'],
+      };
+      foo[Fields.participants] = (foo[Fields.participants] as List<dynamic>)
+          .map((e) => (e as Map<String, dynamic>)[Fields.participantId])
+          .toList();
+      print(json.encode(foo));
       final response = await http.post(
         Uri.parse(apiGateway + postMeeting),
-        body: json.encode(meeting.toJson()),
+        headers: {
+          'accept': 'application/json',
+          'content-type': 'application/json',
+        },
+        body: json.encode(foo),
       );
+      print(response.body);
       return true;
     } catch (e) {
       debugPrint(e.toString());

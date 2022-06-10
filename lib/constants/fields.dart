@@ -11,13 +11,13 @@ class Fields {
   static String participants = 'participants';
   static String meeting = 'meeting';
   static String meetings = 'meetings';
-  static String meetingId = 'meeting-id';
+  static String meetingId = 'meeting_id';
   static String organisation = 'organisation';
   static String reviews = 'reviews';
 
   static String participant = 'participant';
   static String quality = 'quality';
-  static String painPoints = 'points';
+  static String painPoints = 'preset_qs';
   static String notNeeded = 'not_needed';
   static String notPrepared = 'not_prepared';
   static String feedback = 'feedback';

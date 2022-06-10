@@ -5,6 +5,7 @@ import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 
 import 'package:rivia/constants/route_names.dart';
+import 'package:rivia/models/participant.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
 import 'package:rivia/routes/login.dart';
@@ -56,12 +57,21 @@ class _MyAppState extends State<MyApp> {
           '/welcome_screen': (_) => WelcomeScreen(),
           RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
           RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
-          RouteNames.createMeeting: (_) =>
-              CreateMeeting(allParticipants: testParticipants),
           RouteNames.login: (_) => Login(),
         },
         onGenerateRoute: (routeSettings) {
           switch (routeSettings.name) {
+            case RouteNames.createMeeting:
+              if (routeSettings.arguments.runtimeType != List<Participant>) {
+                throw Exception(
+                  "ERROR: Did not pass a valid Participants for Create Meeting page!",
+                );
+              }
+              return MaterialPageRoute(
+                builder: (_) => CreateMeeting(
+                  allParticipants: routeSettings.arguments as List<Participant>,
+                ),
+              );
             case RouteNames.review:
               if (routeSettings.arguments.runtimeType != Meeting) {
                 throw Exception(

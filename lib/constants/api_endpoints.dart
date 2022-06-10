@@ -6,9 +6,9 @@ String getReview = '/review';
 String getMeetingReviews = '/reviews';
 String getMeeting = '/meeting';
 String getDashboard = '/dashboard';
-String getParticipants = '/participants';
+String getParticipants = '/meeting/create';
 
-String postMeeting = '/new-meeting';
+String postMeeting = '/meeting/create';
 String postLogin = '/login';
 String postSignUp = '/create-account';
 String postReview = '/review';
