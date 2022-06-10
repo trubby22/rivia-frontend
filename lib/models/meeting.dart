@@ -22,39 +22,47 @@ class Meeting {
     this.painPoints = const {},
   });
 
-  /// Flatten a JSON before translating it into a [Meeting].
-  static Map<String, dynamic> flatten(Map<String, dynamic> json) {
+  static Meeting? fromJson(Map<String, dynamic> json) {
+    // Flatten the json if necessary.
     if (json[Fields.meeting] != null) {
       json[Fields.title] = json[Fields.meeting]![Fields.title];
       json[Fields.startTime] = json[Fields.meeting]![Fields.startTime];
       json[Fields.endTime] = json[Fields.meeting]![Fields.endTime];
     }
 
-    return json;
-  }
-
-  Meeting.fromJson(Map<String, dynamic> json)
-      : title = json[Fields.title],
-        meetingId = json[Fields.meetingId],
-        startTime = DateTimeJson.fromJSON(json[Fields.startTime]),
-        endTime = DateTimeJson.fromJSON(json[Fields.endTime]),
-        participants = (json[Fields.participants] as List<dynamic>?)
+    try {
+      return Meeting(
+        title: json[Fields.title],
+        meetingId: json[Fields.meetingId],
+        startTime: DateTimeJson.fromJSON(json[Fields.startTime]),
+        endTime: DateTimeJson.fromJSON(json[Fields.endTime]),
+        participants: (json[Fields.participants] as List<dynamic>?)
                 ?.map((e) => Participant.fromJson(e))
                 .toList() ??
             const [],
-        painPoints = Map.fromEntries(
-          (json[Fields.painPoints] as List<dynamic>?)?.map(
-                  (e) => MapEntry(e['preset_q_id'], e['preset_q_text'])) ??
-              const [],
-        );
+        painPoints: Map.fromEntries((json[Fields.painPoints] as List<dynamic>?)
+                ?.map((e) => MapEntry(e['preset_q_id'], e['preset_q_text'])) ??
+            const []),
+      );
+    } catch (e) {
+      debugPrint("Error on deserialising meeting: $e");
+      return null;
+    }
+  }
 
   Map<String, dynamic> toJson() => {
         Fields.title: title,
         Fields.startTime: startTime.toJSON(),
         Fields.endTime: endTime.toJSON(),
-        // Fields.painPoints: painPoints,
+        Fields.painPoints: painPoints,
         Fields.participants: participants.map((e) => e.toJson()).toList(),
         if (meetingId != null) Fields.meetingId: meetingId,
+        Fields.meeting: {
+          Fields.title: title,
+          Fields.startTime: startTime.toJSON(),
+          Fields.endTime: endTime.toJSON(),
+          Fields.participants: participants.map((e) => e.toJson()).toList(),
+        },
       };
 }
 

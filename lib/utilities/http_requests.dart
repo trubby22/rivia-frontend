@@ -31,7 +31,11 @@ Future<List<Meeting>> getMeetings() async {
   http.Response response = await _httpClient.get(Uri.parse(API.getDashboard()));
   var jsonList = (jsonDecode(response.body)
       as Map<String, dynamic>)[Fields.meetings] as List<dynamic>;
-  return jsonList.map((e) => Meeting.fromJson(Meeting.flatten(e))).toList();
+  return jsonList
+      .map((e) => Meeting.fromJson(e))
+      .where((e) => e != null)
+      .cast<Meeting>()
+      .toList();
 }
 
 /// Get the full content of one [Meeting] based on its id.
@@ -46,8 +50,7 @@ Future<Meeting?> getMeetingContent(String meetingId) async {
     return null;
   }
 
-  final response = Meeting.flatten(meetingResponse as Map<String, dynamic>);
-  response[Fields.meetingId] = meetingId;
+  final response = meetingResponse as Map<String, dynamic>;
   if (response[Fields.meetingId] == null) {
     response[Fields.meetingId] == meetingId;
   } else if (response[Fields.meetingId] != meetingId) {
@@ -84,19 +87,10 @@ Future<List<Response>> getMeetingSummary(Meeting meeting,
 /// Create a new meeting.
 Future<bool> postNewMeetingOnBackend(Meeting meeting) async {
   try {
-    final foo = meeting.toJson();
-    foo[Fields.meeting] = {
-      Fields.title: foo[Fields.title],
-      Fields.startTime: foo[Fields.startTime],
-      Fields.endTime: foo[Fields.endTime],
-    };
-    foo[Fields.participants] = (foo[Fields.participants] as List<dynamic>)
-        .map((e) => (e as Map<String, dynamic>)[Fields.participantId])
-        .toList();
     final response = await http.post(
       Uri.parse(API.postMeeting()),
       headers: _headers,
-      body: json.encode(foo),
+      body: json.encode(meeting.toJson()),
     );
     return true;
   } catch (e) {
