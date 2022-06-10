@@ -62,16 +62,18 @@ class _MyAppState extends State<MyApp> {
         onGenerateRoute: (routeSettings) {
           switch (routeSettings.name) {
             case RouteNames.createMeeting:
-              if (routeSettings.arguments.runtimeType != List<Participant>) {
+              try {
+                return MaterialPageRoute(
+                  builder: (_) => CreateMeeting(
+                    allParticipants:
+                        routeSettings.arguments as List<Participant>,
+                  ),
+                );
+              } catch (_) {
                 throw Exception(
-                  "ERROR: Did not pass a valid Participants for Create Meeting page!",
+                  "ERROR: Did not pass a valid Participants for Create Meeting page! Type: ${routeSettings.arguments.runtimeType}",
                 );
               }
-              return MaterialPageRoute(
-                builder: (_) => CreateMeeting(
-                  allParticipants: routeSettings.arguments as List<Participant>,
-                ),
-              );
             case RouteNames.review:
               if (routeSettings.arguments.runtimeType != Meeting) {
                 throw Exception(

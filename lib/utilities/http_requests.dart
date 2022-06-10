@@ -20,10 +20,7 @@ Future<List<Meeting>> getMeetings() async {
   // if (testMode) {
   //   return Future.delayed(const Duration(seconds: 1), () => [testMeeting]);
   // }
-  http.Response response = await http.get(
-    Uri.parse(apiGateway + getDashboard),
-    headers: {"cookie": "session=0"},
-  );
+  http.Response response = await http.get(Uri.parse(apiGateway + getDashboard));
   var jsonList = (jsonDecode(response.body)
       as Map<String, dynamic>)[Fields.meetings] as List<dynamic>;
   return jsonList.map((e) => Meeting.fromJson(Meeting.flatten(e))).toList();
