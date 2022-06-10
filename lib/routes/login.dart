@@ -255,6 +255,7 @@ class _LoginState extends State<Login> {
       }
     } else {
       await postLoginCredentialsToBackend(loginCredentials, user);
+      showToast(context: context, text: "Login...");
       (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
         RouteNames.dashboardAssigned,
       );

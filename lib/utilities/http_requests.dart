@@ -13,6 +13,17 @@ import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 
+/// The global [http.Client].
+final _httpClient = BrowserClient()
+// ..withCredentials = true
+    ;
+
+/// The headers for API requests.
+final _headers = {
+  'accept': 'application/json',
+  'content-type': 'application/json',
+};
+
 // GET
 
 /// Get the list of [Meeting]s.
@@ -20,7 +31,7 @@ Future<List<Meeting>> getMeetings() async {
   // if (testMode) {
   //   return Future.delayed(const Duration(seconds: 1), () => [testMeeting]);
   // }
-  http.Response response = await http.get(Uri.parse(apiGateway + getDashboard));
+  http.Response response = await _httpClient.get(Uri.parse(API.getDashboard()));
   var jsonList = (jsonDecode(response.body)
       as Map<String, dynamic>)[Fields.meetings] as List<dynamic>;
   return jsonList.map((e) => Meeting.fromJson(Meeting.flatten(e))).toList();
@@ -33,7 +44,7 @@ Future<Meeting?> getMeetingContent(String meetingId) async {
   // }
 
   final meetingResponse = json.decode((await http.get(
-    Uri.parse(apiGateway + getMeeting + '/' + meetingId + getReview),
+    Uri.parse(API.meeting(meetingId)),
   ))
       .body);
 
@@ -60,7 +71,7 @@ Future<List<Participant>> getOrganisationParticipants({String? uuid}) async {
   // if (testMode) {
   //   return Future(() => testParticipants);
   // }
-  final foo = (await http.get(Uri.parse(apiGateway + getParticipants)));
+  final foo = (await http.get(Uri.parse(API.getParticipants())));
   Map<String, dynamic> bar = json.decode(foo.body);
   List<dynamic> jsonList = bar["participants"];
   return jsonList.map((e) => Participant.fromJson(e)).toList();
@@ -68,28 +79,41 @@ Future<List<Participant>> getOrganisationParticipants({String? uuid}) async {
 
 Future<List<Response>> getMeetingSummary(Meeting meeting,
     {String? uuid}) async {
-  if (testMode) {
+  if (testMode || true) {
     return Future(() => testResponses);
   }
-  List<Map<String, dynamic>> jsonList =
-      (await http.get(Uri.parse(apiGateway + getMeetingReviews)))
-          as List<Map<String, dynamic>>;
+  // TODO: Back-end for this DNE yet
+  dynamic jsonList =
+      json.decode((await http.get(Uri.parse(API.meetingReviews()))).body);
+  print(jsonList);
   return jsonList.map((e) => Response.fromJson(e)).toList();
 }
 
 // POST
 
 /// Create a new meeting.
-void postNewMeetingOnBackend(Meeting meeting, {String? uuid}) async {
-  final foo = meeting.toJson();
-  foo[Fields.participants] = (foo[Fields.participants] as List<dynamic>)
-      .map((e) => (e as Map<String, dynamic>)[Fields.participantId]);
-
-  if (!testMode) {
-    await http.post(
-      Uri.parse(apiGateway + postMeeting),
-      body: foo,
+Future<bool> postNewMeetingOnBackend(Meeting meeting) async {
+  try {
+    final foo = meeting.toJson();
+    foo['meeting'] = {
+      'title': foo['title'],
+      'start_time': foo['start_time'],
+      'end_time': foo['end_time'],
+    };
+    foo[Fields.participants] = (foo[Fields.participants] as List<dynamic>)
+        .map((e) => (e as Map<String, dynamic>)[Fields.participantId])
+        .toList();
+    print(json.encode(foo));
+    final response = await http.post(
+      Uri.parse(API.postMeeting()),
+      headers: _headers,
+      body: json.encode(foo),
     );
+    print(response.body);
+    return true;
+  } catch (e) {
+    debugPrint(e.toString());
+    return false;
   }
 }
 
@@ -97,7 +121,7 @@ void postNewMeetingOnBackend(Meeting meeting, {String? uuid}) async {
 Future<String> postSignUpCredentialsToBackend(
     LoginCredentials loginCredentials, User user) async {
   http.Response response = await http.post(
-    Uri.parse(apiGateway + postSignUp),
+    Uri.parse(API.postSignUp()),
     body: json.encode(loginCredentials.toJson()),
   );
 
@@ -109,8 +133,8 @@ Future<String> postSignUpCredentialsToBackend(
 Future<void> postLoginCredentialsToBackend(
     LoginCredentials loginCredentials, User user) async {
   if (!testMode) {
-    http.Response response = await http.post(
-      Uri.parse(apiGateway + postLogin),
+    http.Response response = await _httpClient.post(
+      Uri.parse(API.postLogin()),
       body: json.encode(loginCredentials.toJson()),
     );
   }
@@ -129,14 +153,9 @@ void postReviewOnBackend(String meetingId, Response review) async {
       (json[Fields.notPrepared] as List<Map<String, dynamic>>)
           .map((e) => e[Fields.participantId])
           .toList();
-  // print(json);
-  // print(apiGateway + getMeeting + '/$meetingId' + postReview);
   http.Response response = await http.post(
-    Uri.parse(apiGateway + getMeeting + '/$meetingId' + postReview),
-    headers: {
-      'accept': 'application/json',
-      'content-type': 'application/json',
-    },
+    Uri.parse(API.meeting(meetingId)),
+    headers: _headers,
     body: jsonEncode(json),
   );
   // print(response.body);

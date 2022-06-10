@@ -1,10 +1,6 @@
-import 'dart:convert';
-
 import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rivia/constants/api_endpoints.dart';
-import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
@@ -12,11 +8,10 @@ import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/date_picker.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/participant.dart';
+import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/language_switcher.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/time_picker.dart';
-
-import 'package:http/http.dart' as http;
 import 'package:rivia/utilities/toast.dart';
 
 class CreateMeeting extends StatefulWidget {
@@ -228,34 +223,6 @@ class _CreateMeetingState extends State<CreateMeeting> {
         text: 'Create meeting failed: ${meeting.toJson()}',
         success: false,
       );
-    }
-  }
-
-  Future<bool> postNewMeetingOnBackend(Meeting meeting) async {
-    try {
-      final foo = meeting.toJson();
-      foo['meeting'] = {
-        'title': foo['title'],
-        'start_time': foo['start_time'],
-        'end_time': foo['end_time'],
-      };
-      foo[Fields.participants] = (foo[Fields.participants] as List<dynamic>)
-          .map((e) => (e as Map<String, dynamic>)[Fields.participantId])
-          .toList();
-      print(json.encode(foo));
-      final response = await http.post(
-        Uri.parse(apiGateway + postMeeting),
-        headers: {
-          'accept': 'application/json',
-          'content-type': 'application/json',
-        },
-        body: json.encode(foo),
-      );
-      print(response.body);
-      return true;
-    } catch (e) {
-      debugPrint(e.toString());
-      return false;
     }
   }
 }
