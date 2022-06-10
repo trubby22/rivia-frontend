@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
+import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/http_requests.dart';
@@ -26,12 +27,18 @@ class MeetingEntry extends StatelessWidget {
           }
 
           final meetingContent = await getMeetingContent(meeting.meetingId!);
-
-          Navigator.pushNamed(
-            context,
-            RouteNames.review,
-            arguments: meetingContent,
-          );
+          if (meetingContent != null) {
+            Navigator.pushNamed(
+              context,
+              RouteNames.review,
+              arguments: meetingContent,
+            );
+          } else {
+            Navigator.of(context).pushNamed(
+              RouteNames.summary,
+              arguments: testMeeting2,
+            );
+          }
         },
         child: Center(
           child: Padding(

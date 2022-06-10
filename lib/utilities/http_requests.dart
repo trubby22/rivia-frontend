@@ -27,19 +27,22 @@ Future<List<Meeting>> getMeetings() async {
 }
 
 /// Get the full content of one [Meeting] based on its id.
-Future<Meeting> getMeetingContent(String meetingId) async {
+Future<Meeting?> getMeetingContent(String meetingId) async {
   // if (testMode) {
   //   return Future(() => testMeeting2);
   // }
 
-  final response = Meeting.flatten(
-    json.decode(
-      (await http.get(
-        Uri.parse(apiGateway + getMeeting + '/' + meetingId + getReview),
-      ))
-          .body,
-    ) as Map<String, dynamic>,
-  );
+  final meetingResponse = json.decode((await http.get(
+    Uri.parse(apiGateway + getMeeting + '/' + meetingId + getReview),
+  ))
+      .body);
+
+  if (meetingResponse == null) {
+    // Go to summary
+    return null;
+  }
+
+  final response = Meeting.flatten(meetingResponse as Map<String, dynamic>);
   response[Fields.meetingId] = meetingId;
   if (response[Fields.meetingId] == null) {
     response[Fields.meetingId] == meetingId;
@@ -54,9 +57,9 @@ Future<Meeting> getMeetingContent(String meetingId) async {
 }
 
 Future<List<Participant>> getOrganisationParticipants({String? uuid}) async {
-  if (testMode) {
-    return Future(() => testParticipants);
-  }
+  // if (testMode) {
+  //   return Future(() => testParticipants);
+  // }
   final foo = (await http.get(Uri.parse(apiGateway + getParticipants)));
   Map<String, dynamic> bar = json.decode(foo.body);
   List<dynamic> jsonList = bar["participants"];
@@ -115,28 +118,26 @@ Future<void> postLoginCredentialsToBackend(
 
 /// Post the review to the database.
 void postReviewOnBackend(String meetingId, Response review) async {
-  if (!testMode) {
-    final json = review.toJson();
-    json[Fields.painPoints] =
-        (json[Fields.painPoints] as Map<String, String>).keys.toList();
-    json[Fields.notNeeded] =
-        (json[Fields.notNeeded] as List<Map<String, dynamic>>)
-            .map((e) => e[Fields.participantId])
-            .toList();
-    json[Fields.notPrepared] =
-        (json[Fields.notPrepared] as List<Map<String, dynamic>>)
-            .map((e) => e[Fields.participantId])
-            .toList();
-    // print(json);
-    // print(apiGateway + getMeeting + '/$meetingId' + postReview);
-    http.Response response = await http.post(
-      Uri.parse(apiGateway + getMeeting + '/$meetingId' + postReview),
-      headers: {
-        'accept': 'application/json',
-        'content-type': 'application/json',
-      },
-      body: jsonEncode(json),
-    );
-    // print(response.body);
-  }
+  final json = review.toJson();
+  json[Fields.painPoints] =
+      (json[Fields.painPoints] as Map<String, String>).keys.toList();
+  json[Fields.notNeeded] =
+      (json[Fields.notNeeded] as List<Map<String, dynamic>>)
+          .map((e) => e[Fields.participantId])
+          .toList();
+  json[Fields.notPrepared] =
+      (json[Fields.notPrepared] as List<Map<String, dynamic>>)
+          .map((e) => e[Fields.participantId])
+          .toList();
+  // print(json);
+  // print(apiGateway + getMeeting + '/$meetingId' + postReview);
+  http.Response response = await http.post(
+    Uri.parse(apiGateway + getMeeting + '/$meetingId' + postReview),
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+    },
+    body: jsonEncode(json),
+  );
+  // print(response.body);
 }

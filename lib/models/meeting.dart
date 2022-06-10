@@ -42,9 +42,11 @@ class Meeting {
                 ?.map((e) => Participant.fromJson(e))
                 .toList() ??
             const [],
-        painPoints = Map.fromEntries((json[Fields.painPoints] as List<dynamic>?)
-                ?.map((e) => MapEntry(e['preset_q_id'], e['preset_q_text'])) ??
-            const []);
+        painPoints = Map.fromEntries(
+          (json[Fields.painPoints] as List<dynamic>?)?.map(
+                  (e) => MapEntry(e['preset_q_id'], e['preset_q_text'])) ??
+              const [],
+        );
 
   Map<String, dynamic> toJson() => {
         Fields.title: title,
