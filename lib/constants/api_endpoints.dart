@@ -1,6 +1,5 @@
 class API {
-  static String apiGateway =
-      'https://vbc48le64j.execute-api.eu-west-2.amazonaws.com/api';
+  static String apiGateway = 'https://api.rivia.me';
 
   static String summary() => '$apiGateway/summary';
 
