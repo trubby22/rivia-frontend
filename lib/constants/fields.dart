@@ -1,4 +1,6 @@
 class Fields {
+  static String message = 'message';
+
   static String name = 'name';
   static String surname = 'surname';
   static String email = 'email';

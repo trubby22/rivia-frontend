@@ -108,7 +108,8 @@ Future<String> postSignUpCredentialsToBackend(
   );
 
   final String? errMsg =
-      ((json.decode(response.body) as Map<String, dynamic>?) ?? {})['message'];
+      ((json.decode(response.body) as Map<String, dynamic>?) ??
+          {})[Fields.message];
   return errMsg ?? "";
 }
 
