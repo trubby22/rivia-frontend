@@ -54,7 +54,14 @@ class Meeting {
         Fields.title: title,
         Fields.startTime: startTime.toJSON(),
         Fields.endTime: endTime.toJSON(),
-        Fields.painPoints: painPoints,
+        Fields.painPoints: painPoints.entries
+            .map(
+              (e) => {
+                'preset_q_id': e.key,
+                'preset_q_text': e.value,
+              },
+            )
+            .toList(),
         Fields.participants: participants.map((e) => e.toJson()).toList(),
         if (meetingId != null) Fields.meetingId: meetingId,
         Fields.meeting: {

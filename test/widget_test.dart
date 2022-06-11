@@ -6,7 +6,6 @@ import 'package:rivia/models/participant.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:rivia/models/response.dart';
-import 'package:rivia/utilities/http_requests.dart';
 
 List<Participant> testParticipants = [
   Participant(name: "Mamezuku", surname: "Rai", email: "js@rt.cr"),
