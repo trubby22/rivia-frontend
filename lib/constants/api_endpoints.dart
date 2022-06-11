@@ -1,5 +1,5 @@
 class API {
-  static String apiGateway = 'https://api.rivia.me';
+  static String apiGateway = 'https://api.rivia.me/api';
 
   static String summary() => '$apiGateway/summary';
 
