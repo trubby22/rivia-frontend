@@ -14,9 +14,7 @@ import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 
 /// The global [http.Client].
-final _httpClient = BrowserClient()
-// ..withCredentials = true
-    ;
+final _httpClient = BrowserClient()..withCredentials = true;
 
 /// The headers for API requests.
 final _headers = {
