@@ -13,10 +13,8 @@ test-job:
   image: cirrusci/flutter:stable
   stage: test
   script:
-    - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    - apt -y -f install ./google-chrome-stable_current_amd64.deb
     - flutter pub get
-    - flutter test --platform chrome
+    - flutter test
 
 deploy-job:
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest

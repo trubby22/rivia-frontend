@@ -43,21 +43,21 @@ void main() async {
     debugPrint(Response.fromJson(json.decode(jason)).toString());
   });
 
-  test('Can GET list of Meetings', () async {
-    final meetings = await getMeetings();
-    debugPrint("Meetings successfully fetched:");
-    for (var meeting in meetings) {
-      debugPrint(json.encode(meeting.toJson()));
-    }
-  });
+  // test('Can GET list of Meetings', () async {
+  //   final meetings = await getMeetings();
+  //   debugPrint("Meetings successfully fetched:");
+  //   for (var meeting in meetings) {
+  //     debugPrint(json.encode(meeting.toJson()));
+  //   }
+  // });
 
-  test('Can GET list of Participants', () async {
-    final participants = await getOrganisationParticipants();
-    debugPrint("participants successfully fetched:");
-    for (var participant in participants) {
-      debugPrint(json.encode(participant.toJson()));
-    }
-  });
+  // test('Can GET list of Participants', () async {
+  //   final participants = await getOrganisationParticipants();
+  //   debugPrint("participants successfully fetched:");
+  //   for (var participant in participants) {
+  //     debugPrint(json.encode(participant.toJson()));
+  //   }
+  // });
 
   // testWidgets('Can encode Meeting', (WidgetTester tester) async {
   //   final j1 = json.encode(testMeeting.toJson());
