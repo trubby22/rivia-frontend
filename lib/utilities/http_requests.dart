@@ -14,7 +14,9 @@ import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 
 /// The global [http.Client].
-final _httpClient = BrowserClient()..withCredentials = true;
+final _httpClient = BrowserClient()
+// ..withCredentials = true
+    ;
 
 /// The headers for API requests.
 final _headers = {
@@ -117,6 +119,7 @@ Future<void> postLoginCredentialsToBackend(
     print(json.encode(loginCredentials.toJson()));
     http.Response response = await _httpClient.post(
       Uri.parse(API.postLogin()),
+      headers: _headers,
       body: json.encode(loginCredentials.toJson()),
     );
   }
