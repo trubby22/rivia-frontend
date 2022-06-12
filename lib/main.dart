@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +52,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => AuthToken(),
-      child: MaterialApp(
+      builder: (context, _) => MaterialApp(
         debugShowCheckedModeBanner: false,
         initialRoute: RouteNames.login,
         routes: {
@@ -74,7 +76,7 @@ class _MyAppState extends State<MyApp> {
             case RouteNames.login:
               if (dict.isNotEmpty) {
                 print(dict);
-                http.post(
+                final future = http.post(
                   Uri.parse(
                     "https://login.microsoftonline.com/common/oauth2/v2.0/token",
                   ),
@@ -82,8 +84,14 @@ class _MyAppState extends State<MyApp> {
                     "Content-Type": "application/x-www-form-urlencoded",
                   },
                   body:
-                      "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=offline_access%20user.read&code=${dict["code"]}&redirect_uri=https%3A%2F%2Frivia.me&grant_type=authorization_code&code_verifier=114514",
+                      "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=offline_access%20user.read&code=${dict["code"]}&redirect_uri=https%3A%2F%2Fapp.rivia.me&grant_type=authorization_code&code_verifier=114514",
                 );
+                future.then((response) {
+                  context.read<AuthToken>().token =
+                      json.decode(response.body)['access_token'];
+                  context.read<AuthToken>().refreshToken =
+                      json.decode(response.body)['refresh_token'];
+                });
               }
               return MaterialPageRoute(builder: (_) => Login());
             case RouteNames.createMeeting:

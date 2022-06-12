@@ -23,16 +23,24 @@ class MeetingDateAndTime extends ChangeNotifier {
 
 class AuthToken extends ChangeNotifier {
   String? _token;
+  String? _refreshToken;
 
   String? get token => _token;
+  String? get refreshToken => _refreshToken;
 
   set token(String? value) {
     _token = value;
     notifyListeners();
   }
 
+  set refreshToken(String? value) {
+    _refreshToken = value;
+    notifyListeners();
+  }
+
   void reset() {
     _token = null;
+    _refreshToken = null;
     notifyListeners();
   }
 }
