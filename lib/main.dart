@@ -61,6 +61,7 @@ class _MyAppState extends State<MyApp> {
         },
         onGenerateRoute: (routeSettings) {
           assert(routeSettings.name != null);
+          print(routeSettings.name);
           final names = routeSettings.name!.split('?');
           final name = names[0];
           final dict = names.length == 1
@@ -78,7 +79,6 @@ class _MyAppState extends State<MyApp> {
                     "https://login.microsoftonline.com/common/oauth2/v2.0/token",
                   ),
                   headers: {
-                    "Host": "https://login.microsoftonline.com",
                     "Content-Type": "application/x-www-form-urlencoded",
                   },
                   body:
