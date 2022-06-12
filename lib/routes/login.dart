@@ -213,7 +213,7 @@ class _LoginState extends State<Login> {
                                   js.context.callMethod(
                                     'open',
                                     [
-                                      "https://login.microsoftonline.com/{tenant}/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
+                                      "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
                                     ],
                                   );
                                   // js.context.callMethod(
