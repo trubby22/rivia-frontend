@@ -246,7 +246,7 @@ class _LoginState extends State<Login> {
                                                 "application/x-www-form-urlencoded",
                                           },
                                           body:
-                                              "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=offline_access%20User.ReadWrite.All&refresh_token=${user.refreshToken}&redirect_uri=https%3A%2F%2Fapp.rivia.me&grant_type=authorization_code&code_verifier=114514",
+                                              "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=offline_access%20User.ReadWrite.All&code=${user.refreshToken}&redirect_uri=https%3A%2F%2Fapp.rivia.me&grant_type=authorization_code&code_verifier=114514",
                                         )
                                             .then((response) {
                                           user.token = json.decode(
