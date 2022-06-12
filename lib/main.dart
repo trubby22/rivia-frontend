@@ -3,7 +3,7 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
@@ -60,7 +60,31 @@ class _MyAppState extends State<MyApp> {
           RouteNames.login: (_) => Login(),
         },
         onGenerateRoute: (routeSettings) {
-          switch (routeSettings.name) {
+          assert(routeSettings.name != null);
+          final names = routeSettings.name!.split('?');
+          final name = names[0];
+          final dict = names.length == 1
+              ? const {}
+              : Map.fromEntries(names[1].split('&').map((e) {
+                  final kv = e.split('=');
+                  return MapEntry(kv[0], kv[1]);
+                }));
+          switch (name) {
+            case RouteNames.login:
+              if (dict.isNotEmpty) {
+                print(dict);
+                http.post(
+                  Uri.parse(
+                    "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+                  ),
+                  headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                  },
+                  body:
+                      "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=user.read%20mail.read&code=${dict["code"]}&redirect_uri=https%3A%2F%2Frivia.me%2Flogin&grant_type=authorization_code&client_secret=eSb8Q~_JAmiOxiuAmiZF82K4c5zM-N7KJE8zVcWc",
+                );
+              }
+              return MaterialPageRoute(builder: (_) => Login());
             case RouteNames.createMeeting:
               try {
                 return MaterialPageRoute(
