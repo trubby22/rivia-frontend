@@ -45,13 +45,13 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     setUpSharedPref();
-    getLang(() => setState(() {}));
+    getSharedPref(() => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AuthToken(),
+    return ChangeNotifierProvider.value(
+      value: authToken,
       builder: (context, _) => MaterialApp(
         debugShowCheckedModeBanner: false,
         initialRoute: RouteNames.login,

@@ -32,7 +32,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
   @override
   void initState() {
     super.initState();
-    getLang(() => setState(() {}));
+    getSharedPref(() => setState(() {}));
   }
 
   @override

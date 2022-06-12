@@ -1,19 +1,4 @@
-import 'package:rivia/constants/fields.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 Lang language = Lang.en;
-
-Future<void> getLang(Function()? callback) async {
-  language = Lang.values[
-      (await SharedPreferences.getInstance()).getInt(Fields.lang) ??
-          language.index];
-  callback?.call();
-}
-
-Future<void> setLang(Lang value) async {
-  language = value;
-  (await SharedPreferences.getInstance()).setInt(Fields.lang, value.index);
-}
 
 enum Lang {
   en,

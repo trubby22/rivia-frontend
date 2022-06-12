@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/utilities/toast.dart';
+import 'package:rivia/utilities/change_notifiers.dart';
 
 class LanguageSwitcher extends StatelessWidget {
   const LanguageSwitcher({Key? key}) : super(key: key);
@@ -10,9 +11,9 @@ class LanguageSwitcher extends StatelessWidget {
     return ElevatedButton(
       onPressed: () async {
         if (language == Lang.en) {
-          await setLang(Lang.ru);
+          await setSharedPref(Lang.ru);
         } else {
-          await setLang(Lang.en);
+          await setSharedPref(Lang.en);
         }
 
         showToast(context: context, text: 'Language switched, please refresh');

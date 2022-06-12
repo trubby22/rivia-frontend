@@ -10,7 +10,7 @@ class DashboardUnassigned extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    getLang(null);
+    getSharedPref(null);
 
     return Scaffold(
       appBar: AppBar(

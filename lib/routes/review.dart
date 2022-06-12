@@ -197,7 +197,7 @@ class _ReviewState extends State<Review> {
   @override
   void initState() {
     super.initState();
-    getLang(() => setState(() {}));
+    getSharedPref(() => setState(() {}));
   }
 
   @override

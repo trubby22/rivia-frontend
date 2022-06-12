@@ -23,7 +23,7 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
   @override
   void initState() {
     super.initState();
-    getLang(() => setState(() {}));
+    getSharedPref(() => setState(() {}));
     fetchMeetings();
   }
 

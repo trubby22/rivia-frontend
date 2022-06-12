@@ -30,7 +30,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
   @override
   void initState() {
     super.initState();
-    getLang(() => setState(() {}));
+    getSharedPref(() => setState(() {}));
     fetchResponses();
   }
 

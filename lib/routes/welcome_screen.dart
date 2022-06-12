@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/test_data.dart';
+import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/language_switcher.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -9,7 +9,7 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    getLang(null);
+    getSharedPref(null);
 
     return Scaffold(
       appBar: AppBar(

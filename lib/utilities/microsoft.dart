@@ -1,13 +1,13 @@
 import 'dart:html' as html;
 
-final String _microsoftLoginBaseUrl =
+const String _microsoftLoginBaseUrl =
     'https://login.microsoftonline.com/common/oauth2/v2.0/';
 
-final String _clientId = '491d67e2-00cf-46ce-87cc-7e315c09b59f';
+const String _clientId = '491d67e2-00cf-46ce-87cc-7e315c09b59f';
 
-final String _redirectUri = 'https%3A%2F%2Fapp.rivia.me';
+const String _redirectUri = 'https%3A%2F%2Fapp.rivia.me';
 
-final String _pxceChallenge = 'OE_eNjbm4B4BlNKXbY8mQQrz6EblczecsaCeLwdS2Mw';
+const String _pxceChallenge = 'OE_eNjbm4B4BlNKXbY8mQQrz6EblczecsaCeLwdS2Mw';
 
 /// Microsoft Teams & Azure related APIs.
 
@@ -18,3 +18,9 @@ void microsoftLogin() {
     '_self',
   );
 }
+
+/// Attempt to fetch data from Microsoft Graph. Returns null if failed (not
+/// logged in).
+Future<void> microsoftFetch() async {}
+
+void microsoftRefresh() {}

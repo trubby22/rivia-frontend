@@ -31,7 +31,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    getLang(() => setState(() {}));
+    getSharedPref(() => setState(() {}));
   }
 
   @override
@@ -56,9 +56,9 @@ class _LoginState extends State<Login> {
                 width: 100.0,
                 onPressed: (_) async {
                   if (language == Lang.en) {
-                    await setLang(Lang.ru);
+                    await setSharedPref(Lang.ru);
                   } else {
-                    await setLang(Lang.en);
+                    await setSharedPref(Lang.en);
                   }
                   setState(() {});
                 },

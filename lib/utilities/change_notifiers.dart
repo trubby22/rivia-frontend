@@ -1,4 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:rivia/constants/fields.dart';
+import 'package:rivia/constants/languages.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final authToken = AuthToken();
+
+Future<void> getSharedPref(Function()? callback) async {
+  language = Lang.values[
+      (await SharedPreferences.getInstance()).getInt(Fields.lang) ??
+          language.index];
+  callback?.call();
+}
+
+Future<void> setSharedPref(Lang value) async {
+  language = value;
+  final instance = await SharedPreferences.getInstance();
+  instance.setInt(Fields.lang, value.index);
+}
 
 class MeetingDateAndTime extends ChangeNotifier {
   DateTime date = DateTime.now();
