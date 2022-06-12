@@ -25,4 +25,6 @@ class Fields {
   static String feedback = 'feedback';
 
   static String lang = 'lang';
+  static String token = 'token';
+  static String refreshToken = 'refresh_token';
 }

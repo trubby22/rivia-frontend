@@ -6,9 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 final authToken = AuthToken();
 
 Future<void> getSharedPref(Function()? callback) async {
-  language = Lang.values[
-      (await SharedPreferences.getInstance()).getInt(Fields.lang) ??
-          language.index];
+  final instance = await SharedPreferences.getInstance();
+  language = Lang.values[instance.getInt(Fields.lang) ?? language.index];
+  authToken.token = instance.getString(Fields.token);
+  authToken.refreshToken = instance.getString(Fields.refreshToken);
   callback?.call();
 }
 
@@ -16,6 +17,16 @@ Future<void> setSharedPref(Lang value) async {
   language = value;
   final instance = await SharedPreferences.getInstance();
   instance.setInt(Fields.lang, value.index);
+  if (authToken.token == null) {
+    instance.remove(Fields.token);
+  } else {
+    instance.setString(Fields.token, authToken.token!);
+  }
+  if (authToken.refreshToken == null) {
+    instance.remove(Fields.refreshToken);
+  } else {
+    instance.setString(Fields.refreshToken, authToken.refreshToken!);
+  }
 }
 
 class MeetingDateAndTime extends ChangeNotifier {

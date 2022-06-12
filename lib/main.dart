@@ -75,7 +75,6 @@ class _MyAppState extends State<MyApp> {
           switch (name) {
             case RouteNames.login:
               if (dict.isNotEmpty) {
-                print(dict);
                 final future = http.post(
                   Uri.parse(
                     "https://login.microsoftonline.com/common/oauth2/v2.0/token",
