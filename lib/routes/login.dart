@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:http/http.dart' as http;
+import 'dart:js' as js;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
@@ -255,8 +255,12 @@ class _LoginState extends State<Login> {
         showToast(context: context, text: errorMsg);
       }
     } else {
-      http.get(Uri.parse(
-          "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&response_type=code&redirect_uri=https%3A%2F%2Frivia.me&response_mode=query&scope=offline_access%20user.read%20mail.read"));
+      js.context.callMethod(
+        'open',
+        [
+          "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&response_type=code&redirect_uri=https%3A%2F%2Frivia.me&response_mode=query&scope=offline_access%20user.read%20mail.read"
+        ],
+      );
       // await postLoginCredentialsToBackend(loginCredentials, user);
       // showToast(context: context, text: "Login...");
       // (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
