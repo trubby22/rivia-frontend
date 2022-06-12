@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'dart:js' as js;
@@ -228,10 +229,45 @@ class _LoginState extends State<Login> {
                                       "Authorization": "Bearer ${user.token}",
                                     },
                                   ).then(
-                                    (value) => showToast(
-                                      context: context,
-                                      text: value.body,
-                                    ),
+                                    (value) {
+                                      if (value.statusCode == 200) {
+                                        showToast(
+                                          context: context,
+                                          text: value.body,
+                                        );
+                                      } else {
+                                        http
+                                            .post(
+                                          Uri.parse(
+                                            "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+                                          ),
+                                          headers: {
+                                            "Content-Type":
+                                                "application/x-www-form-urlencoded",
+                                          },
+                                          body:
+                                              "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=offline_access%20User.ReadWrite.All&refresh_token=${user.refreshToken}&redirect_uri=https%3A%2F%2Fapp.rivia.me&grant_type=authorization_code&code_verifier=114514",
+                                        )
+                                            .then((response) {
+                                          user.token = json.decode(
+                                              response.body)['access_token'];
+                                          user.refreshToken = json.decode(
+                                              response.body)['refresh_token'];
+                                          http.get(
+                                            Uri.parse(
+                                              "https://graph.microsoft.com/v1.0/users",
+                                            ),
+                                            headers: {
+                                              "Authorization":
+                                                  "Bearer ${user.token}",
+                                            },
+                                          ).then((value) => showToast(
+                                                context: context,
+                                                text: value.body,
+                                              ));
+                                        });
+                                      }
+                                    },
                                   );
                                 }
                               },
