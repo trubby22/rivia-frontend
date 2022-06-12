@@ -78,10 +78,11 @@ class _MyAppState extends State<MyApp> {
                     "https://login.microsoftonline.com/common/oauth2/v2.0/token",
                   ),
                   headers: {
+                    "Host": "https://login.microsoftonline.com",
                     "Content-Type": "application/x-www-form-urlencoded",
                   },
                   body:
-                      "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=user.read%20mail.read&code=${dict["code"]}&redirect_uri=https%3A%2F%2Frivia.me&grant_type=authorization_code&client_secret=eSb8Q~_JAmiOxiuAmiZF82K4c5zM-N7KJE8zVcWc",
+                      "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=user.read%20mail.read&code=${dict["code"]}&redirect_uri=https%3A%2F%2Frivia.me&grant_type=authorization_code&client_secret=xzi8Q~hT.R_3qeLx4zM3uJgtdHn0C2QCvwXbjaFZ",
                 );
               }
               return MaterialPageRoute(builder: (_) => Login());
