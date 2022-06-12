@@ -19,6 +19,7 @@ import 'package:rivia/routes/meeting_summary.dart';
 import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
+import 'package:rivia/utilities/microsoft.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -75,23 +76,7 @@ class _MyAppState extends State<MyApp> {
           switch (name) {
             case RouteNames.login:
               if (dict.isNotEmpty) {
-                final future = http.post(
-                  Uri.parse(
-                    "https://login.microsoftonline.com/common/oauth2/v2.0/token",
-                  ),
-                  headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                  },
-                  body:
-                      "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=offline_access%20User.ReadWrite.All&code=${dict["code"]}&redirect_uri=https%3A%2F%2Fapp.rivia.me&grant_type=authorization_code&code_verifier=114514",
-                );
-                future.then((response) {
-                  context.read<AuthToken>().token =
-                      json.decode(response.body)['access_token'];
-                  context.read<AuthToken>().refreshToken =
-                      json.decode(response.body)['refresh_token'];
-                  setSharedPref(language);
-                });
+                microsoftGetTokens(dict["code"]);
               }
               return MaterialPageRoute(builder: (_) => Login());
             case RouteNames.createMeeting:
