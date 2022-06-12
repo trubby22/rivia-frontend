@@ -213,9 +213,15 @@ class _LoginState extends State<Login> {
                                   js.context.callMethod(
                                     'open',
                                     [
-                                      "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&response_type=code&redirect_uri=https%3A%2F%2Fapp.rivia.me&response_mode=query&scope=User.ReadWrite.All&code_challenge=OE_eNjbm4B4BlNKXbY8mQQrz6EblczecsaCeLwdS2Mw&code_challenge_method=S256"
+                                      "https://login.microsoftonline.com/{tenant}/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
                                     ],
                                   );
+                                  // js.context.callMethod(
+                                  //   'open',
+                                  //   [
+                                  //     "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&response_type=code&redirect_uri=https%3A%2F%2Fapp.rivia.me&response_mode=query&scope=User.ReadWrite.All&code_challenge=OE_eNjbm4B4BlNKXbY8mQQrz6EblczecsaCeLwdS2Mw&code_challenge_method=S256"
+                                  //   ],
+                                  // );
                                   showToast(
                                     context: context,
                                     text: "Try again after login.",
@@ -230,7 +236,7 @@ class _LoginState extends State<Login> {
                                     },
                                   ).then(
                                     (value) {
-                                      if (false) {
+                                      if (value.statusCode == 200) {
                                         showToast(
                                           context: context,
                                           text: value.body,
