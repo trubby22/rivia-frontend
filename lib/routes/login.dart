@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'dart:js' as js;
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
@@ -196,22 +197,51 @@ class _LoginState extends State<Login> {
                         );
                       },
                     ),
-                    SizedButton(
-                      primaryColour: Colors.black,
-                      height: null,
-                      width:
-                          max(350, MediaQuery.of(context).size.width * 0.25) *
+                    Consumer<AuthToken>(
+                      builder: (context, user, child) {
+                        return SizedButton(
+                          primaryColour: Colors.black,
+                          height: null,
+                          width: max(350,
+                                  MediaQuery.of(context).size.width * 0.25) *
                               0.7,
-                      onPressed: (_) {
-                        setState(
-                          () {
-                            _signup = !_signup;
+                          onPressed: (_) {
+                            setState(
+                              () {
+                                if (user.token == null) {
+                                  js.context.callMethod(
+                                    'open',
+                                    [
+                                      "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&response_type=code&redirect_uri=https%3A%2F%2Fapp.rivia.me&response_mode=query&scope=offline_access%20user.read%20mail.read&code_challenge=OE_eNjbm4B4BlNKXbY8mQQrz6EblczecsaCeLwdS2Mw&code_challenge_method=S256"
+                                    ],
+                                  );
+                                  showToast(
+                                    context: context,
+                                    text: "Try again after login.",
+                                  );
+                                } else {
+                                  http.get(
+                                    Uri.parse(
+                                      "https://graph.microsoft.com/v1.0/me",
+                                    ),
+                                    headers: {
+                                      "Authorization": "Bearer ${user.token}",
+                                    },
+                                  ).then(
+                                    (value) => showToast(
+                                      context: context,
+                                      text: value.body,
+                                    ),
+                                  );
+                                }
+                              },
+                            );
                           },
+                          child: Text(
+                            'Click here to ${_signup ? 'Log In' : 'Sign Up'} instead',
+                          ),
                         );
                       },
-                      child: Text(
-                        'Click here to ${_signup ? 'Log In' : 'Sign Up'} instead',
-                      ),
                     ),
                   ],
                 ),
@@ -255,17 +285,11 @@ class _LoginState extends State<Login> {
         showToast(context: context, text: errorMsg);
       }
     } else {
-      js.context.callMethod(
-        'open',
-        [
-          "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&response_type=code&redirect_uri=https%3A%2F%2Fapp.rivia.me&response_mode=query&scope=offline_access%20user.read%20mail.read&code_challenge=OE_eNjbm4B4BlNKXbY8mQQrz6EblczecsaCeLwdS2Mw&code_challenge_method=S256"
-        ],
+      await postLoginCredentialsToBackend(loginCredentials, user);
+      showToast(context: context, text: "Login...");
+      (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
+        RouteNames.dashboardAssigned,
       );
-      // await postLoginCredentialsToBackend(loginCredentials, user);
-      // showToast(context: context, text: "Login...");
-      // (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
-      //   RouteNames.dashboardAssigned,
-      // );
     }
   }
 }
