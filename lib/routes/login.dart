@@ -10,6 +10,7 @@ import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/login_credentials.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
+import 'package:rivia/utilities/microsoft.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/toast.dart';
 
@@ -216,16 +217,7 @@ class _LoginState extends State<Login> {
                                   //     "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
                                   //   ],
                                   // );
-                                  // js.context.callMethod(
-                                  //   'open',
-                                  //   [
-                                  //     "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&response_type=code&redirect_uri=https%3A%2F%2Fapp.rivia.me&response_mode=query&scope=User.ReadWrite.All&code_challenge=OE_eNjbm4B4BlNKXbY8mQQrz6EblczecsaCeLwdS2Mw&code_challenge_method=S256"
-                                  //   ],
-                                  // );
-                                  showToast(
-                                    context: context,
-                                    text: "Try again after login.",
-                                  );
+                                  microsoftLogin();
                                 } else {
                                   http.get(
                                     Uri.parse(
