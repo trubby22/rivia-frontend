@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'dart:js' as js;
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -210,12 +209,13 @@ class _LoginState extends State<Login> {
                             setState(
                               () {
                                 if (user.token == null) {
-                                  js.context.callMethod(
-                                    'open',
-                                    [
-                                      "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
-                                    ],
-                                  );
+                                  // Admin Consent
+                                  // js.context.callMethod(
+                                  //   'open',
+                                  //   [
+                                  //     "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
+                                  //   ],
+                                  // );
                                   // js.context.callMethod(
                                   //   'open',
                                   //   [
