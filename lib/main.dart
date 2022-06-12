@@ -84,7 +84,7 @@ class _MyAppState extends State<MyApp> {
                     "Content-Type": "application/x-www-form-urlencoded",
                   },
                   body:
-                      "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=offline_access%20user.read&code=${dict["code"]}&redirect_uri=https%3A%2F%2Fapp.rivia.me&grant_type=authorization_code&code_verifier=114514",
+                      "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=offline_access%20User.ReadWrite.All&code=${dict["code"]}&redirect_uri=https%3A%2F%2Fapp.rivia.me&grant_type=authorization_code&code_verifier=114514",
                 );
                 future.then((response) {
                   context.read<AuthToken>().token =
