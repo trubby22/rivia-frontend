@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> {
                 print(dict);
                 http.post(
                   Uri.parse(
-                    "login.microsoftonline.com/common/oauth2/v2.0/token",
+                    "https://login.microsoftonline.com/common/oauth2/v2.0/token",
                   ),
                   headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
