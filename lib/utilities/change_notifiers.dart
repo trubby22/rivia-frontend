@@ -71,5 +71,6 @@ class AuthToken extends ChangeNotifier {
     _token = null;
     _refreshToken = null;
     notifyListeners();
+    setSharedPref(language);
   }
 }
