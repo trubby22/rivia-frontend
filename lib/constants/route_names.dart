@@ -4,5 +4,5 @@ class RouteNames {
   static const String dashboardUnassigned = '/dashboard_unassigned';
   static const String dashboardAssigned = '/dashboard_assigned';
   static const String createMeeting = '/create_meeting';
-  static const String login = '/login';
+  static const String login = '/';
 }

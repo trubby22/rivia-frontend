@@ -81,7 +81,7 @@ class _MyAppState extends State<MyApp> {
                     "Content-Type": "application/x-www-form-urlencoded",
                   },
                   body:
-                      "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=user.read%20mail.read&code=${dict["code"]}&redirect_uri=https%3A%2F%2Frivia.me%2Flogin&grant_type=authorization_code&client_secret=eSb8Q~_JAmiOxiuAmiZF82K4c5zM-N7KJE8zVcWc",
+                      "client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&scope=user.read%20mail.read&code=${dict["code"]}&redirect_uri=https%3A%2F%2Frivia.me&grant_type=authorization_code&client_secret=eSb8Q~_JAmiOxiuAmiZF82K4c5zM-N7KJE8zVcWc",
                 );
               }
               return MaterialPageRoute(builder: (_) => Login());
