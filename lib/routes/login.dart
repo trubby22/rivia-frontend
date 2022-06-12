@@ -258,7 +258,7 @@ class _LoginState extends State<Login> {
       js.context.callMethod(
         'open',
         [
-          "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&response_type=code&redirect_uri=https%3A%2F%2Frivia.me&response_mode=query&scope=offline_access%20user.read%20mail.read&code_challenge=YPk_K7oih6qp01GZ3k9TvlOVo9GnXcTX_nIqPadIT8Q&code_challenge_method=S256"
+          "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&response_type=code&redirect_uri=https%3A%2F%2Frivia.me&response_mode=query&scope=offline_access%20user.read%20mail.read&code_challenge=OE_eNjbm4B4BlNKXbY8mQQrz6EblczecsaCeLwdS2Mw&code_challenge_method=S256"
         ],
       );
       // await postLoginCredentialsToBackend(loginCredentials, user);
