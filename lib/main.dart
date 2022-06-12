@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => User(),
+      create: (_) => AuthToken(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         initialRoute: RouteNames.login,

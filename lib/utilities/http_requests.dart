@@ -99,7 +99,7 @@ Future<bool> postNewMeetingOnBackend(Meeting meeting) async {
 
 /// Sign the user up. Returns non-empty error [String] if there is an error.
 Future<String> postSignUpCredentialsToBackend(
-    LoginCredentials loginCredentials, User user) async {
+    LoginCredentials loginCredentials, AuthToken user) async {
   http.Response response = await http.post(
     Uri.parse(API.postSignUp()),
     body: json.encode(loginCredentials.toJson()),
@@ -112,7 +112,7 @@ Future<String> postSignUpCredentialsToBackend(
 }
 
 Future<void> postLoginCredentialsToBackend(
-    LoginCredentials loginCredentials, User user) async {
+    LoginCredentials loginCredentials, AuthToken user) async {
   if (!testMode) {
     print(json.encode(loginCredentials.toJson()));
     http.Response response = await _httpClient.post(

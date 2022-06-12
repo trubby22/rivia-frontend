@@ -172,7 +172,7 @@ class _LoginState extends State<Login> {
                         ],
                       ),
                     ),
-                    Consumer<User>(
+                    Consumer<AuthToken>(
                       builder: (context, user, child) {
                         return SizedButton(
                           backgroundColour:
@@ -223,7 +223,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Future<void> login(BuildContext context, User user) async {
+  Future<void> login(BuildContext context, AuthToken user) async {
     String login = _loginController.value.text;
     String password = _passwordController.value.text;
     String firstName = _firstNameController.value.text;

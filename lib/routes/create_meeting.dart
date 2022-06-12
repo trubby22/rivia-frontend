@@ -42,12 +42,12 @@ class _CreateMeetingState extends State<CreateMeeting> {
         centerTitle: true,
         title: Text(LangText.createMeeting.local),
         actions: [
-          Consumer<User>(
+          Consumer<AuthToken>(
             builder: (context, user, child) {
               return ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(RouteNames.login);
-                  user.uuid = null;
+                  user.reset();
                 },
                 child: Icon(Icons.logout),
               );

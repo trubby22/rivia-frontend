@@ -41,7 +41,7 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
         centerTitle: true,
         title: Text(LangText.dashboard.local),
         actions: [
-          Consumer<User>(
+          Consumer<AuthToken>(
             builder: (context, user, child) {
               return ElevatedButton(
                 onPressed: () {
@@ -49,7 +49,7 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
                       .popAndPushNamed(
                     RouteNames.login,
                   );
-                  user.uuid = null;
+                  user.reset();
                 },
                 child: Icon(Icons.logout),
               );

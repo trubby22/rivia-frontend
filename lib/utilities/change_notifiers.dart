@@ -21,13 +21,18 @@ class MeetingDateAndTime extends ChangeNotifier {
   }
 }
 
-class User extends ChangeNotifier {
-  String? _uuid;
+class AuthToken extends ChangeNotifier {
+  String? _token;
 
-  String? get uuid => _uuid;
+  String? get token => _token;
 
-  set uuid(String? uuid) {
-    _uuid = uuid;
+  set token(String? value) {
+    _token = value;
+    notifyListeners();
+  }
+
+  void reset() {
+    _token = null;
     notifyListeners();
   }
 }
