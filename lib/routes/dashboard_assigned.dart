@@ -44,12 +44,12 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
           Consumer<AuthToken>(
             builder: (context, user, child) {
               return ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  await user.reset();
                   (Navigator.of(context)..popUntil((route) => route.isFirst))
                       .popAndPushNamed(
                     RouteNames.login,
                   );
-                  user.reset();
                 },
                 child: Icon(Icons.logout),
               );

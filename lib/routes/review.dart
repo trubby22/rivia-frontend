@@ -212,9 +212,12 @@ class _ReviewState extends State<Review> {
           Consumer<AuthToken>(
             builder: (context, user, child) {
               return ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(RouteNames.login);
-                  user.reset();
+                onPressed: () async {
+                  await user.reset();
+                  (Navigator.of(context)..popUntil((route) => route.isFirst))
+                      .popAndPushNamed(
+                    RouteNames.login,
+                  );
                 },
                 child: Icon(Icons.logout),
               );

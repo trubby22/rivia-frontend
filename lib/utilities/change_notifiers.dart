@@ -7,11 +7,9 @@ final authToken = AuthToken();
 
 Future<void> getSharedPref(Function()? callback) async {
   final instance = await SharedPreferences.getInstance();
-  print("GET1: ${authToken.token}");
   language = Lang.values[instance.getInt(Fields.lang) ?? language.index];
   authToken.token = instance.getString(Fields.token);
   authToken.refreshToken = instance.getString(Fields.refreshToken);
-  print("GET2: ${authToken.token}");
   callback?.call();
 }
 
@@ -22,7 +20,6 @@ Future<void> setSharedPref(Lang value) async {
   if (authToken.token == null) {
     instance.remove(Fields.token);
   } else {
-    print("SET: ${authToken.token}");
     instance.setString(Fields.token, authToken.token!);
   }
   if (authToken.refreshToken == null) {
@@ -70,7 +67,7 @@ class AuthToken extends ChangeNotifier {
     notifyListeners();
   }
 
-  void reset() {
+  Future<void> reset() async {
     _token = null;
     _refreshToken = null;
     notifyListeners();
