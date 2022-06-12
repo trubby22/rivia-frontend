@@ -90,6 +90,7 @@ class _MyAppState extends State<MyApp> {
                       json.decode(response.body)['access_token'];
                   context.read<AuthToken>().refreshToken =
                       json.decode(response.body)['refresh_token'];
+                  setSharedPref(language);
                 });
               }
               return MaterialPageRoute(builder: (_) => Login());
