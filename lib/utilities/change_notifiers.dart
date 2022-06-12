@@ -11,6 +11,7 @@ Future<void> getSharedPref(Function()? callback) async {
   authToken.token = instance.getString(Fields.token);
   authToken.refreshToken = instance.getString(Fields.refreshToken);
   callback?.call();
+  print("GET TOKEN: ${authToken.token}");
 }
 
 Future<void> setSharedPref(Lang value) async {
@@ -27,6 +28,7 @@ Future<void> setSharedPref(Lang value) async {
   } else {
     instance.setString(Fields.refreshToken, authToken.refreshToken!);
   }
+  print("SET TOKEN TO ${authToken.token}");
 }
 
 class MeetingDateAndTime extends ChangeNotifier {
@@ -71,6 +73,6 @@ class AuthToken extends ChangeNotifier {
     _token = null;
     _refreshToken = null;
     notifyListeners();
-    setSharedPref(language);
+    await setSharedPref(language);
   }
 }
