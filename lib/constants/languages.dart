@@ -35,6 +35,7 @@ enum LangText {
   meetingName,
   participants,
   date,
+  time,
   startTime,
   endTime,
   createMeeting,
@@ -45,6 +46,11 @@ enum LangText {
   surname,
   email,
   password,
+
+  analytics,
+  organiser,
+  noParticipants,
+  lvlSat,
 }
 
 extension LangTextContent on LangText {
@@ -110,6 +116,7 @@ extension LangTextContent on LangText {
     LangText.meetingName: ['Meeting Name', 'Название встречи'],
     LangText.participants: ['Participants', 'Участники'],
     LangText.date: ['Date', 'Свидание'],
+    LangText.time: ['Time', 'Время'],
     LangText.startTime: ['Start Time', 'Время начала'],
     LangText.endTime: ['End Time', 'Время окончания'],
     LangText.signUp: ['Sign Up', 'Подписаться'],
@@ -119,5 +126,12 @@ extension LangTextContent on LangText {
     LangText.email: ['Email', 'Эл. адрес'],
     LangText.password: ['Password', 'Пароль'],
     LangText.createMeeting: ['Create Meeting', 'Создать встречу'],
+    LangText.analytics: ['Analytics', 'Аналитика'],
+    LangText.organiser: ['Organiser', 'Организатор'],
+    LangText.noParticipants: ['Number of Participants', 'Число участников'],
+    LangText.lvlSat: [
+      'Level of Satisfaction',
+      'Число участников',
+    ],
   };
 }

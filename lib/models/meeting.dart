@@ -10,6 +10,7 @@ class Meeting {
   final String title;
   final DateTime startTime;
   final DateTime endTime;
+  final String organiserId;
   final List<Participant> participants;
   final Map<String, String> painPoints;
 
@@ -17,6 +18,7 @@ class Meeting {
     this.meetingId,
     required this.title,
     required this.startTime,
+    required this.organiserId,
     required this.endTime,
     this.participants = const [],
     this.painPoints = const {},
@@ -36,6 +38,7 @@ class Meeting {
         meetingId: json[Fields.meetingId],
         startTime: DateTimeJson.fromJSON(json[Fields.startTime]),
         endTime: DateTimeJson.fromJSON(json[Fields.endTime]),
+        organiserId: json[Fields.organiserId],
         participants: (json[Fields.participants] as List<dynamic>?)
                 ?.map((e) => Participant.fromJson(e))
                 .toList() ??
@@ -54,6 +57,7 @@ class Meeting {
         Fields.title: title,
         Fields.startTime: startTime.toJSON(),
         Fields.endTime: endTime.toJSON(),
+        Fields.organiserId: organiserId,
         Fields.painPoints: painPoints.entries
             .map(
               (e) => {
@@ -78,6 +82,7 @@ class Meeting {
 class MeetingBuilder with ChangeNotifier {
   String? _meetingId;
   late String title;
+  late String organiserId;
   final MeetingDateAndTime meetingDateAndTime = MeetingDateAndTime();
   final Set<Participant> participants = {};
 
@@ -89,6 +94,7 @@ class MeetingBuilder with ChangeNotifier {
 
   /// Build a [Meeting].
   Meeting build() => Meeting(
+        organiserId: organiserId,
         title: title,
         startTime: DateTime(
           meetingDateAndTime.date.year,

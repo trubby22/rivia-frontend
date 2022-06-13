@@ -6,6 +6,7 @@ class Fields {
   static String email = 'email';
   static String password = 'password';
   static String participantId = 'participant_id';
+  static String organiserId = 'organiserId';
 
   static String title = 'title';
   static String startTime = 'start_time';

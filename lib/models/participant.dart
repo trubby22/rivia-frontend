@@ -4,14 +4,14 @@ import 'package:rivia/constants/fields.dart';
 class Participant {
   final String name;
   final String surname;
-  final String email;
-  final String? id;
+  final String? email;
+  final String id;
 
   Participant({
     required this.name,
     required this.surname,
-    required this.email,
-    this.id,
+    this.email,
+    required this.id,
   });
 
   get fullName => name + " " + surname;
@@ -25,7 +25,7 @@ class Participant {
   Map<String, dynamic> toJson() => {
         Fields.name: name,
         Fields.surname: surname,
-        Fields.email: email,
+        if (email != null) Fields.email: email,
         Fields.participantId: id,
       };
 }

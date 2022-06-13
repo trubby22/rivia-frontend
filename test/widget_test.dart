@@ -8,12 +8,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rivia/models/response.dart';
 
 List<Participant> testParticipants = [
-  Participant(name: "Mamezuku", surname: "Rai", email: "js@rt.cr"),
-  Participant(name: "Giorno", surname: "Giovanna", email: "js@kc.tt"),
+  Participant(name: "Mamezuku", surname: "Rai", id: "foo"),
+  Participant(name: "Giorno", surname: "Giovanna", id: "bar"),
 ];
 
 Meeting testMeeting = Meeting(
   title: "Foo Meeting",
+  organiserId: "0",
   startTime: DateTime.now(),
   endTime: DateTime.now(),
   participants: List.of(testParticipants),
