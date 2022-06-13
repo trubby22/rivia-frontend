@@ -1,5 +1,3 @@
-Lang language = Lang.en;
-
 enum Lang {
   en,
   ru,
@@ -47,7 +45,7 @@ enum LangText {
   password,
 }
 
-extension ExtendedLangText on LangText {
+extension LangTextContent on LangText {
   static const langTexts = {
     LangText.langCode: ['EN', 'РУ'],
     LangText.langSwitchMsg: [
@@ -118,6 +116,4 @@ extension ExtendedLangText on LangText {
     LangText.password: ['Password', 'Пароль'],
     LangText.createMeeting: ['Create Meeting', 'Создать встречу'],
   };
-
-  String get local => langTexts[this]![language.index];
 }

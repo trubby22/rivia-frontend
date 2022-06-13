@@ -10,12 +10,12 @@ class LanguageSwitcher extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        if (language == Lang.en) {
-          await setSharedPref(Lang.ru);
+        if (authToken.language == Lang.en) {
+          authToken.language == Lang.ru;
         } else {
-          await setSharedPref(Lang.en);
+          authToken.language == Lang.en;
         }
-
+        await setSharedPref();
         showToast(context: context, text: 'Language switched, please refresh');
       },
       child: Text(LangText.langCode.local),

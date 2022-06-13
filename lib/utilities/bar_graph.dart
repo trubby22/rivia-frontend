@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/models/participant.dart';
+import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/widget_size.dart';
 
 class BarGraphListener with ChangeNotifier {

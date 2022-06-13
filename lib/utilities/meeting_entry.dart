@@ -6,6 +6,7 @@ import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
+import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 
 /// A [Widget] showing the snapshot of a [Meeting] in the calendar.

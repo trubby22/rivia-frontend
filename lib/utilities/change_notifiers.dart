@@ -7,16 +7,16 @@ final authToken = AuthToken();
 
 Future<void> getSharedPref(Function()? callback) async {
   final instance = await SharedPreferences.getInstance();
-  language = Lang.values[instance.getInt(Fields.lang) ?? language.index];
+  authToken.language =
+      Lang.values[instance.getInt(Fields.lang) ?? authToken.language.index];
   authToken.token = instance.getString(Fields.token);
   authToken.refreshToken = instance.getString(Fields.refreshToken);
   callback?.call();
 }
 
-Future<void> setSharedPref(Lang value) async {
-  language = value;
+Future<void> setSharedPref() async {
   final instance = await SharedPreferences.getInstance();
-  instance.setInt(Fields.lang, value.index);
+  instance.setInt(Fields.lang, authToken.language.index);
   if (authToken.token == null) {
     instance.remove(Fields.token);
   } else {
@@ -51,6 +51,7 @@ class MeetingDateAndTime extends ChangeNotifier {
 }
 
 class AuthToken extends ChangeNotifier {
+  Lang language = Lang.en;
   String? _token;
   String? _refreshToken;
 
@@ -71,6 +72,10 @@ class AuthToken extends ChangeNotifier {
     _token = null;
     _refreshToken = null;
     notifyListeners();
-    await setSharedPref(language);
+    await setSharedPref();
   }
+}
+
+extension LangTextChoice on LangText {
+  String get local => langTexts[this]![authToken.language.index];
 }

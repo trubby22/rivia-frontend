@@ -23,7 +23,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
-  bool _signup = false;
+  final bool _signup = false;
 
   @override
   void initState() {
@@ -52,11 +52,12 @@ class _LoginState extends State<Login> {
                 height: 48.0,
                 width: 100.0,
                 onPressed: (_) async {
-                  if (language == Lang.en) {
-                    await setSharedPref(Lang.ru);
+                  if (authToken.language == Lang.en) {
+                    authToken.language = Lang.ru;
                   } else {
-                    await setSharedPref(Lang.en);
+                    authToken.language = Lang.en;
                   }
+                  await setSharedPref();
                   setState(() {});
                 },
                 child: Text(

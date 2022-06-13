@@ -40,7 +40,7 @@ Future<bool> microsoftGetTokens(String code) async {
   if (response.statusCode == 200) {
     authToken.token = json.decode(response.body)['access_token'];
     authToken.refreshToken = json.decode(response.body)['refresh_token'];
-    setSharedPref(language);
+    setSharedPref();
     return true;
   }
 
@@ -94,7 +94,7 @@ Future<bool> microsoftRefresh() async {
   if (response.statusCode == 200) {
     authToken.token = json.decode(response.body)['access_token'];
     authToken.refreshToken = json.decode(response.body)['refresh_token'];
-    setSharedPref(language);
+    setSharedPref();
     return true;
   }
 
