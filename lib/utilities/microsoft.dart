@@ -2,7 +2,6 @@ import 'dart:convert';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 import 'package:http/http.dart' as http;
-import 'package:rivia/constants/languages.dart';
 
 import 'change_notifiers.dart';
 
@@ -34,7 +33,7 @@ Future<bool> microsoftGetTokens(String code) async {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body:
-        "client_id=$_clientId&scope=offline_access%20User.ReadWrite.All&code=$code&redirect_uri=https%3A%2F%2Fapp.rivia.me&grant_type=authorization_code&code_verifier=$_pxceVerifier",
+        "client_id=$_clientId&scope=User.ReadWrite.All&code=$code&redirect_uri=https%3A%2F%2Fapp.rivia.me&grant_type=authorization_code&code_verifier=$_pxceVerifier",
   );
 
   if (response.statusCode == 200) {
@@ -88,7 +87,7 @@ Future<bool> microsoftRefresh() async {
     Uri.parse('$_microsoftLoginBaseUrl/token'),
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     body:
-        'client_id=$_clientId&scope=offline_access%20User.ReadWrite.All&refresh_token=${authToken.refreshToken}&redirect_uri=$_redirectUri&grant_type=refresh_token&code_verifier=$_pxceVerifier',
+        'client_id=$_clientId&scope=User.ReadWrite.All&refresh_token=${authToken.refreshToken}&redirect_uri=$_redirectUri&grant_type=refresh_token&code_verifier=$_pxceVerifier',
   );
 
   if (response.statusCode == 200) {

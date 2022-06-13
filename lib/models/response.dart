@@ -53,6 +53,8 @@ class ResponseBuilder with ChangeNotifier {
   Map<String, String> painPoints = {};
   final Set<Participant> notNeeded = {};
   final Set<Participant> notPrepared = {};
+  final Set<Participant> needed = {};
+  final Set<Participant> prepared = {};
   String? feedback;
 
   double get quality => _quality;

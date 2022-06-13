@@ -24,20 +24,26 @@ class UITexts {
     color: Colors.black,
   );
 
+  static const bigText = TextStyle(
+    fontSize: FontSizes.bigTextSize,
+    color: Colors.black,
+  );
+
   static const mediumButtonText = TextStyle(
-    fontSize: FontSizes.mediumTextSize,
+    fontSize: FontSizes.bigTextSize,
     fontWeight: FontWeight.bold,
   );
 
   static const bigButtonText = TextStyle(
-    fontSize: FontSizes.sectionSubheaderFontSize,
+    fontSize: FontSizes.sectionHeaderFontSize,
     fontWeight: FontWeight.bold,
   );
 }
 
 class FontSizes {
-  static const iconHeaderFontSize = 32.0;
-  static const sectionHeaderFontSize = 26.0;
-  static const sectionSubheaderFontSize = 20.0;
+  static const iconHeaderFontSize = 40.0;
+  static const sectionHeaderFontSize = 28.0;
+  static const sectionSubheaderFontSize = 24.0;
+  static const bigTextSize = 20.0;
   static const mediumTextSize = 16.0;
 }

@@ -42,13 +42,21 @@ Meeting testMeeting2 = Meeting(
   startTime: DateTime.now(),
   endTime: DateTime.now(),
   participants: [
-    Participant(name: "Mamezuku", surname: "Rai", email: "js@rt.cr"),
-    Participant(name: "Giorno", surname: "Giovanna", email: "js@kc.tt"),
+    Participant(name: "Mamezuku", surname: "Rai", email: ""),
+    Participant(
+      name: "Albus Percival Wulfric Brian",
+      surname: "Dumbledore",
+      email: "",
+    ),
+    Participant(name: "Yui", surname: "Kusano", email: ""),
+    Participant(name: "Shadow Mistress", surname: "Yuko", email: ""),
+    Participant(name: "Jacen", surname: "Syndulla", email: ""),
+    Participant(name: "Piotr", surname: "Błaszyk", email: ""),
   ],
   painPoints: {
-    '1': 'meeting overran',
-    '2': 'meeting too short',
-    '3': 'I spoke too little and listened too much',
-    '4': 'too many people invited',
+    '1': 'Need clearer, finer agenda',
+    '2': 'Meeting is too long',
+    '3': 'Follow-ups should be discussed at the next meeting',
+    '4': 'Did not have time to prepare for the meeting',
   },
 );
