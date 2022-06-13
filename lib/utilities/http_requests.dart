@@ -11,7 +11,6 @@ import 'package:rivia/models/login_credentials.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
-import 'package:rivia/utilities/change_notifiers.dart';
 
 /// The global [http.Client].
 final _httpClient = BrowserClient()..withCredentials = true;
@@ -99,7 +98,8 @@ Future<bool> postNewMeetingOnBackend(Meeting meeting) async {
 
 /// Sign the user up. Returns non-empty error [String] if there is an error.
 Future<String> postSignUpCredentialsToBackend(
-    LoginCredentials loginCredentials, AuthToken user) async {
+  LoginCredentials loginCredentials,
+) async {
   http.Response response = await http.post(
     Uri.parse(API.postSignUp()),
     body: json.encode(loginCredentials.toJson()),
@@ -112,7 +112,8 @@ Future<String> postSignUpCredentialsToBackend(
 }
 
 Future<void> postLoginCredentialsToBackend(
-    LoginCredentials loginCredentials, AuthToken user) async {
+  LoginCredentials loginCredentials,
+) async {
   if (!testMode) {
     http.Response response = await _httpClient.post(
       Uri.parse(API.postLogin()),

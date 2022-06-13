@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'dart:math';
 
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/ui_texts.dart';
@@ -174,66 +171,54 @@ class _LoginState extends State<Login> {
                         ],
                       ),
                     ),
-                    Consumer<AuthToken>(
-                      builder: (context, user, child) {
-                        return SizedButton(
-                          backgroundColour:
-                              const Color.fromRGBO(239, 198, 135, 1),
-                          primaryColour: Colors.black,
-                          onPressedColour:
-                              const Color.fromRGBO(239, 198, 135, 1),
-                          height: 64.0,
-                          width: max(350,
-                                  MediaQuery.of(context).size.width * 0.25) *
+                    SizedButton(
+                      backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
+                      primaryColour: Colors.black,
+                      onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
+                      height: 64.0,
+                      width:
+                          max(350, MediaQuery.of(context).size.width * 0.25) *
                               0.7,
-                          onPressed: (_) async {
-                            await login(context, user);
-                          },
-                          child: Text(
-                            _signup
-                                ? LangText.signUp.local
-                                : LangText.login.local,
-                            style: UITexts.mediumButtonText,
-                          ),
-                        );
+                      onPressed: (_) async {
+                        await login(context);
                       },
+                      child: Text(
+                        _signup ? LangText.signUp.local : LangText.login.local,
+                        style: UITexts.mediumButtonText,
+                      ),
                     ),
-                    Consumer<AuthToken>(
-                      builder: (context, user, child) {
-                        return SizedButton(
-                          primaryColour: Colors.black,
-                          height: null,
-                          width: max(350,
-                                  MediaQuery.of(context).size.width * 0.25) *
+                    SizedButton(
+                      primaryColour: Colors.black,
+                      height: null,
+                      width:
+                          max(350, MediaQuery.of(context).size.width * 0.25) *
                               0.7,
-                          onPressed: (_) {
-                            setState(
-                              () {
-                                if (user.token == null) {
-                                  // Admin Consent
-                                  // js.context.callMethod(
-                                  //   'open',
-                                  //   [
-                                  //     "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
-                                  //   ],
-                                  // );
-                                  microsoftLogin();
-                                } else {
-                                  microsoftFetch().then(
-                                    (value) => showToast(
-                                      context: context,
-                                      text: value ?? "[ERROR: NOT LOGGED IN]",
-                                    ),
-                                  );
-                                }
-                              },
-                            );
+                      onPressed: (_) {
+                        setState(
+                          () {
+                            if (authToken.token == null) {
+                              // Admin Consent
+                              // js.context.callMethod(
+                              //   'open',
+                              //   [
+                              //     "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
+                              //   ],
+                              // );
+                              microsoftLogin();
+                            } else {
+                              microsoftFetch().then(
+                                (value) => showToast(
+                                  context: context,
+                                  text: value ?? "[ERROR: NOT LOGGED IN]",
+                                ),
+                              );
+                            }
                           },
-                          child: Text(
-                            'Click here to ${_signup ? 'Log In' : 'Sign Up'} instead',
-                          ),
                         );
                       },
+                      child: Text(
+                        'Click here to ${_signup ? 'Log In' : 'Sign Up'} instead',
+                      ),
                     ),
                   ],
                 ),
@@ -245,7 +230,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Future<void> login(BuildContext context, AuthToken user) async {
+  Future<void> login(BuildContext context) async {
     String login = _loginController.value.text;
     String password = _passwordController.value.text;
     String firstName = _firstNameController.value.text;
@@ -263,8 +248,7 @@ class _LoginState extends State<Login> {
     );
 
     if (_signup) {
-      String errorMsg =
-          await postSignUpCredentialsToBackend(loginCredentials, user);
+      String errorMsg = await postSignUpCredentialsToBackend(loginCredentials);
       if (errorMsg.isEmpty) {
         showToast(
           context: context,
@@ -277,7 +261,7 @@ class _LoginState extends State<Login> {
         showToast(context: context, text: errorMsg);
       }
     } else {
-      await postLoginCredentialsToBackend(loginCredentials, user);
+      await postLoginCredentialsToBackend(loginCredentials);
       showToast(context: context, text: "Login...");
       (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
         RouteNames.dashboardAssigned,

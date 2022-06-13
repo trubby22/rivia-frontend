@@ -17,19 +17,15 @@ class DashboardUnassigned extends StatelessWidget {
         centerTitle: true,
         title: Text(LangText.dashboard.local),
         actions: [
-          Consumer<AuthToken>(
-            builder: (context, user, child) {
-              return ElevatedButton(
-                onPressed: () async {
-                  await user.reset();
-                  (Navigator.of(context)..popUntil((route) => route.isFirst))
-                      .popAndPushNamed(
-                    RouteNames.login,
-                  );
-                },
-                child: Icon(Icons.logout),
+          ElevatedButton(
+            onPressed: () async {
+              await authToken.reset();
+              (Navigator.of(context)..popUntil((route) => route.isFirst))
+                  .popAndPushNamed(
+                RouteNames.login,
               );
             },
+            child: Icon(Icons.logout),
           ),
           // ignore: prefer_const_constructors
           LanguageSwitcher(),

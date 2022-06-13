@@ -71,19 +71,15 @@ class _MeetingSummaryState extends State<MeetingSummary> {
         centerTitle: true,
         title: Text(widget.meeting.title),
         actions: [
-          Consumer<AuthToken>(
-            builder: (context, user, child) {
-              return ElevatedButton(
-                onPressed: () async {
-                  await user.reset();
-                  (Navigator.of(context)..popUntil((route) => route.isFirst))
-                      .popAndPushNamed(
-                    RouteNames.login,
-                  );
-                },
-                child: Icon(Icons.logout),
+          ElevatedButton(
+            onPressed: () async {
+              await authToken.reset();
+              (Navigator.of(context)..popUntil((route) => route.isFirst))
+                  .popAndPushNamed(
+                RouteNames.login,
               );
             },
+            child: Icon(Icons.logout),
           ),
           // ignore: prefer_const_constructors
           LanguageSwitcher(),

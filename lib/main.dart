@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:provider/provider.dart';
 import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
-import 'package:http/http.dart' as http;
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
@@ -51,73 +47,69 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: authToken,
-      builder: (context, _) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        initialRoute: RouteNames.login,
-        routes: {
-          '/welcome_screen': (_) => WelcomeScreen(),
-          RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
-          RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
-          RouteNames.login: (_) => Login(),
-        },
-        onGenerateRoute: (routeSettings) {
-          assert(routeSettings.name != null);
-          print(routeSettings.name);
-          final names = routeSettings.name!.split('?');
-          final name = names[0];
-          final dict = names.length == 1
-              ? const {}
-              : Map.fromEntries(names[1].split('&').map((e) {
-                  final kv = e.split('=');
-                  return MapEntry(kv[0], kv[1]);
-                }));
-          switch (name) {
-            case RouteNames.login:
-              if (dict.isNotEmpty) {
-                microsoftGetTokens(dict["code"]);
-              }
-              return MaterialPageRoute(builder: (_) => Login());
-            case RouteNames.createMeeting:
-              try {
-                return MaterialPageRoute(
-                  builder: (_) => CreateMeeting(
-                    allParticipants:
-                        routeSettings.arguments as List<Participant>,
-                  ),
-                );
-              } catch (_) {
-                throw Exception(
-                  "ERROR: Did not pass a valid Participants for Create Meeting page! Type: ${routeSettings.arguments.runtimeType}",
-                );
-              }
-            case RouteNames.review:
-              if (routeSettings.arguments.runtimeType != Meeting) {
-                throw Exception(
-                  "ERROR: Did not pass a valid Meeting for Review page!",
-                );
-              }
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: RouteNames.login,
+      routes: {
+        '/welcome_screen': (_) => WelcomeScreen(),
+        RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
+        RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
+        RouteNames.login: (_) => Login(),
+      },
+      onGenerateRoute: (routeSettings) {
+        assert(routeSettings.name != null);
+        print(routeSettings.name);
+        final names = routeSettings.name!.split('?');
+        final name = names[0];
+        final dict = names.length == 1
+            ? const {}
+            : Map.fromEntries(names[1].split('&').map((e) {
+                final kv = e.split('=');
+                return MapEntry(kv[0], kv[1]);
+              }));
+        switch (name) {
+          case RouteNames.login:
+            if (dict.isNotEmpty) {
+              microsoftGetTokens(dict["code"]);
+            }
+            return MaterialPageRoute(builder: (_) => Login());
+          case RouteNames.createMeeting:
+            try {
               return MaterialPageRoute(
-                builder: (_) => Review(
-                  meeting: routeSettings.arguments as Meeting,
-                  participant: testParticipants[0],
+                builder: (_) => CreateMeeting(
+                  allParticipants: routeSettings.arguments as List<Participant>,
                 ),
               );
-            case RouteNames.summary:
-              if (routeSettings.arguments.runtimeType != Meeting) {
-                throw Exception(
-                  "ERROR: Did not pass a valid Meeting for Summary page!",
-                );
-              }
-              return MaterialPageRoute(
-                builder: (_) => MeetingSummary(
-                  meeting: routeSettings.arguments as Meeting,
-                ),
+            } catch (_) {
+              throw Exception(
+                "ERROR: Did not pass a valid Participants for Create Meeting page! Type: ${routeSettings.arguments.runtimeType}",
               );
-          }
-        },
-      ),
+            }
+          case RouteNames.review:
+            if (routeSettings.arguments.runtimeType != Meeting) {
+              throw Exception(
+                "ERROR: Did not pass a valid Meeting for Review page!",
+              );
+            }
+            return MaterialPageRoute(
+              builder: (_) => Review(
+                meeting: routeSettings.arguments as Meeting,
+                participant: testParticipants[0],
+              ),
+            );
+          case RouteNames.summary:
+            if (routeSettings.arguments.runtimeType != Meeting) {
+              throw Exception(
+                "ERROR: Did not pass a valid Meeting for Summary page!",
+              );
+            }
+            return MaterialPageRoute(
+              builder: (_) => MeetingSummary(
+                meeting: routeSettings.arguments as Meeting,
+              ),
+            );
+        }
+      },
     );
   }
 }
