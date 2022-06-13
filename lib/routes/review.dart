@@ -266,8 +266,11 @@ class _ReviewState extends State<Review> {
                         Expanded(
                           child: SliderTheme(
                             data: SliderTheme.of(context).copyWith(
-                              trackHeight: 32.0,
                               inactiveTrackColor: Colors.white,
+                              trackHeight: 32.0,
+                              tickMarkShape: const RoundSliderTickMarkShape(
+                                tickMarkRadius: 0,
+                              ),
                               trackShape: const BiColourSliderTrackShape(),
                               thumbShape: const RoundSliderThumbShape(
                                 enabledThumbRadius: 32.0,
@@ -283,7 +286,7 @@ class _ReviewState extends State<Review> {
                               activeColor: Colors.grey.shade500,
                               min: 0,
                               max: 1,
-                              divisions: null,
+                              divisions: 6,
                               onChanged: (value) {
                                 context.read<ResponseBuilder>().quality = value;
                               },
