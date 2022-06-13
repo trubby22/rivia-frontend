@@ -20,6 +20,8 @@ enum LangText {
   voters,
 
   confidentialSurvey,
+  bad,
+  good,
   needed,
   prepared,
   all,
@@ -91,6 +93,8 @@ extension LangTextContent on LangText {
       'Confidential Survey',
       'Конфиденциальный опрос',
     ],
+    LangText.bad: ['BAD', 'ПЛОХО'],
+    LangText.good: ['GOOD', 'ХОРОШИЙ'],
     LangText.needed: ['Needed', 'Нужно'],
     LangText.prepared: ['Prepared', 'Готово'],
     LangText.all: ['ALL', 'все'],

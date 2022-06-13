@@ -12,6 +12,7 @@ import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
+import 'package:rivia/utilities/language_switcher.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/toast.dart';
 
@@ -256,7 +257,7 @@ class _ReviewState extends State<Review> {
                         SizedBox(
                           width: 100.0,
                           child: Text(
-                            'BAD',
+                            LangText.bad.local,
                             textAlign: TextAlign.center,
                             style: UITexts.sectionHeader.copyWith(
                               color: Colors.red,
@@ -296,7 +297,7 @@ class _ReviewState extends State<Review> {
                         SizedBox(
                           width: 100.0,
                           child: Text(
-                            'GOOD',
+                            LangText.good.local,
                             textAlign: TextAlign.center,
                             style: UITexts.sectionHeader.copyWith(
                               color: Colors.green,
@@ -469,6 +470,30 @@ class _ReviewState extends State<Review> {
               fit: BoxFit.fill,
             ),
             foregroundBuilder(context),
+            LanguageSwitcher(callback: () => setState(() => {})),
+            Positioned(
+              left: 64.0,
+              top: 24.0,
+              child: SizedButton(
+                backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
+                primaryColour: Colors.black,
+                onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
+                height: 48.0,
+                width: 48.0,
+                radius: BorderRadius.circular(24.0),
+                onPressed: (_) {
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  } else {
+                    Navigator.of(context).popAndPushNamed(
+                      RouteNames.analytics,
+                      arguments: [testMeeting2],
+                    );
+                  }
+                },
+                child: const Icon(Icons.arrow_back, size: 32.0),
+              ),
+            ),
           ],
         ),
       ),

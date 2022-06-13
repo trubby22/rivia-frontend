@@ -21,6 +21,7 @@ class _AnalyticsState extends State<Analytics> {
           height: MediaQuery.of(context).size.height,
           fit: BoxFit.fill,
         ),
+        // foregroundBuilder(context),
       ],
     );
   }

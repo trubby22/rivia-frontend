@@ -8,6 +8,7 @@ import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/login_credentials.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
+import 'package:rivia/utilities/language_switcher.dart';
 import 'package:rivia/utilities/microsoft.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/toast.dart';
@@ -43,30 +44,7 @@ class _LoginState extends State<Login> {
         backgroundColor: const Color.fromRGBO(244, 242, 234, 1),
         body: Stack(
           children: [
-            Positioned(
-              right: 64.0,
-              top: 24.0,
-              child: SizedButton(
-                backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
-                primaryColour: Colors.black,
-                onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
-                height: 48.0,
-                width: 100.0,
-                onPressed: (_) async {
-                  if (authToken.language == Lang.en) {
-                    authToken.language = Lang.ru;
-                  } else {
-                    authToken.language = Lang.en;
-                  }
-                  await setSharedPref();
-                  setState(() {});
-                },
-                child: Text(
-                  LangText.langCode.local,
-                  style: UITexts.mediumButtonText,
-                ),
-              ),
-            ),
+            LanguageSwitcher(callback: () => setState(() => {})),
             Center(
               child: Container(
                 width: max(350, MediaQuery.of(context).size.width * 0.25),
