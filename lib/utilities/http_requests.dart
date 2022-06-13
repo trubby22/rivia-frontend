@@ -114,7 +114,6 @@ Future<String> postSignUpCredentialsToBackend(
 Future<void> postLoginCredentialsToBackend(
     LoginCredentials loginCredentials, AuthToken user) async {
   if (!testMode) {
-    print(json.encode(loginCredentials.toJson()));
     http.Response response = await _httpClient.post(
       Uri.parse(API.postLogin()),
       headers: _headers,
