@@ -4,6 +4,7 @@ import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/participant.dart';
+import 'package:rivia/routes/analytics.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
 import 'package:rivia/routes/login.dart';
@@ -58,7 +59,6 @@ class _MyAppState extends State<MyApp> {
       },
       onGenerateRoute: (routeSettings) {
         assert(routeSettings.name != null);
-        print(routeSettings.name);
         final names = routeSettings.name!.split('?');
         final name = names[0];
         final dict = names.length == 1
@@ -68,6 +68,18 @@ class _MyAppState extends State<MyApp> {
                 return MapEntry(kv[0], kv[1]);
               }));
         switch (name) {
+          case RouteNames.analytics:
+            try {
+              return MaterialPageRoute(
+                builder: (_) => Analytics(
+                  meetings: routeSettings.arguments as List<Meeting>,
+                ),
+              );
+            } catch (_) {
+              throw Exception(
+                "ERROR: Did not pass a valid list of Meetings for Analytics page! Type: ${routeSettings.arguments.runtimeType}",
+              );
+            }
           case RouteNames.login:
             if (dict.isNotEmpty) {
               microsoftGetTokens(dict["code"]);
@@ -82,7 +94,7 @@ class _MyAppState extends State<MyApp> {
               );
             } catch (_) {
               throw Exception(
-                "ERROR: Did not pass a valid Participants for Create Meeting page! Type: ${routeSettings.arguments.runtimeType}",
+                "ERROR: Did not pass a valid list of Participants for Create Meeting page! Type: ${routeSettings.arguments.runtimeType}",
               );
             }
           case RouteNames.review:

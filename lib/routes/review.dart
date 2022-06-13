@@ -4,6 +4,8 @@ import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
+import 'package:rivia/constants/route_names.dart';
+import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
@@ -278,7 +280,7 @@ class _ReviewState extends State<Review> {
                             ),
                             child: Slider(
                               value: quality,
-                              activeColor: Colors.grey.shade400,
+                              activeColor: Colors.grey.shade500,
                               min: 0,
                               max: 1,
                               divisions: null,
@@ -319,8 +321,8 @@ class _ReviewState extends State<Review> {
                       borderRadius: BorderRadius.circular(20.0),
                       boxShadow: const [
                         BoxShadow(
-                          offset: Offset(0, 1),
-                          blurRadius: 2.0,
+                          offset: Offset(0, 0.5),
+                          blurRadius: 1.0,
                         ),
                       ],
                     ),
@@ -423,7 +425,10 @@ class _ReviewState extends State<Review> {
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     onPressed: (_) {
                       submitReview(context);
-                      Navigator.of(context).pop();
+                      (Navigator.of(context)..pop()).pushNamed(
+                        RouteNames.analytics,
+                        arguments: [testMeeting2],
+                      );
                     },
                     isSelected: true,
                     child: Text(

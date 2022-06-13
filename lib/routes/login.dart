@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
+import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/login_credentials.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
@@ -181,7 +182,11 @@ class _LoginState extends State<Login> {
                           max(350, MediaQuery.of(context).size.width * 0.25) *
                               0.7,
                       onPressed: (_) async {
-                        await login(context);
+                        Navigator.of(context).pushNamed(
+                          RouteNames.review,
+                          arguments: testMeeting2,
+                        );
+                        // await login(context);
                       },
                       child: Text(
                         _signup ? LangText.signUp.local : LangText.login.local,
