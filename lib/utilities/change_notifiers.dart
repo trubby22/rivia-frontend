@@ -77,5 +77,6 @@ class AuthToken extends ChangeNotifier {
 }
 
 extension LangTextChoice on LangText {
-  String get local => langTexts[this]![authToken.language.index];
+  String get local =>
+      LangTextContent.langTexts[this]![authToken.language.index];
 }
