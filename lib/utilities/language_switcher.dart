@@ -19,7 +19,7 @@ class LanguageSwitcher extends StatelessWidget {
         primaryColour: Colors.black,
         onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
         height: 48.0,
-        width: 100.0,
+        width: 64.0,
         onPressed: (_) async {
           if (authToken.language == Lang.en) {
             authToken.language = Lang.ru;

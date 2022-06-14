@@ -49,6 +49,188 @@ class _AnalyticsState extends State<Analytics> {
     );
   }
 
+  Widget tableBuilder(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
+    return Align(
+      child: SizedBox(
+        width: width * 0.72,
+        child: Table(
+          border: TableBorder.all(color: Colors.grey),
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          columnWidths: const {
+            0: IntrinsicColumnWidth(),
+            1: IntrinsicColumnWidth(),
+            2: IntrinsicColumnWidth(),
+          },
+          children: [
+            TableRow(
+              decoration: const BoxDecoration(color: Colors.blue),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    LangText.date.local,
+                    textAlign: TextAlign.center,
+                    style: UITexts.bigText.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    LangText.startTime.local,
+                    textAlign: TextAlign.center,
+                    style: UITexts.bigText.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    LangText.endTime.local,
+                    textAlign: TextAlign.center,
+                    style: UITexts.bigText.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    LangText.organiser.local,
+                    textAlign: TextAlign.center,
+                    style: UITexts.bigText.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    LangText.noParticipants.local,
+                    textAlign: TextAlign.center,
+                    style: UITexts.bigText.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    LangText.lvlSat.local,
+                    textAlign: TextAlign.center,
+                    style: UITexts.bigText.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    LangText.neededParticipants.local,
+                    textAlign: TextAlign.center,
+                    style: UITexts.bigText.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    LangText.preparedParticipants.local,
+                    textAlign: TextAlign.center,
+                    style: UITexts.bigText.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ...List.generate(
+              widget.meetings.length,
+              (index) {
+                final meeting = widget.meetings[index];
+                final start = meeting.startTime;
+                final end = meeting.endTime;
+                Participant? organiser;
+                for (final p in meeting.participants) {
+                  if (p.participant.id == meeting.organiserId) {
+                    organiser = p.participant;
+                    break;
+                  }
+                }
+                final organiserName = organiser?.fullName ?? "[NULL]";
+                final participantNum = meeting.participants.length;
+                final notNeededNum =
+                    meeting.participants.where((e) => e.notNeeded != 0).length;
+                final notPreparedNum = meeting.participants
+                    .where((e) => e.notPrepared != 0)
+                    .length;
+
+                return TableRow(
+                  decoration: BoxDecoration(
+                    color: _highlightIndex == index
+                        ? index.isOdd
+                            ? Colors.blue.shade50
+                            : Colors.orange.shade50
+                        : index.isOdd
+                            ? const Color.fromARGB(255, 150, 210, 255)
+                            : const Color.fromARGB(255, 255, 212, 150),
+                  ),
+                  children: [
+                    entryBuilder(
+                      context,
+                      index: index,
+                      text: '${start.day}/${start.month}/${start.year}',
+                    ),
+                    entryBuilder(
+                      context,
+                      index: index,
+                      text: TimeOfDay.fromDateTime(start).format(context),
+                    ),
+                    entryBuilder(
+                      context,
+                      index: index,
+                      text: TimeOfDay.fromDateTime(end).format(context),
+                    ),
+                    entryBuilder(
+                      context,
+                      index: index,
+                      text: organiserName,
+                    ),
+                    entryBuilder(
+                      context,
+                      index: index,
+                      text: '$participantNum',
+                    ),
+                    entryBuilder(
+                      context,
+                      index: index,
+                      text: '${(meeting.quality * 100).round()}%',
+                    ),
+                    entryBuilder(
+                      context,
+                      index: index,
+                      text: '${participantNum - notNeededNum}',
+                    ),
+                    entryBuilder(
+                      context,
+                      index: index,
+                      text: '${participantNum - notPreparedNum}',
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget foregroundBuilder(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -79,186 +261,17 @@ class _AnalyticsState extends State<Analytics> {
           child: Column(
             children: [
               Align(
-                child: SizedBox(
-                  width: width * 0.72,
-                  child: Table(
-                    border: TableBorder.all(color: Colors.grey),
-                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                    columnWidths: const {
-                      0: IntrinsicColumnWidth(),
-                      1: IntrinsicColumnWidth(),
-                      2: IntrinsicColumnWidth(),
-                    },
-                    children: [
-                      TableRow(
-                        decoration: const BoxDecoration(color: Colors.blue),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              LangText.date.local,
-                              textAlign: TextAlign.center,
-                              style: UITexts.bigText.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              LangText.startTime.local,
-                              textAlign: TextAlign.center,
-                              style: UITexts.bigText.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              LangText.endTime.local,
-                              textAlign: TextAlign.center,
-                              style: UITexts.bigText.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              LangText.organiser.local,
-                              textAlign: TextAlign.center,
-                              style: UITexts.bigText.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              LangText.noParticipants.local,
-                              textAlign: TextAlign.center,
-                              style: UITexts.bigText.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              LangText.lvlSat.local,
-                              textAlign: TextAlign.center,
-                              style: UITexts.bigText.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              LangText.neededParticipants.local,
-                              textAlign: TextAlign.center,
-                              style: UITexts.bigText.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              LangText.preparedParticipants.local,
-                              textAlign: TextAlign.center,
-                              style: UITexts.bigText.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      ...List.generate(
-                        widget.meetings.length,
-                        (index) {
-                          final meeting = widget.meetings[index];
-                          final start = meeting.startTime;
-                          final end = meeting.endTime;
-                          Participant? organiser;
-                          for (final p in meeting.participants) {
-                            if (p.participant.id == meeting.organiserId) {
-                              organiser = p.participant;
-                              break;
-                            }
-                          }
-                          final organiserName = organiser?.fullName ?? "[NULL]";
-                          final participantNum = meeting.participants.length;
-                          final notNeededNum = meeting.participants
-                              .where((e) => e.notNeeded != 0)
-                              .length;
-                          final notPreparedNum = meeting.participants
-                              .where((e) => e.notPrepared != 0)
-                              .length;
-
-                          return TableRow(
-                            decoration: BoxDecoration(
-                              color: _highlightIndex == index
-                                  ? index.isOdd
-                                      ? Colors.blue.shade50
-                                      : Colors.orange.shade50
-                                  : index.isOdd
-                                      ? Color.fromARGB(255, 150, 210, 255)
-                                      : Color.fromARGB(255, 255, 212, 150),
-                            ),
-                            children: [
-                              entryBuilder(
-                                context,
-                                index: index,
-                                text:
-                                    '${start.day}/${start.month}/${start.year}',
-                              ),
-                              entryBuilder(
-                                context,
-                                index: index,
-                                text: TimeOfDay.fromDateTime(start)
-                                    .format(context),
-                              ),
-                              entryBuilder(
-                                context,
-                                index: index,
-                                text:
-                                    TimeOfDay.fromDateTime(end).format(context),
-                              ),
-                              entryBuilder(
-                                context,
-                                index: index,
-                                text: organiserName,
-                              ),
-                              entryBuilder(
-                                context,
-                                index: index,
-                                text: '$participantNum',
-                              ),
-                              entryBuilder(
-                                context,
-                                index: index,
-                                text: '${(meeting.quality * 100).round()}%',
-                              ),
-                              entryBuilder(
-                                context,
-                                index: index,
-                                text: '${participantNum - notNeededNum}',
-                              ),
-                              entryBuilder(
-                                context,
-                                index: index,
-                                text: '${participantNum - notPreparedNum}',
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
+                child: Padding(
+                  padding: EdgeInsets.only(top: height * 0.06),
+                  // width: width * 0.72,
+                  child: //TODO
+                      Container(
+                    color: Colors.red,
+                    height: 100,
                   ),
                 ),
               ),
+              tableBuilder(context),
               SizedBox(height: height * 0.02),
             ],
           ),
