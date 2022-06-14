@@ -305,34 +305,40 @@ class _AnalyticsState extends State<Analytics> {
                             children: [
                               Text('Organiser:'),
                               SizedBox(width: 8.0),
-                              DropdownButton<String>(
-                                value: _organiser,
-                                icon: const Icon(Icons.arrow_downward),
-                                elevation: 16,
-                                underline: Container(
-                                  height: 2,
-                                  color: Colors.blue,
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.blue.shade100,
+                                    border: Border.all(),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: DropdownButton<String>(
+                                    value: _organiser,
+                                    icon: const Icon(Icons.arrow_drop_down),
+                                    borderRadius: BorderRadius.circular(10),
+                                    elevation: 16,
+                                    onChanged: (String? newValue) {
+                                      if (_organiser == newValue) {
+                                        setState(() {
+                                          _organiser = null;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          _organiser = newValue!;
+                                        });
+                                      }
+                                    },
+                                    items: <String>['Akbar', 'Bali Organa']
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
                                 ),
-                                onChanged: (String? newValue) {
-                                  if (_organiser == newValue) {
-                                    setState(() {
-                                      _organiser = null;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      _organiser = newValue!;
-                                    });
-                                  }
-                                },
-                                items: <String>[
-                                  'Akbar',
-                                  'Bali Organa'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
                               ),
                             ],
                           ),
@@ -361,50 +367,64 @@ class _AnalyticsState extends State<Analytics> {
                             children: [
                               Text('Meeting satisfaction between'),
                               SizedBox(width: 8.0),
-                              DropdownButton<String>(
-                                value: _lowerSatisfaction,
-                                icon: const Icon(Icons.arrow_downward),
-                                elevation: 16,
-                                underline: Container(
-                                  height: 2,
-                                  color: Colors.blue,
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.blue.shade100,
+                                    border: Border.all(),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: DropdownButton<String>(
+                                    value: _lowerSatisfaction,
+                                    icon: const Icon(Icons.arrow_drop_down),
+                                    borderRadius: BorderRadius.circular(10),
+                                    elevation: 16,
+                                    onChanged: (String? newValue) {
+                                      if (_lowerSatisfaction == newValue) {
+                                        setState(() {
+                                          _lowerSatisfaction = null;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          _lowerSatisfaction = newValue!;
+                                        });
+                                      }
+                                    },
+                                    items: _percentages,
+                                  ),
                                 ),
-                                onChanged: (String? newValue) {
-                                  if (_lowerSatisfaction == newValue) {
-                                    setState(() {
-                                      _lowerSatisfaction = null;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      _lowerSatisfaction = newValue!;
-                                    });
-                                  }
-                                },
-                                items: _percentages,
                               ),
                               SizedBox(width: 8.0),
                               Text('and'),
                               SizedBox(width: 8.0),
-                              DropdownButton<String>(
-                                value: _upperSatisfaction,
-                                icon: const Icon(Icons.arrow_downward),
-                                elevation: 16,
-                                underline: Container(
-                                  height: 2,
-                                  color: Colors.blue,
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.blue.shade100,
+                                    border: Border.all(),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: DropdownButton<String>(
+                                    value: _upperSatisfaction,
+                                    icon: const Icon(Icons.arrow_drop_down),
+                                    borderRadius: BorderRadius.circular(10),
+                                    elevation: 16,
+                                    onChanged: (String? newValue) {
+                                      if (_upperSatisfaction == newValue) {
+                                        setState(() {
+                                          _upperSatisfaction = null;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          _upperSatisfaction = newValue!;
+                                        });
+                                      }
+                                    },
+                                    items: _percentages,
+                                  ),
                                 ),
-                                onChanged: (String? newValue) {
-                                  if (_upperSatisfaction == newValue) {
-                                    setState(() {
-                                      _upperSatisfaction = null;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      _upperSatisfaction = newValue!;
-                                    });
-                                  }
-                                },
-                                items: _percentages,
                               ),
                             ],
                           ),
@@ -412,10 +432,16 @@ class _AnalyticsState extends State<Analytics> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               MultiSelectDialogField(
-                                buttonText: Text('Select columns'),
                                 items: _selectedColumns
                                     .map((e) => MultiSelectItem(e, e))
                                     .toList(),
+                                buttonText: Text('Select columns'),
+                                buttonIcon: Icon(Icons.arrow_drop_down),
+                                decoration: BoxDecoration(
+                                    color: Colors.blue.shade100,
+                                    border: Border.all(),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
                                 initialValue: _selectedColumns,
                                 listType: MultiSelectListType.CHIP,
                                 chipDisplay: MultiSelectChipDisplay.none(),

@@ -75,6 +75,10 @@ class _DatePickerState extends State<DatePicker> with RestorationMixin {
       onPressed: (_) {
         _restorableDatePickerRouteFuture.present();
       },
+      primaryColour: Colors.black,
+      selectedColour: Colors.white,
+      backgroundColour: Colors.blue.shade100,
+      onPressedColour: Colors.blue,
       isSelected: true,
       height: null,
       width: null,
