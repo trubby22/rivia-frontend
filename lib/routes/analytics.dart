@@ -7,7 +7,11 @@ import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
+import 'package:rivia/utilities/date_picker.dart';
 import 'package:rivia/utilities/language_switcher.dart';
+import 'package:multiselect/multiselect.dart';
+import 'package:rivia/utilities/sized_button.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class Analytics extends StatefulWidget {
   const Analytics({Key? key, required this.meetings}) : super(key: key);
@@ -20,6 +24,33 @@ class Analytics extends StatefulWidget {
 
 class _AnalyticsState extends State<Analytics> {
   int _highlightIndex = -1;
+  String? _organiser;
+  String? _lowerSatisfaction;
+  String? _upperSatisfaction;
+  bool _largeMeetings = false;
+  List<String> _selectedColumns = [
+    'Date',
+    'Start time',
+    'End time',
+    'Organiser',
+    'Number of participants',
+    'Level of satisfaction',
+    'Needed participants',
+    'Prepared participants',
+  ];
+  final List<DropdownMenuItem<String>> _percentages = [
+    '0 %',
+    '20 %',
+    '40 %',
+    '60 %',
+    '80 %',
+    '100 %',
+  ].map<DropdownMenuItem<String>>((String value) {
+    return DropdownMenuItem<String>(
+      value: value,
+      child: Text(value),
+    );
+  }).toList();
 
   Widget entryBuilder(
     BuildContext context, {
@@ -262,12 +293,157 @@ class _AnalyticsState extends State<Analytics> {
             children: [
               Align(
                 child: Padding(
-                  padding: EdgeInsets.only(top: height * 0.06),
+                  padding: EdgeInsets.only(
+                      top: height * 0.06, bottom: height * 0.06),
                   // width: width * 0.72,
-                  child: //TODO
-                      Container(
-                    color: Colors.red,
-                    height: 100,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text('Organiser:'),
+                              SizedBox(width: 8.0),
+                              DropdownButton<String>(
+                                value: _organiser,
+                                icon: const Icon(Icons.arrow_downward),
+                                elevation: 16,
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.blue,
+                                ),
+                                onChanged: (String? newValue) {
+                                  if (_organiser == newValue) {
+                                    setState(() {
+                                      _organiser = null;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _organiser = newValue!;
+                                    });
+                                  }
+                                },
+                                items: <String>[
+                                  'Akbar',
+                                  'Bali Organa'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text('From:'),
+                              SizedBox(width: 8.0),
+                              DatePicker(
+                                  restorationId: 'analytics',
+                                  meetingDateAndTime: MeetingDateAndTime()),
+                              SizedBox(width: 8.0),
+                              Text('To:'),
+                              SizedBox(width: 8.0),
+                              DatePicker(
+                                  restorationId: 'analytics',
+                                  meetingDateAndTime: MeetingDateAndTime()),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text('Meeting satisfaction between'),
+                              SizedBox(width: 8.0),
+                              DropdownButton<String>(
+                                value: _lowerSatisfaction,
+                                icon: const Icon(Icons.arrow_downward),
+                                elevation: 16,
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.blue,
+                                ),
+                                onChanged: (String? newValue) {
+                                  if (_lowerSatisfaction == newValue) {
+                                    setState(() {
+                                      _lowerSatisfaction = null;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _lowerSatisfaction = newValue!;
+                                    });
+                                  }
+                                },
+                                items: _percentages,
+                              ),
+                              SizedBox(width: 8.0),
+                              Text('and'),
+                              SizedBox(width: 8.0),
+                              DropdownButton<String>(
+                                value: _upperSatisfaction,
+                                icon: const Icon(Icons.arrow_downward),
+                                elevation: 16,
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.blue,
+                                ),
+                                onChanged: (String? newValue) {
+                                  if (_upperSatisfaction == newValue) {
+                                    setState(() {
+                                      _upperSatisfaction = null;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _upperSatisfaction = newValue!;
+                                    });
+                                  }
+                                },
+                                items: _percentages,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              MultiSelectDialogField(
+                                buttonText: Text('Select columns'),
+                                items: _selectedColumns
+                                    .map((e) => MultiSelectItem(e, e))
+                                    .toList(),
+                                initialValue: _selectedColumns,
+                                listType: MultiSelectListType.CHIP,
+                                chipDisplay: MultiSelectChipDisplay.none(),
+                                onConfirm: (values) {
+                                  _selectedColumns = values as List<String>;
+                                },
+                              ),
+                              SizedBox(width: 8.0),
+                              SizedButton(
+                                  primaryColour: Colors.black,
+                                  selectedColour: Colors.white,
+                                  backgroundColour: Colors.blue.shade100,
+                                  onPressedColour: Colors.blue,
+                                  useShadow: true,
+                                  width: 150,
+                                  height: null,
+                                  isSelected: _largeMeetings,
+                                  onPressed: (_) {
+                                    setState(() {
+                                      _largeMeetings = !_largeMeetings;
+                                    });
+                                  },
+                                  child: Text('Large meetings')),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),

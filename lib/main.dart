@@ -57,8 +57,9 @@ class _MyAppState extends State<MyApp> {
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
         RouteNames.login: (_) => Login(),
-        RouteNames.summary: (_) =>
-            MeetingSummary(meeting: testMeeting2),
+        RouteNames.summary: (_) => MeetingSummary(meeting: testMeeting2),
+        RouteNames.analytics: (_) =>
+            Analytics(meetings: [testMeeting, testMeeting2]),
       },
       onGenerateRoute: (routeSettings) {
         assert(routeSettings.name != null);
