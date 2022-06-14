@@ -108,6 +108,75 @@ class _MeetingSummaryState extends State<MeetingSummary> {
     );
   }
 
+  Widget _tagsBuilder(List<String> texts, double maxWidth) {
+    if (texts.isEmpty) {
+      return const SizedBox();
+    }
+
+    double width;
+    final lineNums = <int>[];
+    int sum = 0;
+    int index = 0;
+
+    while (sum < texts.length) {
+      width = 0;
+      lineNums.add(0);
+      for (; index < texts.length; index++) {
+        double curWidth = _getTextSize(texts[index]).width;
+
+        if (width + curWidth + 48.0 > maxWidth) {
+          break;
+        }
+        width += curWidth + 48.0;
+        lineNums.last += 1;
+        sum += 1;
+      }
+
+      if (lineNums.last == 0) {
+        lineNums.last = 1;
+        sum += 1;
+      }
+    }
+
+    final rows = <Widget>[];
+    int cur = 0;
+    while (lineNums.isNotEmpty) {
+      rows.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: texts
+              .getRange(cur, cur + lineNums[0])
+              .map((t) => _singleTagBuilder(t, maxWidth))
+              .toList(),
+        ),
+      );
+      cur += lineNums[0];
+      lineNums.removeAt(0);
+    }
+
+    return Column(children: rows);
+  }
+
+  Widget _singleTagBuilder(String tag, double maxWidth) {
+    return Container(
+      width: min(_getTextSize(tag).width + 34.0, maxWidth),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: const [BoxShadow(offset: Offset(0, 0.5), blurRadius: 1.0)],
+        color: Colors.white,
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+      child: Text(tag, style: UITexts.mediumText, textAlign: TextAlign.center),
+    );
+  }
+
+  Size _getTextSize(String text) => (TextPainter(
+        text: TextSpan(text: text, style: UITexts.mediumText),
+        textDirection: TextDirection.ltr,
+      )..layout())
+          .size;
+
   Widget foregroundBuilder(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -119,7 +188,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: height * 0.04),
             child: Text(
-              LangText.analytics.local,
+              LangText.summary.local,
               style: UITexts.iconHeader,
             ),
           ),
@@ -130,7 +199,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
             right: min(width * 0.07, max(0, width - 700)),
             bottom: max(height * 0.05, 20.0),
           ),
-          padding: EdgeInsets.only(top: height * 0.12, bottom: height * 0.03),
+          padding: EdgeInsets.only(top: height * 0.04, bottom: height * 0.03),
           decoration: const BoxDecoration(
             color: Color(0xFFE6E6E6),
             borderRadius: BorderRadius.all(Radius.circular(48.0)),
@@ -138,6 +207,14 @@ class _MeetingSummaryState extends State<MeetingSummary> {
           ),
           child: Column(
             children: [
+              Text(
+                '${widget.meeting.title} '
+                '${TimeOfDay.fromDateTime(widget.meeting.startTime).format(context)} - '
+                '${TimeOfDay.fromDateTime(widget.meeting.endTime).format(context)} '
+                '${widget.meeting.startTime.day}/${widget.meeting.startTime.month}/${widget.meeting.startTime.year}',
+                style: UITexts.sectionHeader,
+              ),
+              SizedBox(height: height * 0.03),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -218,26 +295,23 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                     barGraphBuilder(context),
                     Center(
                       child: Container(
-                        // color: Colors.lightBlue,
-                        decoration: const BoxDecoration(
-                          color: Colors.lightBlue,
-                          borderRadius: BorderRadius.all(Radius.circular(48.0)),
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        width: width * 0.7,
+                        margin: EdgeInsets.only(
+                          bottom: max(height * 0.05, 20.0),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(32.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: List.generate(feedback.length, (index) {
-                              return Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(feedback[index]),
-                                ),
-                              );
-                            }),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade100,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(32.0),
                           ),
+                          boxShadow: const [
+                            BoxShadow(offset: Offset(0, 0.5), blurRadius: 1.0),
+                          ],
+                        ),
+                        child: _tagsBuilder(
+                          widget.meeting.feedback,
+                          width * 0.65,
                         ),
                       ),
                     ),
@@ -264,6 +338,20 @@ class _MeetingSummaryState extends State<MeetingSummary> {
           ),
           foregroundBuilder(context),
           LanguageSwitcher(callback: () => setState(() => {})),
+          Positioned(
+            left: 64.0,
+            top: 24.0,
+            child: SizedButton(
+              backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
+              primaryColour: Colors.black,
+              onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
+              height: 48.0,
+              width: 48.0,
+              radius: BorderRadius.circular(24.0),
+              onPressed: (_) => Navigator.of(context).pop(),
+              child: const Icon(Icons.arrow_back, size: 32.0),
+            ),
+          ),
         ],
       ),
     );

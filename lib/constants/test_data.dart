@@ -61,6 +61,16 @@ Meeting testMeeting2 = Meeting(
     'Great',
     'Too long',
     'No one was prepared',
+    'CEO should be fired',
+    'Excellent',
+    'Great',
+    'Too long',
+    '3.141592653589793238462643383279502884197',
+    'CEO should be fired; CEO should be fired; CEO should be fired',
+    'Excellent',
+    'Great DAZE!',
+    'Too long',
+    'No one was prepared',
   ],
   participants: [
     TaggedParticipant(

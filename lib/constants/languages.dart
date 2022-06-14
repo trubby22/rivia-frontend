@@ -53,6 +53,8 @@ enum LangText {
   lvlSat,
   neededParticipants,
   preparedParticipants,
+
+  summary,
 }
 
 extension LangTextContent on LangText {
@@ -140,5 +142,6 @@ extension LangTextContent on LangText {
       'Prepared Participants',
       'Подготовленные участники',
     ],
+    LangText.summary: ['Summary', 'Резюме'],
   };
 }
