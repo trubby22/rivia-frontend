@@ -346,6 +346,10 @@ class _ReviewState extends State<Review> {
                                 vertical: 12.0,
                               ),
                               child: SizedButton(
+                                primaryColour: Colors.black,
+                                selectedColour: Colors.white,
+                                onPressedColour: Colors.blue,
+                                backgroundColour: Colors.blue.shade100,
                                 width: width * 0.3,
                                 height: 52.0,
                                 radius: BorderRadius.circular(20.0),

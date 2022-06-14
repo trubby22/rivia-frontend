@@ -2,12 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
+import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/language_switcher.dart';
-import 'package:rivia/utilities/mouse_clicker.dart';
 
 class Analytics extends StatefulWidget {
   const Analytics({Key? key, required this.meetings}) : super(key: key);
@@ -20,6 +20,34 @@ class Analytics extends StatefulWidget {
 
 class _AnalyticsState extends State<Analytics> {
   int _highlightIndex = -1;
+
+  Widget entryBuilder(
+    BuildContext context, {
+    required int index,
+    required String text,
+  }) {
+    return TableRowInkWell(
+      onTap: () => Navigator.of(context).pushNamed(
+        RouteNames.pieChartSummary,
+        arguments: widget.meetings[index],
+      ),
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _highlightIndex = index),
+        onExit: (_) => setState(() => _highlightIndex = -1),
+        child: Container(
+          height: 100.0,
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: UITexts.bigText,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget foregroundBuilder(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -52,13 +80,14 @@ class _AnalyticsState extends State<Analytics> {
             children: [
               Align(
                 child: SizedBox(
-                  width: width * 0.68,
+                  width: width * 0.72,
                   child: Table(
                     border: TableBorder.all(color: Colors.grey),
                     defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                     columnWidths: const {
                       0: IntrinsicColumnWidth(),
                       1: IntrinsicColumnWidth(),
+                      2: IntrinsicColumnWidth(),
                     },
                     children: [
                       TableRow(
@@ -77,7 +106,17 @@ class _AnalyticsState extends State<Analytics> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              LangText.time.local,
+                              LangText.startTime.local,
+                              textAlign: TextAlign.center,
+                              style: UITexts.bigText.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              LangText.endTime.local,
                               textAlign: TextAlign.center,
                               style: UITexts.bigText.copyWith(
                                 color: Colors.white,
@@ -161,103 +200,56 @@ class _AnalyticsState extends State<Analytics> {
                           return TableRow(
                             decoration: BoxDecoration(
                               color: _highlightIndex == index
-                                  ? Colors.white
-                                  : index.isEven
-                                      ? Colors.blue.shade100
-                                      : Colors.blue.shade50,
+                                  ? index.isOdd
+                                      ? Colors.blue.shade50
+                                      : Colors.orange.shade50
+                                  : index.isOdd
+                                      ? Color.fromARGB(255, 150, 210, 255)
+                                      : Color.fromARGB(255, 255, 212, 150),
                             ),
                             children: [
-                              MouseClicker(
-                                onHover: (_) => setState(
-                                  () => _highlightIndex = index,
-                                ),
-                                // onTap: (_),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
+                              entryBuilder(
+                                context,
+                                index: index,
+                                text:
                                     '${start.day}/${start.month}/${start.year}',
-                                    textAlign: TextAlign.center,
-                                    style: UITexts.bigText,
-                                  ),
-                                ),
                               ),
-                              MouseClicker(
-                                onHover: (_) => setState(
-                                  () => _highlightIndex = index,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '${TimeOfDay.fromDateTime(start).format(context)}\n${TimeOfDay.fromDateTime(end).format(context)}',
-                                    textAlign: TextAlign.center,
-                                    style: UITexts.bigText,
-                                  ),
-                                ),
+                              entryBuilder(
+                                context,
+                                index: index,
+                                text: TimeOfDay.fromDateTime(start)
+                                    .format(context),
                               ),
-                              MouseClicker(
-                                onHover: (_) => setState(
-                                  () => _highlightIndex = index,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    organiserName,
-                                    textAlign: TextAlign.center,
-                                    style: UITexts.bigText,
-                                  ),
-                                ),
+                              entryBuilder(
+                                context,
+                                index: index,
+                                text:
+                                    TimeOfDay.fromDateTime(end).format(context),
                               ),
-                              MouseClicker(
-                                onHover: (_) => setState(
-                                  () => _highlightIndex = index,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '$participantNum',
-                                    textAlign: TextAlign.center,
-                                    style: UITexts.bigText,
-                                  ),
-                                ),
+                              entryBuilder(
+                                context,
+                                index: index,
+                                text: organiserName,
                               ),
-                              MouseClicker(
-                                onHover: (_) => setState(
-                                  () => _highlightIndex = index,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '${(meeting.quality * 100).round()}%',
-                                    textAlign: TextAlign.center,
-                                    style: UITexts.bigText,
-                                  ),
-                                ),
+                              entryBuilder(
+                                context,
+                                index: index,
+                                text: '$participantNum',
                               ),
-                              MouseClicker(
-                                onHover: (_) => setState(
-                                  () => _highlightIndex = index,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '${participantNum - notNeededNum}',
-                                    textAlign: TextAlign.center,
-                                    style: UITexts.bigText,
-                                  ),
-                                ),
+                              entryBuilder(
+                                context,
+                                index: index,
+                                text: '${(meeting.quality * 100).round()}%',
                               ),
-                              MouseClicker(
-                                onHover: (_) => setState(
-                                  () => _highlightIndex = index,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '${participantNum - notPreparedNum}',
-                                    textAlign: TextAlign.center,
-                                    style: UITexts.bigText,
-                                  ),
-                                ),
+                              entryBuilder(
+                                context,
+                                index: index,
+                                text: '${participantNum - notNeededNum}',
+                              ),
+                              entryBuilder(
+                                context,
+                                index: index,
+                                text: '${participantNum - notPreparedNum}',
                               ),
                             ],
                           );
