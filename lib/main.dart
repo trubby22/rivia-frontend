@@ -57,7 +57,8 @@ class _MyAppState extends State<MyApp> {
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
         RouteNames.login: (_) => Login(),
-        RouteNames.pieChartSummary: (_) => PieChartSummary(meeting: testMeeting),
+        RouteNames.pieChartSummary: (_) =>
+            PieChartSummary(meeting: testMeeting2),
       },
       onGenerateRoute: (routeSettings) {
         assert(routeSettings.name != null);

@@ -18,10 +18,13 @@ class PieChartSummary extends StatefulWidget {
 }
 
 class _PieChartSummaryState extends State<PieChartSummary> {
+  int _selectedIndex = 0;
+
   Widget foregroundBuilder(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     Map<String, double> dataMap = binQualityReviews(widget.meeting);
+    final List<String> feedback = widget.meeting.feedback;
 
     return ListView(
       children: [
@@ -46,13 +49,79 @@ class _PieChartSummaryState extends State<PieChartSummary> {
             borderRadius: BorderRadius.all(Radius.circular(48.0)),
             boxShadow: [BoxShadow(offset: Offset(0, 1), blurRadius: 2.0)],
           ),
-          child: PieChart(
-            dataMap: dataMap,
-            chartRadius: MediaQuery.of(context).size.width / 3.2,
-            chartValuesOptions: ChartValuesOptions(
-              showChartValuesInPercentage: true,
-              decimalPlaces: 0,
-            ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedIndex = 0;
+                        });
+                      },
+                      child: Text('Overall Satisfaction')),
+                  ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedIndex = 1;
+                        });
+                      },
+                      child: Text('Participants')),
+                  ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedIndex = 2;
+                        });
+                      },
+                      child: Text('Feedback')),
+                ],
+              ),
+              Divider(
+                height: 20,
+                thickness: 5,
+                color: Colors.blue,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: IndexedStack(
+                  index: _selectedIndex,
+                  children: [
+                    PieChart(
+                      dataMap: dataMap,
+                      chartRadius: MediaQuery.of(context).size.width / 3.2,
+                      chartValuesOptions: ChartValuesOptions(
+                        showChartValuesInPercentage: true,
+                        decimalPlaces: 0,
+                      ),
+                    ),
+                    Container(),
+                    Center(
+                      child: Container(
+                        // color: Colors.lightBlue,
+                        decoration: const BoxDecoration(
+                          color: Colors.lightBlue,
+                          borderRadius: BorderRadius.all(Radius.circular(48.0)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(32.0),
+                          child: Column(
+                            children: List.generate(feedback.length, (index) {
+                              return Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(feedback[index]),
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ],

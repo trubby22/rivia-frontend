@@ -55,7 +55,13 @@ Meeting testMeeting2 = Meeting(
   startTime: DateTime(2022, 6, 14, 8),
   organiserId: "5",
   endTime: DateTime(2022, 6, 14, 11),
-  feedback: ['CEO should be fired'],
+  feedback: [
+    'CEO should be fired',
+    'Excellent',
+    'Great',
+    'Too long',
+    'No one was prepared',
+  ],
   participants: [
     TaggedParticipant(
       participant: Participant(
