@@ -13,6 +13,9 @@ class Meeting {
   final String organiserId;
   final List<Participant> participants;
   final Map<String, String> painPoints;
+  final double quality;
+  final int responses;
+  final List<String> feedback;
 
   Meeting({
     this.meetingId,
@@ -20,7 +23,10 @@ class Meeting {
     required this.startTime,
     required this.organiserId,
     required this.endTime,
+    required this.quality,
+    required this.responses,
     this.participants = const [],
+    this.feedback = const [],
     this.painPoints = const {},
   });
 
@@ -38,6 +44,8 @@ class Meeting {
         meetingId: json[Fields.meetingId],
         startTime: DateTimeJson.fromJSON(json[Fields.startTime]),
         endTime: DateTimeJson.fromJSON(json[Fields.endTime]),
+        quality: json[Fields.quality],
+        responses: json[Fields.responses],
         organiserId: json[Fields.organiserId],
         participants: (json[Fields.participants] as List<dynamic>?)
                 ?.map((e) => Participant.fromJson(e))
@@ -85,6 +93,9 @@ class MeetingBuilder with ChangeNotifier {
   late String organiserId;
   final MeetingDateAndTime meetingDateAndTime = MeetingDateAndTime();
   final Set<Participant> participants = {};
+  late double quality;
+  late int responses;
+  final List<String> feedback = [];
 
   String? get meetingId => _meetingId;
   set meetingId(String? value) {
@@ -96,6 +107,9 @@ class MeetingBuilder with ChangeNotifier {
   Meeting build() => Meeting(
         organiserId: organiserId,
         title: title,
+        quality: quality,
+        responses: responses,
+        feedback: feedback,
         startTime: DateTime(
           meetingDateAndTime.date.year,
           meetingDateAndTime.date.month,

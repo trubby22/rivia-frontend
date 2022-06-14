@@ -17,6 +17,7 @@ class Fields {
   static String meetingId = 'meeting_id';
   static String organisation = 'organisation';
   static String reviews = 'reviews';
+  static String responses = 'responses';
 
   static String participant = 'participant';
   static String quality = 'quality';

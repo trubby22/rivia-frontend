@@ -28,6 +28,8 @@ List<Response> testResponses = [
 
 Meeting testMeeting = Meeting(
   title: "Bar Meeting",
+  quality: 0.5,
+  responses: 2,
   meetingId: "114514-1919810",
   organiserId: "3",
   startTime: DateTime.now(),
@@ -40,9 +42,12 @@ Meeting testMeeting = Meeting(
 
 Meeting testMeeting2 = Meeting(
   title: "Foo Meeting",
+  quality: 0.8,
+  responses: 5,
   startTime: DateTime.now(),
   organiserId: "5",
   endTime: DateTime.now(),
+  feedback: ['CEO should be fired'],
   participants: [
     Participant(name: "Mamezuku", surname: "Rai", email: "", id: "4"),
     Participant(
