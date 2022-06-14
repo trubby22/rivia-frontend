@@ -431,7 +431,12 @@ class _ReviewState extends State<Review> {
                       submitReview(context);
                       (Navigator.of(context)..pop()).pushNamed(
                         RouteNames.analytics,
-                        arguments: [testMeeting2],
+                        arguments: [
+                          testMeeting2,
+                          testMeeting2,
+                          testMeeting2,
+                          testMeeting2,
+                        ],
                       );
                     },
                     isSelected: true,
@@ -487,7 +492,12 @@ class _ReviewState extends State<Review> {
                   } else {
                     Navigator.of(context).popAndPushNamed(
                       RouteNames.analytics,
-                      arguments: [testMeeting2],
+                      arguments: [
+                        testMeeting2,
+                        testMeeting2,
+                        testMeeting2,
+                        testMeeting2
+                      ],
                     );
                   }
                 },

@@ -52,9 +52,9 @@ Meeting testMeeting2 = Meeting(
   title: "Foo Meeting",
   quality: 0.8,
   responses: 5,
-  startTime: DateTime.now(),
+  startTime: DateTime(2022, 6, 14, 8),
   organiserId: "5",
-  endTime: DateTime.now(),
+  endTime: DateTime(2022, 6, 14, 11),
   feedback: ['CEO should be fired'],
   participants: [
     TaggedParticipant(
