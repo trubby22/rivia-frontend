@@ -87,16 +87,16 @@ class _ReviewState extends State<Review> {
                           style: UITexts.mediumButtonText,
                         ),
                         isSelected: data.value3.contains(
-                          widget.meeting.participants[index],
+                          widget.meeting.participants[index].participant,
                         ),
                         onPressed: (isSelected) {
+                          final participant =
+                              widget.meeting.participants[index].participant;
                           if (isSelected) {
-                            data.value3
-                                .remove(widget.meeting.participants[index]);
+                            data.value3.remove(participant);
                           } else {
-                            data.value4
-                                .remove(widget.meeting.participants[index]);
-                            data.value3.add(widget.meeting.participants[index]);
+                            data.value4.remove(participant);
+                            data.value3.add(participant);
                           }
                           context.read<ResponseBuilder>().notify();
                         },
@@ -121,16 +121,16 @@ class _ReviewState extends State<Review> {
                           style: UITexts.mediumButtonText,
                         ),
                         isSelected: data.value4.contains(
-                          widget.meeting.participants[index],
+                          widget.meeting.participants[index].participant,
                         ),
                         onPressed: (isSelected) {
+                          final participant =
+                              widget.meeting.participants[index].participant;
                           if (isSelected) {
-                            data.value4
-                                .remove(widget.meeting.participants[index]);
+                            data.value4.remove(participant);
                           } else {
-                            data.value3
-                                .remove(widget.meeting.participants[index]);
-                            data.value4.add(widget.meeting.participants[index]);
+                            data.value3.remove(participant);
+                            data.value4.add(participant);
                           }
                           context.read<ResponseBuilder>().notify();
                         },
@@ -188,7 +188,7 @@ class _ReviewState extends State<Review> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      widget.meeting.participants[index].fullName,
+                      widget.meeting.participants[index].participant.fullName,
                       style: UITexts.bigText,
                       maxLines: 2,
                       softWrap: true,

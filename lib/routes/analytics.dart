@@ -81,12 +81,12 @@ class _AnalyticsState extends State<Analytics> {
                             style: UITexts.sectionSubheader,
                           ),
                           Text(
-                            LangText.needed.local,
+                            LangText.neededParticipants.local,
                             textAlign: TextAlign.center,
                             style: UITexts.sectionSubheader,
                           ),
                           Text(
-                            LangText.prepared.local,
+                            LangText.preparedParticipants.local,
                             textAlign: TextAlign.center,
                             style: UITexts.sectionSubheader,
                           ),
@@ -100,12 +100,19 @@ class _AnalyticsState extends State<Analytics> {
                           final end = meeting.endTime;
                           Participant? organiser;
                           for (final p in meeting.participants) {
-                            if (p.id == meeting.organiserId) {
-                              organiser = p;
+                            if (p.participant.id == meeting.organiserId) {
+                              organiser = p.participant;
                               break;
                             }
                           }
                           final organiserName = organiser?.fullName ?? "[NULL]";
+                          final participantNum = meeting.participants.length;
+                          final notNeededNum = meeting.participants
+                              .where((e) => e.notNeeded != 0)
+                              .length;
+                          final notPreparedNum = meeting.participants
+                              .where((e) => e.notPrepared != 0)
+                              .length;
 
                           return TableRow(
                             children: [
@@ -119,19 +126,19 @@ class _AnalyticsState extends State<Analytics> {
                               ),
                               Text(organiserName, textAlign: TextAlign.center),
                               Text(
-                                '${meeting.participants.length}',
+                                '$participantNum',
                                 textAlign: TextAlign.center,
                               ),
                               Text(
-                                'Soccer',
+                                '${(meeting.quality * 100).round()}%',
                                 textAlign: TextAlign.center,
                               ),
                               Text(
-                                '11',
+                                '${participantNum - notNeededNum}',
                                 textAlign: TextAlign.center,
                               ),
                               Text(
-                                '42',
+                                '${participantNum - notPreparedNum}',
                                 textAlign: TextAlign.center,
                               ),
                             ],

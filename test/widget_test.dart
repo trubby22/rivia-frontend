@@ -19,7 +19,17 @@ Meeting testMeeting = Meeting(
   responses: 5,
   startTime: DateTime.now(),
   endTime: DateTime.now(),
-  participants: List.of(testParticipants),
+  participants: List.of(
+    testParticipants
+        .map(
+          (p) => TaggedParticipant(
+            participant: p,
+            notNeeded: 0,
+            notPrepared: 0,
+          ),
+        )
+        .toList(),
+  ),
   painPoints: {'0': "PAINTOS"},
 );
 

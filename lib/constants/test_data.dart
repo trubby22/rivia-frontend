@@ -35,8 +35,16 @@ Meeting testMeeting = Meeting(
   startTime: DateTime.now(),
   endTime: DateTime.now(),
   participants: [
-    Participant(name: "Mamezuku", surname: "Rai", id: "2"),
-    Participant(name: "Giorno", surname: "Giovanna", id: "3"),
+    TaggedParticipant(
+      participant: Participant(name: "Mamezuku", surname: "Rai", id: "2"),
+      notNeeded: 1,
+      notPrepared: 2,
+    ),
+    TaggedParticipant(
+      participant: Participant(name: "Giorno", surname: "Giovanna", id: "3"),
+      notNeeded: 0,
+      notPrepared: 0,
+    ),
   ],
 );
 
@@ -49,17 +57,66 @@ Meeting testMeeting2 = Meeting(
   endTime: DateTime.now(),
   feedback: ['CEO should be fired'],
   participants: [
-    Participant(name: "Mamezuku", surname: "Rai", email: "", id: "4"),
-    Participant(
-      name: "Albus Percival Wulfric Brian",
-      surname: "Dumbledore",
-      email: "",
-      id: "5",
+    TaggedParticipant(
+      participant: Participant(
+        name: "Mamezuku",
+        surname: "Rai",
+        email: "",
+        id: "4",
+      ),
+      notNeeded: 1,
+      notPrepared: 2,
     ),
-    Participant(name: "Yui", surname: "Kusano", email: "", id: "5"),
-    Participant(name: "Shadow Mistress", surname: "Yuko", email: "", id: "6"),
-    Participant(name: "Jacen", surname: "Syndulla", email: "", id: "7"),
-    Participant(name: "Piotr", surname: "Błaszyk", email: "", id: "8"),
+    TaggedParticipant(
+      participant: Participant(
+        name: "Albus Percival Wulfric Brian",
+        surname: "Dumbledore",
+        email: "",
+        id: "5",
+      ),
+      notNeeded: 0,
+      notPrepared: 0,
+    ),
+    TaggedParticipant(
+      participant: Participant(
+        name: "Yui",
+        surname: "Kusano",
+        email: "",
+        id: "5",
+      ),
+      notNeeded: 0,
+      notPrepared: 2,
+    ),
+    TaggedParticipant(
+      participant: Participant(
+        name: "Shadow Mistress",
+        surname: "Yuko",
+        email: "",
+        id: "6",
+      ),
+      notNeeded: 0,
+      notPrepared: 3,
+    ),
+    TaggedParticipant(
+      participant: Participant(
+        name: "Jacen",
+        surname: "Syndulla",
+        email: "",
+        id: "7",
+      ),
+      notNeeded: 4,
+      notPrepared: 0,
+    ),
+    TaggedParticipant(
+      participant: Participant(
+        name: "Piotr",
+        surname: "Błaszyk",
+        email: "",
+        id: "8",
+      ),
+      notNeeded: 0,
+      notPrepared: 0,
+    ),
   ],
   painPoints: {
     '1': 'Need clearer, finer agenda',

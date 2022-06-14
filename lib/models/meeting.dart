@@ -11,7 +11,7 @@ class Meeting {
   final DateTime startTime;
   final DateTime endTime;
   final String organiserId;
-  final List<Participant> participants;
+  final List<TaggedParticipant> participants;
   final Map<String, String> painPoints;
   final double quality;
   final int responses;
@@ -48,7 +48,7 @@ class Meeting {
         responses: json[Fields.responses],
         organiserId: json[Fields.organiserId],
         participants: (json[Fields.participants] as List<dynamic>?)
-                ?.map((e) => Participant.fromJson(e))
+                ?.map((e) => TaggedParticipant.fromJson(e)!)
                 .toList() ??
             const [],
         painPoints: Map.fromEntries((json[Fields.painPoints] as List<dynamic>?)
@@ -66,6 +66,8 @@ class Meeting {
         Fields.startTime: startTime.toJSON(),
         Fields.endTime: endTime.toJSON(),
         Fields.organiserId: organiserId,
+        Fields.quality: quality,
+        Fields.responses: responses,
         Fields.painPoints: painPoints.entries
             .map(
               (e) => {
@@ -124,11 +126,51 @@ class MeetingBuilder with ChangeNotifier {
           meetingDateAndTime.endTime.hour,
           meetingDateAndTime.endTime.minute,
         ),
-        participants: participants.toList(),
+        participants: participants
+            .map(
+              (p) => TaggedParticipant(
+                participant: p,
+                notNeeded: 0,
+                notPrepared: 0,
+              ),
+            )
+            .toList(),
       );
 
   /// Notify the listeners.
   void notify() {
     notifyListeners();
   }
+}
+
+/// [Participant] with their corresponding votes by others.
+class TaggedParticipant {
+  final Participant participant;
+  final int notNeeded;
+  final int notPrepared;
+
+  const TaggedParticipant({
+    required this.participant,
+    required this.notNeeded,
+    required this.notPrepared,
+  });
+
+  static TaggedParticipant? fromJson(Map<String, dynamic> json) {
+    try {
+      return TaggedParticipant(
+        participant: Participant.fromJson(json[Fields.participant]),
+        notNeeded: json[Fields.notNeeded],
+        notPrepared: json[Fields.notPrepared],
+      );
+    } catch (e) {
+      debugPrint("Error on deserialising tagged participant: $e");
+      return null;
+    }
+  }
+
+  Map<String, dynamic> toJson() => {
+        Fields.participant: participant,
+        Fields.notNeeded: notNeeded,
+        Fields.notPrepared: notPrepared,
+      };
 }

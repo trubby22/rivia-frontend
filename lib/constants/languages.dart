@@ -51,6 +51,8 @@ enum LangText {
   organiser,
   noParticipants,
   lvlSat,
+  neededParticipants,
+  preparedParticipants,
 }
 
 extension LangTextContent on LangText {
@@ -129,9 +131,14 @@ extension LangTextContent on LangText {
     LangText.analytics: ['Analytics', 'Аналитика'],
     LangText.organiser: ['Organiser', 'Организатор'],
     LangText.noParticipants: ['Number of Participants', 'Число участников'],
-    LangText.lvlSat: [
-      'Level of Satisfaction',
-      'Число участников',
+    LangText.lvlSat: ['Level of Satisfaction', 'Число участников'],
+    LangText.neededParticipants: [
+      'Needed Participants',
+      'Необходимые участники',
+    ],
+    LangText.preparedParticipants: [
+      'Prepared Participants',
+      'Подготовленные участники',
     ],
   };
 }
