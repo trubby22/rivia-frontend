@@ -36,7 +36,7 @@ class MeetingEntry extends StatelessWidget {
             );
           } else {
             Navigator.of(context).pushNamed(
-              RouteNames.summary,
+              RouteNames.summaryOld,
               arguments: testMeeting2,
             );
           }

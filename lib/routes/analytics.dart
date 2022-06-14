@@ -28,7 +28,7 @@ class _AnalyticsState extends State<Analytics> {
   }) {
     return TableRowInkWell(
       onTap: () => Navigator.of(context).pushNamed(
-        RouteNames.pieChartSummary,
+        RouteNames.summary,
         arguments: widget.meetings[index],
       ),
       child: MouseRegion(

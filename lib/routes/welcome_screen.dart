@@ -61,7 +61,7 @@ class WelcomeScreen extends StatelessWidget {
               child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context)
-                        .pushNamed(RouteNames.summary, arguments: testMeeting2);
+                        .pushNamed(RouteNames.summaryOld, arguments: testMeeting2);
                   },
                   child: Text('summary')),
             ),
@@ -77,7 +77,7 @@ class WelcomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(RouteNames.pieChartSummary);
+                    Navigator.of(context).pushNamed(RouteNames.summary);
                   },
                   child: Text('pie chart summary')),
             ),

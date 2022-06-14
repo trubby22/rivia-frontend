@@ -10,9 +10,9 @@ import 'package:rivia/routes/dashboard_unassigned.dart';
 import 'package:rivia/routes/login.dart';
 import 'package:rivia/routes/review.dart';
 import 'package:rivia/routes/create_meeting.dart';
-import 'package:rivia/routes/pie_chart_summary.dart';
-import 'package:rivia/routes/welcome_screen.dart';
 import 'package:rivia/routes/meeting_summary.dart';
+import 'package:rivia/routes/welcome_screen.dart';
+import 'package:rivia/routes/meeting_summary_old.dart';
 
 import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/models/meeting.dart';
@@ -57,8 +57,8 @@ class _MyAppState extends State<MyApp> {
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
         RouteNames.login: (_) => Login(),
-        RouteNames.pieChartSummary: (_) =>
-            PieChartSummary(meeting: testMeeting2),
+        RouteNames.summary: (_) =>
+            MeetingSummary(meeting: testMeeting2),
       },
       onGenerateRoute: (routeSettings) {
         assert(routeSettings.name != null);
@@ -112,14 +112,14 @@ class _MyAppState extends State<MyApp> {
                 participant: testParticipants[0],
               ),
             );
-          case RouteNames.summary:
+          case RouteNames.summaryOld:
             if (routeSettings.arguments.runtimeType != Meeting) {
               throw Exception(
                 "ERROR: Did not pass a valid Meeting for Summary page!",
               );
             }
             return MaterialPageRoute(
-              builder: (_) => MeetingSummary(
+              builder: (_) => MeetingSummaryOld(
                 meeting: routeSettings.arguments as Meeting,
               ),
             );
