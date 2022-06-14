@@ -1,9 +1,6 @@
 build-job:
   image: cirrusci/flutter:stable
   stage: build
-  rules:
-    - if: '$CI_COMMIT_REF_NAME == "master"'
-    - when: manual
   artifacts:
     untracked: true
   script:
@@ -12,6 +9,9 @@ build-job:
 # test-job:
 #   image: cirrusci/flutter:stable
 #   stage: test
+#   rules:
+#     - if: '$CI_COMMIT_REF_NAME == "master"'
+#     - when: manual
 #   script:
 #     - flutter pub get
 #     - flutter test
@@ -19,6 +19,9 @@ build-job:
 deploy-job:
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
   stage: deploy
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+    - when: manual
   dependencies:
     - build-job
   script:
