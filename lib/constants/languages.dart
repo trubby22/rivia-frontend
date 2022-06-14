@@ -55,6 +55,8 @@ enum LangText {
   preparedParticipants,
 
   summary,
+  overallSat,
+  feedback,
 }
 
 extension LangTextContent on LangText {
@@ -143,5 +145,7 @@ extension LangTextContent on LangText {
       'Подготовленные участники',
     ],
     LangText.summary: ['Summary', 'Резюме'],
+    LangText.overallSat: ['Overall Satisfaction', 'Удовлетворение'],
+    LangText.feedback: ['Feedback', 'Обратная связь'],
   };
 }

@@ -180,7 +180,6 @@ class _MeetingSummaryState extends State<MeetingSummary> {
   Widget foregroundBuilder(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final List<String> feedback = widget.meeting.feedback;
 
     return ListView(
       children: [
@@ -235,7 +234,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                     child: SizedBox(
                       height: FontSizes.mediumTextSize * 1.5,
                       child: Text(
-                        'Overall Satisfaction',
+                        LangText.overallSat.local,
                         style: UITexts.smallButtonText,
                       ),
                     ),
@@ -258,7 +257,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                     child: SizedBox(
                       height: FontSizes.mediumTextSize * 1.5,
                       child: Text(
-                        'Participants',
+                        LangText.participants.local,
                         style: UITexts.smallButtonText,
                       ),
                     ),
@@ -280,7 +279,10 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                     },
                     child: SizedBox(
                       height: FontSizes.mediumTextSize * 1.5,
-                      child: Text('Feedback', style: UITexts.smallButtonText),
+                      child: Text(
+                        LangText.feedback.local,
+                        style: UITexts.smallButtonText,
+                      ),
                     ),
                   ),
                 ],
