@@ -69,10 +69,12 @@ class _ReviewState extends State<Review> {
                       SizedButton(
                         padding: EdgeInsets.zero,
                         useShadow: false,
-                        borderColour: Colors.grey,
+                        borderSide: const BorderSide(
+                          color: Colors.grey,
+                          width: 0.5,
+                        ),
                         primaryColour: Colors.green,
                         onPressedColour: Colors.green.shade300,
-                        borderWidth: 0.5,
                         radius: index == 0
                             ? const BorderRadius.only(
                                 topLeft: Radius.circular(16.0),
@@ -102,8 +104,10 @@ class _ReviewState extends State<Review> {
                         },
                       ),
                       SizedButton(
-                        borderColour: Colors.grey,
-                        borderWidth: 0.5,
+                        borderSide: const BorderSide(
+                          color: Colors.grey,
+                          width: 0.5,
+                        ),
                         primaryColour: Colors.red,
                         onPressedColour: Colors.red.shade300,
                         radius: index == 0

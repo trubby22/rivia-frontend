@@ -5,8 +5,7 @@ class SizedButton extends StatelessWidget {
     Key? key,
     this.isSelected = false,
     this.width = 52.0,
-    this.borderWidth = 0,
-    this.borderColour = Colors.transparent,
+    this.borderSide = BorderSide.none,
     this.height = 52.0,
     this.primaryColour = Colors.blue,
     this.selectedColour,
@@ -22,8 +21,7 @@ class SizedButton extends StatelessWidget {
   final bool isSelected;
   final double? width;
   final double? height;
-  final double borderWidth;
-  final Color borderColour;
+  final BorderSide borderSide;
   final Color primaryColour;
   final Color? selectedColour;
   final Color backgroundColour;
@@ -53,10 +51,7 @@ class SizedButton extends StatelessWidget {
               isSelected ? selectedColour ?? backgroundColour : primaryColour,
           padding: padding,
           splashFactory: NoSplash.splashFactory,
-          shape: RoundedRectangleBorder(
-            borderRadius: radius,
-            side: BorderSide(color: borderColour, width: borderWidth),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: radius, side: borderSide),
         ).merge(
           ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith(

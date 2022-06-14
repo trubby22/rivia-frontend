@@ -29,6 +29,10 @@ class UITexts {
     color: Colors.black,
   );
 
+  static const smallButtonText = TextStyle(
+    fontSize: FontSizes.mediumTextSize,
+  );
+
   static const mediumButtonText = TextStyle(
     fontSize: FontSizes.bigTextSize,
     fontWeight: FontWeight.bold,

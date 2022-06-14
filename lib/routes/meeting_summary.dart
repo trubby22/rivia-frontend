@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
+import 'package:rivia/utilities/bar_graph.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/language_switcher.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -21,10 +22,95 @@ class MeetingSummary extends StatefulWidget {
 class _MeetingSummaryState extends State<MeetingSummary> {
   int _selectedIndex = 0;
 
+  Widget pieChartBuilder(BuildContext context) {
+    return PieChart(
+      dataMap: binQualityReviews(widget.meeting),
+      chartRadius: MediaQuery.of(context).size.width / 4,
+      chartValuesOptions: const ChartValuesOptions(
+        showChartValuesInPercentage: true,
+        decimalPlaces: 0,
+      ),
+    );
+  }
+
+  Widget barGraphBuilder(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(
+              left: min(width * 0.02, max(0, width - 700)),
+              right: min(width * 0.01, max(0, width - 700)),
+              bottom: max(height * 0.05, 20.0),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade100,
+              borderRadius: const BorderRadius.all(Radius.circular(32.0)),
+              boxShadow: const [
+                BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
+              ],
+            ),
+            child: Column(
+              children: [
+                SizedBox(height: height * 0.02),
+                Text(
+                  LangText.detailedNotNeeded.local,
+                  style: UITexts.sectionSubheader,
+                ),
+                BarGraph(
+                  dicts: Map.fromEntries(
+                    widget.meeting.participants
+                        .map((p) => MapEntry(p.participant, p.notNeeded))
+                        .where((p) => p.value != 0),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(
+              left: min(width * 0.01, max(0, width - 400)),
+              right: min(width * 0.02, max(0, width - 400)),
+              bottom: max(height * 0.05, 20.0),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade100,
+              borderRadius: const BorderRadius.all(Radius.circular(32.0)),
+              boxShadow: const [
+                BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
+              ],
+            ),
+            child: Column(
+              children: [
+                SizedBox(height: height * 0.02),
+                Text(
+                  LangText.detailedNotPrepared.local,
+                  style: UITexts.sectionSubheader,
+                ),
+                BarGraph(
+                  dicts: Map.fromEntries(
+                    widget.meeting.participants
+                        .map((p) => MapEntry(p.participant, p.notPrepared))
+                        .where((p) => p.value != 0),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget foregroundBuilder(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    Map<String, double> dataMap = binQualityReviews(widget.meeting);
     final List<String> feedback = widget.meeting.feedback;
 
     return ListView(
@@ -44,7 +130,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
             right: min(width * 0.07, max(0, width - 700)),
             bottom: max(height * 0.05, 20.0),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+          padding: EdgeInsets.only(top: height * 0.12, bottom: height * 0.03),
           decoration: const BoxDecoration(
             color: Color(0xFFE6E6E6),
             borderRadius: BorderRadius.all(Radius.circular(48.0)),
@@ -56,77 +142,80 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedButton(
-                      primaryColour: Colors.black,
-                      selectedColour: Colors.white,
-                      backgroundColour: Colors.blue.shade100,
-                      onPressedColour: Colors.blue,
-                      useShadow: false,
-                      width: 150,
-                      height: null,
-                      isSelected: _selectedIndex == 0,
-                      onPressed: (_) {
-                        setState(() {
-                          _selectedIndex = 0;
-                        });
-                      },
-                      child: Text('Overall Satisfaction')),
-                  SizedBox(
-                    width: 8.0,
+                    primaryColour: Colors.black,
+                    selectedColour: Colors.white,
+                    backgroundColour: Colors.blue.shade100,
+                    onPressedColour: Colors.blue,
+                    useShadow: false,
+                    width: 180.0,
+                    height: null,
+                    isSelected: _selectedIndex == 0,
+                    onPressed: (_) {
+                      setState(() {
+                        _selectedIndex = 0;
+                      });
+                    },
+                    child: SizedBox(
+                      height: FontSizes.mediumTextSize * 1.5,
+                      child: Text(
+                        'Overall Satisfaction',
+                        style: UITexts.smallButtonText,
+                      ),
+                    ),
                   ),
+                  const SizedBox(width: 4.0),
                   SizedButton(
-                      primaryColour: Colors.black,
-                      selectedColour: Colors.white,
-                      backgroundColour: Colors.blue.shade100,
-                      onPressedColour: Colors.blue,
-                      useShadow: false,
-                      width: 150,
-                      height: null,
-                      isSelected: _selectedIndex == 1,
-                      onPressed: (_) {
-                        setState(() {
-                          _selectedIndex = 1;
-                        });
-                      },
-                      child: Text('Participants')),
-                  SizedBox(
-                    width: 8.0,
+                    primaryColour: Colors.black,
+                    selectedColour: Colors.white,
+                    backgroundColour: Colors.blue.shade100,
+                    onPressedColour: Colors.blue,
+                    useShadow: false,
+                    width: 180.0,
+                    height: null,
+                    isSelected: _selectedIndex == 1,
+                    onPressed: (_) {
+                      setState(() {
+                        _selectedIndex = 1;
+                      });
+                    },
+                    child: SizedBox(
+                      height: FontSizes.mediumTextSize * 1.5,
+                      child: Text(
+                        'Participants',
+                        style: UITexts.smallButtonText,
+                      ),
+                    ),
                   ),
+                  const SizedBox(width: 4.0),
                   SizedButton(
-                      primaryColour: Colors.black,
-                      selectedColour: Colors.white,
-                      backgroundColour: Colors.blue.shade100,
-                      onPressedColour: Colors.blue,
-                      useShadow: false,
-                      width: 150,
-                      height: null,
-                      isSelected: _selectedIndex == 2,
-                      onPressed: (_) {
-                        setState(() {
-                          _selectedIndex = 2;
-                        });
-                      },
-                      child: Text('Feedback')),
+                    primaryColour: Colors.black,
+                    selectedColour: Colors.white,
+                    backgroundColour: Colors.blue.shade100,
+                    onPressedColour: Colors.blue,
+                    useShadow: false,
+                    width: 180.0,
+                    height: null,
+                    isSelected: _selectedIndex == 2,
+                    onPressed: (_) {
+                      setState(() {
+                        _selectedIndex = 2;
+                      });
+                    },
+                    child: SizedBox(
+                      height: FontSizes.mediumTextSize * 1.5,
+                      child: Text('Feedback', style: UITexts.smallButtonText),
+                    ),
+                  ),
                 ],
               ),
-              Divider(
-                height: 0,
-                thickness: 5,
-                color: Colors.blue,
-              ),
+              const Divider(height: 0.0, thickness: 5.0, color: Colors.blue),
               Padding(
-                padding: const EdgeInsets.only(top: 16.0),
+                padding: EdgeInsets.only(top: height * 0.04),
                 child: IndexedStack(
                   index: _selectedIndex,
                   children: [
-                    PieChart(
-                      dataMap: dataMap,
-                      chartRadius: MediaQuery.of(context).size.width / 3.2,
-                      chartValuesOptions: ChartValuesOptions(
-                        showChartValuesInPercentage: true,
-                        decimalPlaces: 0,
-                      ),
-                    ),
-                    Container(),
+                    pieChartBuilder(context),
+                    barGraphBuilder(context),
                     Center(
                       child: Container(
                         // color: Colors.lightBlue,
