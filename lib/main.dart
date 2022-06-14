@@ -10,6 +10,7 @@ import 'package:rivia/routes/dashboard_unassigned.dart';
 import 'package:rivia/routes/login.dart';
 import 'package:rivia/routes/review.dart';
 import 'package:rivia/routes/create_meeting.dart';
+import 'package:rivia/routes/summary.dart';
 import 'package:rivia/routes/welcome_screen.dart';
 import 'package:rivia/routes/meeting_summary.dart';
 
@@ -56,6 +57,7 @@ class _MyAppState extends State<MyApp> {
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
         RouteNames.login: (_) => Login(),
+        RouteNames.pieChartSummary: (_) => PieChartSummary(meeting: testMeeting),
       },
       onGenerateRoute: (routeSettings) {
         assert(routeSettings.name != null);

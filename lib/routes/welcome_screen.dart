@@ -73,6 +73,14 @@ class WelcomeScreen extends StatelessWidget {
                   },
                   child: Text('login')),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(RouteNames.pieChartSummary);
+                  },
+                  child: Text('pie chart summary')),
+            ),
           ],
         ),
       ),

@@ -6,4 +6,5 @@ class RouteNames {
   static const String createMeeting = '/create_meeting';
   static const String analytics = '/analytics';
   static const String login = '/';
+  static const String pieChartSummary = '/pie_chart_summary';
 }
