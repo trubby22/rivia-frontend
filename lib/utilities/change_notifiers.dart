@@ -41,27 +41,6 @@ Future<void> setSharedPref() async {
   }
 }
 
-class MeetingDateAndTime extends ChangeNotifier {
-  DateTime date = DateTime.now();
-  TimeOfDay startTime = TimeOfDay.now();
-  TimeOfDay endTime = TimeOfDay.now();
-
-  void setDate(DateTime date) {
-    this.date = date;
-    notifyListeners();
-  }
-
-  void setStartTime(TimeOfDay time) {
-    startTime = time;
-    notifyListeners();
-  }
-
-  void setEndTime(TimeOfDay time) {
-    endTime = time;
-    notifyListeners();
-  }
-}
-
 class AuthToken {
   Lang language = Lang.en;
   String? token;
@@ -81,4 +60,65 @@ class AuthToken {
 extension LangTextChoice on LangText {
   String get local =>
       LangTextContent.langTexts[this]![authToken.language.index];
+}
+
+abstract class MeetingDate {
+  DateTime get date;
+
+  set date(DateTime date);
+}
+
+class MeetingStartDate extends ChangeNotifier implements MeetingDate {
+  DateTime _date;
+
+  MeetingStartDate(date) : _date = date;
+
+  @override
+  DateTime get date => _date;
+
+  @override
+  set date(DateTime date) {
+    _date = date;
+    notifyListeners();
+  }
+}
+
+class MeetingEndDate extends ChangeNotifier implements MeetingDate {
+  DateTime _date;
+
+  MeetingEndDate(date) : _date = date;
+
+  @override
+  DateTime get date => _date;
+
+  @override
+  set date(DateTime date) {
+    _date = date;
+    notifyListeners();
+  }
+}
+
+class MeetingDateAndTime extends ChangeNotifier implements MeetingDate {
+  DateTime _date = DateTime.now();
+  TimeOfDay startTime = TimeOfDay.now();
+  TimeOfDay endTime = TimeOfDay.now();
+
+  @override
+  DateTime get date => _date;
+
+  @override
+  set date(DateTime date) {
+    _date = date;
+    notifyListeners();
+  }
+
+  void setStartTime(TimeOfDay time) {
+    startTime = time;
+    notifyListeners();
+  }
+
+  void setEndTime(TimeOfDay time) {
+    endTime = time;
+    notifyListeners();
+  }
 }
