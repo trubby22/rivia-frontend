@@ -191,9 +191,10 @@ class _LoginState extends State<Login> {
                               microsoftLogin();
                             } else {
                               microsoftGetUserId().then(
-                                (value) => showToast(
+                                (_) => showToast(
                                   context: context,
-                                  text: value ?? "[ERROR: NOT LOGGED IN]",
+                                  text: authToken.tenantDomain ??
+                                      "[ERROR: NOT LOGGED IN]",
                                 ),
                               );
                             }

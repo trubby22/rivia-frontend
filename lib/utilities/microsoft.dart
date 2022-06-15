@@ -46,12 +46,11 @@ Future<bool> microsoftGetTokens(String code) async {
   return false;
 }
 
-/// Attempt to fetch the user id from Microsoft Graph. Returns null if failed
-/// (not logged in).
-/// The id is returned back and also stored in [authToken].
-Future<String?> microsoftGetUserId() async {
+/// Attempt to fetch the user id and tenant domain from Microsoft Graph. Set the
+/// userId in [authToken] to null if failed (not logged in).
+Future<void> microsoftGetUserId() async {
   if (authToken.userId != null) {
-    return authToken.userId;
+    return;
   }
 
   if (authToken.token == null) {
@@ -65,8 +64,9 @@ Future<String?> microsoftGetUserId() async {
 
     if (response.statusCode == 200) {
       // User id fetched from microsoft
-      print(json.decode(response.body));
-      authToken.userId = json.decode(response.body)['id'];
+      final body = json.decode(response.body);
+      authToken.userId = body['id'];
+      authToken.tenantDomain = (body['mail'] as String).split('@')[1];
       setSharedPref();
     } else if (authToken.refreshToken == null) {
       // Refresh token is null. Should not happen
@@ -74,34 +74,12 @@ Future<String?> microsoftGetUserId() async {
       await authToken.reset();
     } else if (await microsoftRefresh() == true) {
       // Refresh successful
-      authToken.userId = await microsoftGetUserId();
-      setSharedPref();
+      await microsoftGetUserId();
     } else {
       // Refresh token expired, need to login again
       await authToken.reset();
     }
   }
-
-  return authToken.userId;
-}
-
-/// Attempt to fetch the user id from Microsoft Graph. Returns null if failed
-/// (not logged in).
-/// The id is returned back and also stored in [authToken].
-Future<String?> microsoftGetTenantId() async {
-  if (authToken.tenantId != null) {
-    return authToken.tenantId;
-  }
-
-  final userId = await microsoftGetUserId();
-
-  final response = await http.get(
-    Uri.parse(
-      'https://login.windows.net/z3ymd.onmicrosoft.com/.well-known/openid-configuration',
-    ),
-  );
-
-  return authToken.userId;
 }
 
 Future<bool> microsoftRefresh() async {
