@@ -102,11 +102,12 @@ Future<bool> postMeeting(Meeting meeting) async {
       'surname': organiser.participant.surname,
     };
     print(jason);
-    // final response = await http.post(
-    //   Uri.parse(API.postMeeting()),
-    //   headers: _headers,
-    //   body: json.encode(meeting.toJson()),
-    // );
+    final response = await http.post(
+      Uri.parse(API.postMeeting()),
+      headers: _headers,
+      body: json.encode(meeting.toJson()),
+    );
+    print(response.body);
     return true;
   } catch (e) {
     debugPrint(e.toString());
@@ -160,10 +161,10 @@ void postReview(String meetingId, Response review) async {
   json[Fields.prepared] = (json[Fields.prepared] as List<Map<String, dynamic>>)
       .map((e) => e[Fields.participantId])
       .toList();
-  print(API.review(meetingId));
+  print(API.getReview(meetingId));
   print(jsonEncode(json));
   http.Response response = await http.post(
-    Uri.parse(API.review(meetingId)),
+    Uri.parse(API.getReview(meetingId)),
     headers: _headers,
     body: jsonEncode(json),
   );
