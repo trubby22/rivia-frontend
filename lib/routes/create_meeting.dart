@@ -287,7 +287,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
                     selector: (_, data) => data.meetingDateAndTime,
                     builder: (context, data, _) => DatePicker(
                       restorationId: 'meetingDate',
-                      meetingDateAndTime: data,
+                      meetingDate: data,
                     ),
                   ),
                 ],
@@ -304,7 +304,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
                     selector: (_, data) => data.meetingDateAndTime,
                     builder: (context, data, _) => TimePicker(
                       startEnd: StartEnd.start,
-                      meetingDateAndTime: data,
+                      meetingTime: data,
                     ),
                   ),
                 ],
@@ -321,7 +321,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
                     selector: (_, data) => data.meetingDateAndTime,
                     builder: (context, data, _) => TimePicker(
                       startEnd: StartEnd.end,
-                      meetingDateAndTime: data,
+                      meetingTime: data,
                     ),
                   ),
                 ],

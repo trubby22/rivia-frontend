@@ -8,12 +8,12 @@ enum StartEnd {
 }
 
 class TimePicker extends StatefulWidget {
-  final MeetingDateAndTime meetingDateAndTime;
+  final MeetingDateAndTime meetingTime;
   final StartEnd startEnd;
 
   const TimePicker({
     Key? key,
-    required this.meetingDateAndTime,
+    required this.meetingTime,
     required this.startEnd,
   }) : super(key: key);
 
@@ -35,9 +35,9 @@ class _TimePickerState extends State<TimePicker> {
         _time = newTime;
       });
       if (widget.startEnd == StartEnd.start) {
-        widget.meetingDateAndTime.setStartTime(newTime);
+        widget.meetingTime.setStartTime(newTime);
       } else {
-        widget.meetingDateAndTime.setEndTime(newTime);
+        widget.meetingTime.setEndTime(newTime);
       }
     }
   }

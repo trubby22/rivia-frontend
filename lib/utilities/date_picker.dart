@@ -6,11 +6,11 @@ class DatePicker extends StatefulWidget {
   const DatePicker({
     Key? key,
     required this.restorationId,
-    required this.meetingDateAndTime,
+    required this.meetingDate,
   }) : super(key: key);
 
   final String? restorationId;
-  final MeetingDateAndTime meetingDateAndTime;
+  final MeetingDate meetingDate;
 
   @override
   State<DatePicker> createState() => _DatePickerState();
@@ -23,7 +23,8 @@ class _DatePickerState extends State<DatePicker> with RestorationMixin {
   @override
   String? get restorationId => widget.restorationId;
 
-  final RestorableDateTime _selectedDate = RestorableDateTime(DateTime.now());
+  late final RestorableDateTime _selectedDate =
+      RestorableDateTime(widget.meetingDate.date);
   late final RestorableRouteFuture<DateTime?> _restorableDatePickerRouteFuture =
       RestorableRouteFuture<DateTime?>(
     onComplete: _selectDate,
@@ -65,7 +66,7 @@ class _DatePickerState extends State<DatePicker> with RestorationMixin {
       setState(() {
         _selectedDate.value = newSelectedDate;
       });
-      widget.meetingDateAndTime.setDate(newSelectedDate);
+      widget.meetingDate.date = newSelectedDate;
     }
   }
 
