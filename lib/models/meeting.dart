@@ -48,12 +48,15 @@ class Meeting {
     }
 
     try {
+      print("ORG:");
+      print(json[Fields.organiserId]);
       return Meeting(
+        feedback: (json[Fields.feedback] as List<dynamic>).cast(),
         title: json[Fields.title],
-        meetingId: json[Fields.meetingId],
+        meetingId: json[Fields.meetingId] ?? "1",
         startTime: DateTimeJson.fromJSON(json[Fields.startTime]),
         endTime: DateTimeJson.fromJSON(json[Fields.endTime]),
-        qualities: json[Fields.qualities],
+        qualities: (json[Fields.qualities] as List<dynamic>).cast(),
         responses: json[Fields.responses],
         organiserId: json[Fields.organiserId],
         participants: (json[Fields.participants] as List<dynamic>?)
@@ -61,7 +64,8 @@ class Meeting {
                 .toList() ??
             const [],
         painPoints: Map.fromEntries((json[Fields.painPoints] as List<dynamic>?)
-                ?.map((e) => MapEntry(e['preset_q_id'], e['preset_q_text'])) ??
+                ?.map((e) =>
+                    MapEntry(e['presetQ']['id'], e['presetQ']['text'])) ??
             const []),
       );
     } catch (e) {

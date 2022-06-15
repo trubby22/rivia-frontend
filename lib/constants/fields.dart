@@ -7,8 +7,8 @@ class Fields {
   static String surname = 'surname';
   static String email = 'email';
   static String password = 'password';
-  static String participantId = 'participantId';
-  static String organiserId = 'organiserId';
+  static String participantId = 'id';
+  static String organiserId = 'organizerId';
 
   static String title = 'title';
   static String startTime = 'startTime';
@@ -28,7 +28,7 @@ class Fields {
   static String notPrepared = 'notPrepared';
   static String needed = 'needed';
   static String prepared = 'prepared';
-  static String feedback = 'feedback';
+  static String feedback = 'feedbacks';
 
   static String lang = 'lang';
   static String token = 'token';

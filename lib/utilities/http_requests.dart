@@ -60,7 +60,7 @@ Future<Meeting?> getMeetingContent(String meetingId) async {
     );
     response[Fields.meetingId] == meetingId;
   }
-
+  print(response);
   return Meeting.fromJson(response);
 }
 
