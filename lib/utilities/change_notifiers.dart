@@ -12,6 +12,7 @@ Future<void> getSharedPref(Function()? callback) async {
   authToken.token = instance.getString(Fields.token);
   authToken.refreshToken = instance.getString(Fields.refreshToken);
   authToken.userId = instance.getString(Fields.participantId);
+  authToken.tenantId = instance.getString(Fields.organiserId);
   callback?.call();
 }
 
@@ -32,6 +33,11 @@ Future<void> setSharedPref() async {
     instance.remove(Fields.participantId);
   } else {
     instance.setString(Fields.participantId, authToken.userId!);
+  }
+  if (authToken.tenantId == null) {
+    instance.remove(Fields.organiserId);
+  } else {
+    instance.setString(Fields.organiserId, authToken.tenantId!);
   }
 }
 
@@ -61,11 +67,13 @@ class AuthToken {
   String? token;
   String? refreshToken;
   String? userId;
+  String? tenantId;
 
   Future<void> reset() async {
     token = null;
     refreshToken = null;
     userId = null;
+    tenantId = null;
     await setSharedPref();
   }
 }
