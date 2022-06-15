@@ -26,14 +26,7 @@ final _headers = {
 
 /// Get the list of [Meeting]s.
 Future<List<String>> getMeetings() async {
-  print(API.getMeetings(
-    authToken.tenantDomain!,
-    authToken.userId!,
-  ));
-  http.Response response = await _httpClient.get(Uri.parse(API.getMeetings(
-    authToken.tenantDomain!,
-    authToken.userId!,
-  )));
+  http.Response response = await _httpClient.get(Uri.parse(API.getMeetings()));
 
   final jason = jsonDecode(response.body);
 
@@ -50,11 +43,9 @@ Future<List<String>> getMeetings() async {
 
 /// Get the full content of one [Meeting] based on its id.
 Future<Meeting?> getMeetingContent(String meetingId) async {
+  print((API.getMeeting(meetingId)));
   final meetingResponse = json.decode(
-    (await http.get(
-      Uri.parse(API.meeting(meetingId)),
-    ))
-        .body,
+    (await http.get(Uri.parse(API.getMeeting(meetingId)))).body,
   );
 
   if (meetingResponse == null) {

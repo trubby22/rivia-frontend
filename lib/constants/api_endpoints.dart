@@ -17,8 +17,12 @@ class API {
   static String meetingReviews() => '$apiGateway/reviews';
 
   /// Get all [Meeting]s.
-  static String getMeetings(String tenantDomain, String userId) =>
-      '$apiGateway/tenants/$tenantDomain/meetings?user=$userId';
+  static String getMeetings() =>
+      '$apiGateway/tenants/${authToken.tenantDomain}/meetings?user=${authToken.userId}';
+
+  /// Get the [Meeting] corresponding to the meetingId.
+  static String getMeeting(String meetingId) =>
+      '$apiGateway/tenants/${authToken.tenantDomain}/meetings/$meetingId?user=${authToken.userId}';
 
   /// Get all [Participant]s.
   static String getParticipants() => '$apiGateway/meeting/create';
