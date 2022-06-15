@@ -28,10 +28,10 @@ class _DashboardAssignedState extends State<DashboardAssigned> {
   }
 
   void fetchMeetings() async {
-    List<Meeting> tempMeetings = await getMeetings();
-    setState(() {
-      _meetings = tempMeetings;
-    });
+    // List<Meeting> tempMeetings = await getMeetings();
+    // setState(() {
+    //   _meetings = tempMeetings;
+    // });
   }
 
   @override

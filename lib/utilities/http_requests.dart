@@ -11,6 +11,7 @@ import 'package:rivia/models/login_credentials.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
+import 'package:rivia/utilities/change_notifiers.dart';
 
 /// The global [http.Client].
 final _httpClient = BrowserClient()..withCredentials = true;
@@ -24,15 +25,14 @@ final _headers = {
 // GET
 
 /// Get the list of [Meeting]s.
-Future<List<Meeting>> getMeetings() async {
-  http.Response response = await _httpClient.get(Uri.parse(API.getDashboard()));
+Future<List<String>> getMeetings() async {
+  http.Response response = await _httpClient.get(Uri.parse(API.getMeetings(
+    authToken.tenantDomain!,
+    authToken.userId!,
+  )));
   var jsonList = (jsonDecode(response.body)
       as Map<String, dynamic>)[Fields.meetings] as List<dynamic>;
-  return jsonList
-      .map((e) => Meeting.fromJson(e))
-      .where((e) => e != null)
-      .cast<Meeting>()
-      .toList();
+  return [];
 }
 
 /// Get the full content of one [Meeting] based on its id.

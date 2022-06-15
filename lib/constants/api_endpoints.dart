@@ -11,7 +11,8 @@ class API {
   static String meetingReviews() => '$apiGateway/reviews';
 
   /// Get all [Meeting]s.
-  static String getDashboard() => '$apiGateway/dashboard';
+  static String getMeetings(String tenantDomain, String userId) =>
+      '$apiGateway/tenants/$tenantDomain/meetings?user=$userId';
 
   /// Get all [Participant]s.
   static String getParticipants() => '$apiGateway/meeting/create';
