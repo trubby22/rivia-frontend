@@ -26,12 +26,24 @@ final _headers = {
 
 /// Get the list of [Meeting]s.
 Future<List<String>> getMeetings() async {
+  print(API.getMeetings(
+    authToken.tenantDomain!,
+    authToken.userId!,
+  ));
   http.Response response = await _httpClient.get(Uri.parse(API.getMeetings(
     authToken.tenantDomain!,
     authToken.userId!,
   )));
-  var jsonList = (jsonDecode(response.body)
-      as Map<String, dynamic>)[Fields.meetings] as List<dynamic>;
+
+  final jason = jsonDecode(response.body);
+
+  if (jason[Fields.errorCode] != null && jason[Fields.errorCode] != 200) {
+    return Future.error(
+      "Get Meetings Failed!\nError Code: ${jason[Fields.errorCode]}",
+    );
+  }
+
+  var jsonList = jason[Fields.meetings] as List<dynamic>;
   return [];
 }
 
@@ -128,7 +140,7 @@ Future<void> postLoginCredentialsToBackend(
 }
 
 /// Post the review to the database.
-void postReviewOnBackend(String meetingId, Response review) async {
+void postReview(String meetingId, Response review) async {
   final json = review.toJson();
   json[Fields.painPoints] =
       (json[Fields.painPoints] as Map<String, String>).keys.toList();
@@ -140,8 +152,16 @@ void postReviewOnBackend(String meetingId, Response review) async {
       (json[Fields.notPrepared] as List<Map<String, dynamic>>)
           .map((e) => e[Fields.participantId])
           .toList();
+  json[Fields.needed] = (json[Fields.needed] as List<Map<String, dynamic>>)
+      .map((e) => e[Fields.participantId])
+      .toList();
+  json[Fields.prepared] = (json[Fields.prepared] as List<Map<String, dynamic>>)
+      .map((e) => e[Fields.participantId])
+      .toList();
+  print(API.review(meetingId));
+  print(jsonEncode(json));
   http.Response response = await http.post(
-    Uri.parse(API.meeting(meetingId)),
+    Uri.parse(API.review(meetingId)),
     headers: _headers,
     body: jsonEncode(json),
   );

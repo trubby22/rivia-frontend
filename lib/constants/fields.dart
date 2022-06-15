@@ -1,5 +1,6 @@
 class Fields {
   static String message = 'message';
+  static String errorCode = 'errorCode';
 
   static String name = 'name';
   static String surname = 'surname';
@@ -21,7 +22,7 @@ class Fields {
 
   static String participant = 'participant';
   static String quality = 'quality';
-  static String painPoints = 'preset_qs';
+  static String painPoints = 'presetQs';
   static String notNeeded = 'notNeeded';
   static String notPrepared = 'notPrepared';
   static String needed = 'needed';

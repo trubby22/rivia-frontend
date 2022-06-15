@@ -50,6 +50,7 @@ Meeting testMeeting = Meeting(
 
 Meeting testMeeting2 = Meeting(
   title: "Foo Meeting",
+  meetingId: "132452",
   quality: 0.8,
   responses: 5,
   startTime: DateTime(2022, 6, 14, 8),
