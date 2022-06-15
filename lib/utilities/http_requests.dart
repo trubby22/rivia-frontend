@@ -47,6 +47,8 @@ Future<Meeting?> getMeetingContent(String meetingId) async {
     (await http.get(Uri.parse(API.getMeeting(meetingId)))).body,
   );
 
+  print(meetingResponse);
+
   if (meetingResponse == null) {
     // Go to summary
     return null;
