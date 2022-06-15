@@ -180,9 +180,7 @@ class _LoginState extends State<Login> {
                       onPressed: (_) {
                         setState(
                           () {
-                            print("clicked...");
                             if (authToken.token == null) {
-                              print("NULL...");
                               // Admin Consent
                               // js.context.callMethod(
                               //   'open',
@@ -192,7 +190,6 @@ class _LoginState extends State<Login> {
                               // );
                               microsoftLogin();
                             } else {
-                              print("fetching...");
                               microsoftFetch().then(
                                 (value) => showToast(
                                   context: context,

@@ -49,14 +49,13 @@ Future<bool> microsoftGetTokens(String code) async {
 /// Attempt to fetch data from Microsoft Graph. Returns null if failed (not
 /// logged in).
 Future<String?> microsoftFetch() async {
-  print('USE: ${authToken.token}');
   // Not logged in if there is no token
   if (authToken.token == null) {
     return null;
   }
 
   final response = await http.get(
-    Uri.parse('$_microsoftGraphBaseUrl/users'),
+    Uri.parse('$_microsoftGraphBaseUrl/me'),
     headers: {'Authorization': 'Bearer ${authToken.token}'},
   );
 
