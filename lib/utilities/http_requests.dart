@@ -47,7 +47,7 @@ Future<Meeting?> getMeetingContent(String meetingId) async {
     (await http.get(Uri.parse(API.getMeeting(meetingId)))).body,
   );
 
-  print(meetingResponse);
+  print('response: $meetingResponse');
 
   if (meetingResponse == null) {
     // Go to summary
@@ -63,6 +63,9 @@ Future<Meeting?> getMeetingContent(String meetingId) async {
     );
     response[Fields.meetingId] == meetingId;
   }
+
+  print('edited response: $meetingResponse');
+  print('from JSON: ${Meeting.fromJson(response)}');
 
   return Meeting.fromJson(response);
 }
