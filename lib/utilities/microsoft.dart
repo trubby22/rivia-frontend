@@ -18,7 +18,7 @@ const String _pxceVerifier = '114514';
 /// Log the user in via their Microsoft account, opening a new tab.
 void microsoftLogin() {
   window.open(
-    '$_microsoftLoginBaseUrl/authorize?client_id=$_clientId&response_type=code&redirect_uri=$_redirectUri&response_mode=query&scope=User.ReadWrite.All&code_challenge=$_pxceChallenge&code_challenge_method=S256',
+    '$_microsoftLoginBaseUrl/authorize?client_id=$_clientId&response_type=code&redirect_uri=$_redirectUri&response_mode=query&scope=User.Read&code_challenge=$_pxceChallenge&code_challenge_method=S256',
     '_self',
   );
 }
@@ -33,7 +33,7 @@ Future<bool> microsoftGetTokens(String code) async {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body:
-        "client_id=$_clientId&scope=User.ReadWrite.All&code=$code&redirect_uri=https%3A%2F%2Fapp.rivia.me&grant_type=authorization_code&code_verifier=$_pxceVerifier",
+        "client_id=$_clientId&scope=User.Read&code=$code&redirect_uri=https%3A%2F%2Fapp.rivia.me&grant_type=authorization_code&code_verifier=$_pxceVerifier",
   );
 
   if (response.statusCode == 200) {
@@ -87,7 +87,7 @@ Future<bool> microsoftRefresh() async {
     Uri.parse('$_microsoftLoginBaseUrl/token'),
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     body:
-        'client_id=$_clientId&scope=User.ReadWrite.All&refresh_token=${authToken.refreshToken}&redirect_uri=$_redirectUri&grant_type=refresh_token&code_verifier=$_pxceVerifier',
+        'client_id=$_clientId&scope=User.Read&refresh_token=${authToken.refreshToken}&redirect_uri=$_redirectUri&grant_type=refresh_token&code_verifier=$_pxceVerifier',
   );
 
   if (response.statusCode == 200) {
