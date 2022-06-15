@@ -7,7 +7,7 @@ class Fields {
   static String surname = 'surname';
   static String email = 'email';
   static String password = 'password';
-  static String participantId = 'participant_id';
+  static String participantId = 'participantId';
   static String organiserId = 'organiserId';
 
   static String title = 'title';
