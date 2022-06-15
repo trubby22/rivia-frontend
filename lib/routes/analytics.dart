@@ -319,33 +319,31 @@ class _AnalyticsState extends State<Analytics> {
                                         offset: Offset(0, 1), blurRadius: 2.0)
                                   ],
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: DropdownButton<String>(
-                                    value: _organiser,
-                                    icon: const Icon(Icons.arrow_drop_down),
-                                    borderRadius: BorderRadius.circular(10),
-                                    elevation: 16,
-                                    onChanged: (String? newValue) {
-                                      if (_organiser == newValue) {
-                                        setState(() {
-                                          _organiser = null;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          _organiser = newValue!;
-                                        });
-                                      }
-                                    },
-                                    items: <String>['Akbar', 'Bali Organa']
-                                        .map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                  ),
+                                child: DropdownButton<String>(
+                                  value: _organiser,
+                                  underline: Container(),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  borderRadius: BorderRadius.circular(10),
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    if (_organiser == newValue) {
+                                      setState(() {
+                                        _organiser = null;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        _organiser = newValue!;
+                                      });
+                                    }
+                                  },
+                                  items: <String>['Akbar', 'Bali Organa']
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
                                 ),
                               ),
                             ],
@@ -389,26 +387,24 @@ class _AnalyticsState extends State<Analytics> {
                                         offset: Offset(0, 1), blurRadius: 2.0)
                                   ],
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: DropdownButton<String>(
-                                    value: _lowerSatisfaction,
-                                    icon: const Icon(Icons.arrow_drop_down),
-                                    borderRadius: BorderRadius.circular(10),
-                                    elevation: 16,
-                                    onChanged: (String? newValue) {
-                                      if (_lowerSatisfaction == newValue) {
-                                        setState(() {
-                                          _lowerSatisfaction = null;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          _lowerSatisfaction = newValue!;
-                                        });
-                                      }
-                                    },
-                                    items: _percentages,
-                                  ),
+                                child: DropdownButton<String>(
+                                  value: _lowerSatisfaction,
+                                  underline: Container(),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  borderRadius: BorderRadius.circular(10),
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    if (_lowerSatisfaction == newValue) {
+                                      setState(() {
+                                        _lowerSatisfaction = null;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        _lowerSatisfaction = newValue!;
+                                      });
+                                    }
+                                  },
+                                  items: _percentages,
                                 ),
                               ),
                               SizedBox(width: 8.0),
@@ -428,26 +424,24 @@ class _AnalyticsState extends State<Analytics> {
                                         offset: Offset(0, 1), blurRadius: 2.0)
                                   ],
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: DropdownButton<String>(
-                                    value: _upperSatisfaction,
-                                    icon: const Icon(Icons.arrow_drop_down),
-                                    borderRadius: BorderRadius.circular(10),
-                                    elevation: 16,
-                                    onChanged: (String? newValue) {
-                                      if (_upperSatisfaction == newValue) {
-                                        setState(() {
-                                          _upperSatisfaction = null;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          _upperSatisfaction = newValue!;
-                                        });
-                                      }
-                                    },
-                                    items: _percentages,
-                                  ),
+                                child: DropdownButton<String>(
+                                  value: _upperSatisfaction,
+                                  underline: Container(),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  borderRadius: BorderRadius.circular(10),
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    if (_upperSatisfaction == newValue) {
+                                      setState(() {
+                                        _upperSatisfaction = null;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        _upperSatisfaction = newValue!;
+                                      });
+                                    }
+                                  },
+                                  items: _percentages,
                                 ),
                               ),
                             ],
