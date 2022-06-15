@@ -30,6 +30,15 @@ class Meeting {
     this.painPoints = const {},
   });
 
+  Participant? get organiser {
+    for (final p in participants) {
+      if (p.participant.id == organiserId) {
+        return p.participant;
+      }
+    }
+    return null;
+  }
+
   static Meeting? fromJson(Map<String, dynamic> json) {
     // Flatten the json if necessary.
     if (json[Fields.meeting] != null) {
@@ -100,6 +109,7 @@ class MeetingBuilder with ChangeNotifier {
   final List<String> feedback = [];
 
   String? get meetingId => _meetingId;
+
   set meetingId(String? value) {
     _meetingId = value;
     notifyListeners();

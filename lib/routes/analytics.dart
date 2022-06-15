@@ -24,10 +24,11 @@ class Analytics extends StatefulWidget {
 
 class _AnalyticsState extends State<Analytics> {
   int _highlightIndex = -1;
-  String? _organiser;
+  Participant? _organiser;
   String? _lowerSatisfaction;
   String? _upperSatisfaction;
   bool _largeMeetings = false;
+
   List<String> _selectedColumns = [
     'Date',
     'Start time',
@@ -38,6 +39,7 @@ class _AnalyticsState extends State<Analytics> {
     'Needed participants',
     'Prepared participants',
   ];
+
   final List<DropdownMenuItem<String>> _percentages = [
     '0 %',
     '20 %',
@@ -82,6 +84,11 @@ class _AnalyticsState extends State<Analytics> {
 
   Widget tableBuilder(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    List<Meeting> meetings = widget.meetings;
+    List<Meeting> filteredMeetings = meetings
+        .where(
+            (element) => _organiser == null || element.organiser == _organiser)
+        .toList();
 
     return Align(
       child: SizedBox(
@@ -181,18 +188,12 @@ class _AnalyticsState extends State<Analytics> {
               ],
             ),
             ...List.generate(
-              widget.meetings.length,
+              filteredMeetings.length,
               (index) {
-                final meeting = widget.meetings[index];
+                final meeting = filteredMeetings[index];
                 final start = meeting.startTime;
                 final end = meeting.endTime;
-                Participant? organiser;
-                for (final p in meeting.participants) {
-                  if (p.participant.id == meeting.organiserId) {
-                    organiser = p.participant;
-                    break;
-                  }
-                }
+                final organiser = meeting.organiser;
                 final organiserName = organiser?.fullName ?? "[NULL]";
                 final participantNum = meeting.participants.length;
                 final notNeededNum =
@@ -319,29 +320,31 @@ class _AnalyticsState extends State<Analytics> {
                                         offset: Offset(0, 1), blurRadius: 2.0)
                                   ],
                                 ),
-                                child: DropdownButton<String>(
+                                child: DropdownButton<Participant>(
                                   value: _organiser,
                                   underline: Container(),
+                                  style: TextStyle(),
                                   icon: const Icon(Icons.arrow_drop_down),
                                   borderRadius: BorderRadius.circular(10),
                                   elevation: 16,
-                                  onChanged: (String? newValue) {
-                                    if (_organiser == newValue) {
+                                  onChanged: (Participant? newValue) {
+                                    if (newValue == _organiser) {
                                       setState(() {
                                         _organiser = null;
                                       });
                                     } else {
                                       setState(() {
-                                        _organiser = newValue!;
+                                        _organiser = newValue;
                                       });
                                     }
                                   },
-                                  items: <String>['Akbar', 'Bali Organa']
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
+                                  items: widget.meetings
+                                      .map((e) => e.organiser)
+                                      .map<DropdownMenuItem<Participant>>(
+                                          (Participant? p) {
+                                    return DropdownMenuItem<Participant>(
+                                      value: p,
+                                      child: Text(p?.fullName),
                                     );
                                   }).toList(),
                                 ),
