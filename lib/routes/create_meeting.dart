@@ -27,6 +27,8 @@ class _CreateMeetingState extends State<CreateMeeting> {
   final _nameController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _surnameController = TextEditingController();
+  final _organiserFirstNameController = TextEditingController();
+  final _organiserSurnameController = TextEditingController();
   late List<Participant> _participants = widget.allParticipants;
   bool _createParticipant = false;
 
@@ -73,6 +75,54 @@ class _CreateMeetingState extends State<CreateMeeting> {
                   labelText: LangText.meetingName.local,
                 ),
                 controller: _nameController,
+              ),
+              const SizedBox(height: 12.0),
+              Row(
+                children: [
+                  Expanded(
+                      child: Text(
+                    LangText.organiser.local,
+                    style: UITexts.sectionSubheader,
+                  )),
+                  Spacer(),
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromRGBO(190, 150, 100, 1),
+                          ),
+                        ),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        filled: true,
+                        labelText: LangText.firstName.local,
+                      ),
+                      controller: _organiserFirstNameController,
+                    ),
+                  ),
+                  Spacer(),
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromRGBO(190, 150, 100, 1),
+                          ),
+                        ),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        filled: true,
+                        labelText: LangText.surname.local,
+                      ),
+                      controller: _organiserSurnameController,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 12.0),
               Text(
@@ -151,81 +201,88 @@ class _CreateMeetingState extends State<CreateMeeting> {
                   style: UITexts.smallButtonText,
                 ),
               ),
+              const SizedBox(height: 12.0),
               if (_createParticipant)
-                Row(
+                Column(
                   children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color.fromRGBO(190, 150, 100, 1),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              fillColor: Colors.white,
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color.fromRGBO(190, 150, 100, 1),
+                                ),
+                              ),
+                              border: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              filled: true,
+                              labelText: LangText.firstName.local,
+                            ),
+                            controller: _firstNameController,
+                          ),
+                        ),
+                        Spacer(),
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              fillColor: Colors.white,
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color.fromRGBO(190, 150, 100, 1),
+                                ),
+                              ),
+                              border: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              filled: true,
+                              labelText: LangText.surname.local,
+                            ),
+                            controller: _surnameController,
+                          ),
+                        ),
+                        Spacer(),
+                        Expanded(
+                          child: SizedButton(
+                            primaryColour: Colors.black,
+                            selectedColour: Colors.white,
+                            backgroundColour: Colors.blue.shade100,
+                            onPressedColour: Colors.blue,
+                            useShadow: true,
+                            width: 150,
+                            onPressed: (_) {
+                              if (_firstNameController.text.isNotEmpty &&
+                                  _surnameController.text.isNotEmpty) {
+                                String name = _firstNameController.text;
+                                String surname = _surnameController.text;
+                                _firstNameController.clear();
+                                _surnameController.clear();
+                                Participant participant =
+                                    Participant(name: name, surname: surname);
+                                setState(() {
+                                  _participants.add(participant);
+                                  _createParticipant = false;
+                                });
+                              }
+                            },
+                            child: Text(
+                              'Submit participant',
+                              style: UITexts.smallButtonText,
                             ),
                           ),
-                          border: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                          filled: true,
-                          labelText: LangText.firstName.local,
                         ),
-                        controller: _firstNameController,
-                      ),
+                      ],
                     ),
-                    Spacer(),
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color.fromRGBO(190, 150, 100, 1),
-                            ),
-                          ),
-                          border: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                          filled: true,
-                          labelText: LangText.surname.local,
-                        ),
-                        controller: _surnameController,
-                      ),
-                    ),
-                    Spacer(),
-                    Expanded(
-                      child: SizedButton(
-                        primaryColour: Colors.black,
-                        selectedColour: Colors.white,
-                        backgroundColour: Colors.blue.shade100,
-                        onPressedColour: Colors.blue,
-                        useShadow: true,
-                        width: 150,
-                        onPressed: (_) {
-                          if (_firstNameController.text.isNotEmpty &&
-                              _surnameController.text.isNotEmpty) {
-                            String name = _firstNameController.text;
-                            String surname = _surnameController.text;
-                            _firstNameController.clear();
-                            _surnameController.clear();
-                            Participant participant =
-                                Participant(name: name, surname: surname);
-                            setState(() {
-                              _participants.add(participant);
-                              _createParticipant = false;
-                            });
-                          }
-                        },
-                        child: Text(
-                          'Submit participant',
-                          style: UITexts.smallButtonText,
-                        ),
-                      ),
-                    ),
+                    const SizedBox(height: 12.0),
                   ],
                 ),
               Row(
                 children: [
                   Text(LangText.date.local, style: UITexts.sectionSubheader),
+                  SizedBox(width: 8.0),
                   Selector<MeetingBuilder, MeetingDateAndTime>(
                     selector: (_, data) => data.meetingDateAndTime,
                     builder: (context, data, _) => DatePicker(
@@ -242,6 +299,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
                     LangText.startTime.local,
                     style: UITexts.sectionSubheader,
                   ),
+                  SizedBox(width: 8.0),
                   Selector<MeetingBuilder, MeetingDateAndTime>(
                     selector: (_, data) => data.meetingDateAndTime,
                     builder: (context, data, _) => TimePicker(
@@ -258,6 +316,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
                     LangText.endTime.local,
                     style: UITexts.sectionSubheader,
                   ),
+                  SizedBox(width: 8.0),
                   Selector<MeetingBuilder, MeetingDateAndTime>(
                     selector: (_, data) => data.meetingDateAndTime,
                     builder: (context, data, _) => TimePicker(

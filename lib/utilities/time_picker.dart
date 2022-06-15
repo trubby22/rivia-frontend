@@ -45,11 +45,14 @@ class _TimePickerState extends State<TimePicker> {
   @override
   Widget build(BuildContext context) {
     return SizedButton(
+      primaryColour: Colors.black,
+      selectedColour: Colors.white,
+      backgroundColour: Colors.blue.shade100,
+      onPressedColour: Colors.blue,
       height: null,
       width: null,
       onPressed: (_) => _selectTime(context),
       child: Text(_time.format(context)),
-      isSelected: true,
     );
   }
 }
