@@ -101,7 +101,8 @@ Future<bool> postMeeting(Meeting meeting) async {
       'name': organiser.participant.name,
       'surname': organiser.participant.surname,
     };
-    print(jason);
+    print("JSON: $jason");
+    print("STR: ${json.encode(jason)}");
     final response = await http.post(
       Uri.parse(API.postMeeting()),
       headers: _headers,
