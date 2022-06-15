@@ -82,13 +82,14 @@ Future<List<Response>> getMeetingSummary(Meeting meeting,
 // POST
 
 /// Create a new meeting.
-Future<bool> postNewMeetingOnBackend(Meeting meeting) async {
+Future<bool> postMeeting(Meeting meeting) async {
   try {
-    final response = await http.post(
-      Uri.parse(API.postMeeting()),
-      headers: _headers,
-      body: json.encode(meeting.toJson()),
-    );
+    print(json.encode(meeting.toJson()));
+    // final response = await http.post(
+    //   Uri.parse(API.postMeeting()),
+    //   headers: _headers,
+    //   body: json.encode(meeting.toJson()),
+    // );
     return true;
   } catch (e) {
     debugPrint(e.toString());

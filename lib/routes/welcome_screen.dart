@@ -16,7 +16,6 @@ class WelcomeScreen extends StatelessWidget {
         centerTitle: true,
         title: Text('Dashboard'),
         // ignore: prefer_const_constructors, prefer_const_literals_to_create_immutables
-        actions: [LanguageSwitcher()],
       ),
       body: Center(
         child: Column(
@@ -60,8 +59,8 @@ class WelcomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(RouteNames.summaryOld, arguments: testMeeting2);
+                    Navigator.of(context).pushNamed(RouteNames.summaryOld,
+                        arguments: testMeeting2);
                   },
                   child: Text('summary')),
             ),

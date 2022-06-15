@@ -9,7 +9,6 @@ import 'package:rivia/utilities/date_picker.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/http_requests.dart';
-import 'package:rivia/utilities/language_switcher.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/time_picker.dart';
 import 'package:rivia/utilities/toast.dart';
@@ -17,10 +16,8 @@ import 'package:rivia/utilities/toast.dart';
 class CreateMeeting extends StatefulWidget {
   final List<Participant> allParticipants;
 
-  const CreateMeeting({
-    Key? key,
-    required this.allParticipants,
-  }) : super(key: key);
+  const CreateMeeting({Key? key, this.allParticipants = const []})
+      : super(key: key);
 
   @override
   State<CreateMeeting> createState() => _CreateMeetingState();
@@ -53,7 +50,6 @@ class _CreateMeetingState extends State<CreateMeeting> {
             child: Icon(Icons.logout),
           ),
           // ignore: prefer_const_constructors
-          LanguageSwitcher(),
         ],
       ),
       body: ChangeNotifierProvider(
@@ -213,7 +209,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
     context.read<MeetingBuilder>().organiserId = "[TODO]";
     Meeting meeting = context.read<MeetingBuilder>().build();
 
-    bool result = await postNewMeetingOnBackend(meeting);
+    bool result = await postMeeting(meeting);
 
     if (result) {
       showToast(context: context, text: 'Meeting created: ${meeting.toJson()}');

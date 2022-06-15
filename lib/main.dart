@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp> {
             try {
               return MaterialPageRoute(
                 builder: (_) => CreateMeeting(
-                  allParticipants: routeSettings.arguments as List<Participant>,
+                  allParticipants: [],
                 ),
               );
             } catch (_) {
