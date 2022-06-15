@@ -105,7 +105,7 @@ Future<bool> postMeeting(Meeting meeting) async {
     final response = await http.post(
       Uri.parse(API.postMeeting()),
       headers: _headers,
-      body: json.encode(meeting.toJson()),
+      body: json.encode(jason),
     );
     print(response.body);
     return true;
