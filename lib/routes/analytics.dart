@@ -9,7 +9,6 @@ import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/date_picker.dart';
 import 'package:rivia/utilities/language_switcher.dart';
-import 'package:multiselect/multiselect.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
@@ -547,6 +546,23 @@ class _AnalyticsState extends State<Analytics> {
           ),
           foregroundBuilder(context),
           LanguageSwitcher(callback: () => setState(() => {})),
+          Positioned(
+            bottom: 32.0,
+            right: 64.0,
+            child: SizedButton(
+              backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
+              primaryColour: Colors.black,
+              onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
+              height: null,
+              width: null,
+              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+              child: Text("Create New Meeting", style: UITexts.bigButtonText),
+              onPressed: (_) => Navigator.of(context).pushNamed(
+                RouteNames.createMeeting,
+                arguments: [],
+              ),
+            ),
+          ),
         ],
       ),
     );

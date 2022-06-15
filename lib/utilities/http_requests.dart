@@ -89,8 +89,19 @@ Future<List<Response>> getMeetingSummary(Meeting meeting,
 /// Create a new meeting.
 Future<bool> postMeeting(Meeting meeting) async {
   try {
-    print(json.encode(meeting.toJson()));
+    final organiser = meeting.participants.firstWhere(
+      (e) => e.participant.id == 'seven',
+    );
+    meeting.participants.remove(organiser);
     final jason = meeting.toJson();
+    jason[Fields.participants] = (jason[Fields.participants] as List<dynamic>)
+        .map((p) => p[Fields.participant]);
+
+    jason['organizer'] = {
+      'name': organiser.participant.name,
+      'surname': organiser.participant.surname,
+    };
+    print(jason);
     // final response = await http.post(
     //   Uri.parse(API.postMeeting()),
     //   headers: _headers,
