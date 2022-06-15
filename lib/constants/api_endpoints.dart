@@ -11,9 +11,9 @@ class API {
 
   /// Post review to the [Meeting] corresponding to [meetingId].
   static String getReview(String meetingId) =>
-      '$apiGateway/tenants/${authToken.tenantDomain}/meetings/$meetingId/review?user=${authToken.userId}';
+      '$apiGateway/tenants/${authToken.tenantDomain}/meetings/$meetingId/reviews?user=${authToken.userId}';
 
-  /// TODO: get all responses to the review survey. Prolly will need meetingId.
+  /// TODO: DEPRICATED
   static String meetingReviews() => '$apiGateway/reviews';
 
   /// Get all [Meeting]s.
