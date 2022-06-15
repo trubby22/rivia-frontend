@@ -56,7 +56,8 @@ Future<String?> microsoftGetUserId() async {
   }
 
   if (authToken.token == null) {
-    authToken.userId = null;
+    // No token; not logged in
+    authToken.reset();
   } else {
     final response = await http.get(
       Uri.parse('$_microsoftGraphBaseUrl/me'),
@@ -64,17 +65,23 @@ Future<String?> microsoftGetUserId() async {
     );
 
     if (response.statusCode == 200) {
+      // User id fetched from microsoft
       authToken.userId = json.decode(response.body)['id'];
+      setSharedPref();
     } else if (authToken.refreshToken == null) {
+      // Refresh token is null. Should not happen
+      print("Refresh token is null. Should not happen!");
       await authToken.reset();
     } else if (await microsoftRefresh() == true) {
+      // Refresh successful
       authToken.userId = await microsoftGetUserId();
+      setSharedPref();
     } else {
+      // Refresh token expired, need to login again
       await authToken.reset();
     }
   }
 
-  setSharedPref();
   return authToken.userId;
 }
 
