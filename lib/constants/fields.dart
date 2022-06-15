@@ -1,6 +1,7 @@
 class Fields {
   static String message = 'message';
   static String errorCode = 'errorCode';
+  static String jsonData = 'jsonData';
 
   static String name = 'name';
   static String surname = 'surname';

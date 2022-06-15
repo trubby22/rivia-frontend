@@ -43,8 +43,9 @@ Future<List<String>> getMeetings() async {
     );
   }
 
-  var jsonList = jason[Fields.meetings] as List<dynamic>;
-  return [];
+  var jsonList =
+      (jason[Fields.jsonData][Fields.meetings] as List<dynamic>).cast<String>();
+  return jsonList;
 }
 
 /// Get the full content of one [Meeting] based on its id.
