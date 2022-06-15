@@ -360,6 +360,17 @@ class _CreateMeetingState extends State<CreateMeeting> {
     context.read<MeetingBuilder>().title = _nameController.text;
     context.read<MeetingBuilder>().organiserId = "";
     Meeting meeting = context.read<MeetingBuilder>().build();
+    meeting.participants.add(
+      TaggedParticipant(
+        participant: Participant(
+          id: "seven",
+          name: _organiserFirstNameController.text,
+          surname: _organiserSurnameController.text,
+        ),
+        notNeeded: 0,
+        notPrepared: 0,
+      ),
+    );
 
     bool result = await postMeeting(meeting);
 

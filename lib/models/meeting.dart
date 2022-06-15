@@ -178,7 +178,7 @@ class TaggedParticipant {
   }
 
   Map<String, dynamic> toJson() => {
-        Fields.participant: participant,
+        Fields.participant: participant.toJson(),
         Fields.notNeeded: notNeeded,
         Fields.notPrepared: notPrepared,
       };
