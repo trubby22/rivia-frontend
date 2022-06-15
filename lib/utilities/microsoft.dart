@@ -46,36 +46,36 @@ Future<bool> microsoftGetTokens(String code) async {
   return false;
 }
 
-/// Attempt to fetch data from Microsoft Graph. Returns null if failed (not
-/// logged in).
-Future<String?> microsoftFetch() async {
-  // Not logged in if there is no token
+/// Attempt to fetch the user id from Microsoft Graph. Returns null if failed
+/// (not logged in).
+/// The id is returned back and also stored in [authToken].
+Future<String?> microsoftGetUserId() async {
+  if (authToken.userId != null) {
+    print("from cache");
+    return authToken.userId;
+  }
+
   if (authToken.token == null) {
-    return null;
+    authToken.userId = null;
+  } else {
+    final response = await http.get(
+      Uri.parse('$_microsoftGraphBaseUrl/me'),
+      headers: {'Authorization': 'Bearer ${authToken.token}'},
+    );
+
+    if (response.statusCode == 200) {
+      authToken.userId = json.decode(response.body)['id'];
+    } else if (authToken.refreshToken == null) {
+      await authToken.reset();
+    } else if (await microsoftRefresh() == true) {
+      authToken.userId = await microsoftGetUserId();
+    } else {
+      await authToken.reset();
+    }
   }
 
-  final response = await http.get(
-    Uri.parse('$_microsoftGraphBaseUrl/me'),
-    headers: {'Authorization': 'Bearer ${authToken.token}'},
-  );
-
-  if (response.statusCode == 200) {
-    return response.body;
-  }
-
-  // Not logged in if there is no refresh token
-  if (authToken.refreshToken == null) {
-    await authToken.reset();
-    return null;
-  }
-
-  if (await microsoftRefresh() == true) {
-    return microsoftFetch();
-  }
-
-  // Not logged in if refresh token has expired
-  await authToken.reset();
-  return null;
+  setSharedPref();
+  return authToken.userId;
 }
 
 Future<bool> microsoftRefresh() async {

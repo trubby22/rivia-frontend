@@ -190,7 +190,7 @@ class _LoginState extends State<Login> {
                               // );
                               microsoftLogin();
                             } else {
-                              microsoftFetch().then(
+                              microsoftGetUserId().then(
                                 (value) => showToast(
                                   context: context,
                                   text: value ?? "[ERROR: NOT LOGGED IN]",

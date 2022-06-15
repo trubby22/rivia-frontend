@@ -11,6 +11,7 @@ Future<void> getSharedPref(Function()? callback) async {
       Lang.values[instance.getInt(Fields.lang) ?? authToken.language.index];
   authToken.token = instance.getString(Fields.token);
   authToken.refreshToken = instance.getString(Fields.refreshToken);
+  authToken.userId = instance.getString(Fields.participantId);
   callback?.call();
 }
 
@@ -26,6 +27,11 @@ Future<void> setSharedPref() async {
     instance.remove(Fields.refreshToken);
   } else {
     instance.setString(Fields.refreshToken, authToken.refreshToken!);
+  }
+  if (authToken.userId == null) {
+    instance.remove(Fields.participantId);
+  } else {
+    instance.setString(Fields.participantId, authToken.userId!);
   }
 }
 
@@ -50,28 +56,16 @@ class MeetingDateAndTime extends ChangeNotifier {
   }
 }
 
-class AuthToken extends ChangeNotifier {
+class AuthToken {
   Lang language = Lang.en;
-  String? _token;
-  String? _refreshToken;
-
-  String? get token => _token;
-  String? get refreshToken => _refreshToken;
-
-  set token(String? value) {
-    _token = value;
-    notifyListeners();
-  }
-
-  set refreshToken(String? value) {
-    _refreshToken = value;
-    notifyListeners();
-  }
+  String? token;
+  String? refreshToken;
+  String? userId;
 
   Future<void> reset() async {
-    _token = null;
-    _refreshToken = null;
-    notifyListeners();
+    token = null;
+    refreshToken = null;
+    userId = null;
     await setSharedPref();
   }
 }
