@@ -42,12 +42,9 @@ Future<List<String>> getMeetings() async {
 
 /// Get the full content of one [Meeting] based on its id.
 Future<Meeting?> getMeetingContent(String meetingId) async {
-  print((API.getMeeting(meetingId)));
   final meetingResponse = (json.decode(
     ((await http.get(Uri.parse(API.getMeeting(meetingId)))).body),
   ))[Fields.jsonData];
-
-  print('response: $meetingResponse');
 
   if (meetingResponse == null) {
     // Go to summary
@@ -63,9 +60,6 @@ Future<Meeting?> getMeetingContent(String meetingId) async {
     );
     response[Fields.meetingId] == meetingId;
   }
-
-  print('edited response: $meetingResponse');
-  print('from JSON: ${Meeting.fromJson(response)}');
 
   return Meeting.fromJson(response);
 }
