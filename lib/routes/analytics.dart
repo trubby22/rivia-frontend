@@ -307,10 +307,18 @@ class _AnalyticsState extends State<Analytics> {
                               SizedBox(width: 8.0),
                               Container(
                                 decoration: BoxDecoration(
-                                    color: Colors.blue.shade100,
-                                    border: Border.all(),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
+                                  color: Colors.blue.shade100,
+                                  border: Border.all(
+                                    color: Colors.transparent,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(0, 1), blurRadius: 2.0)
+                                  ],
+                                ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: DropdownButton<String>(
@@ -369,10 +377,18 @@ class _AnalyticsState extends State<Analytics> {
                               SizedBox(width: 8.0),
                               Container(
                                 decoration: BoxDecoration(
-                                    color: Colors.blue.shade100,
-                                    border: Border.all(),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
+                                  color: Colors.blue.shade100,
+                                  border: Border.all(
+                                    color: Colors.transparent,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(0, 1), blurRadius: 2.0)
+                                  ],
+                                ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: DropdownButton<String>(
@@ -400,10 +416,18 @@ class _AnalyticsState extends State<Analytics> {
                               SizedBox(width: 8.0),
                               Container(
                                 decoration: BoxDecoration(
-                                    color: Colors.blue.shade100,
-                                    border: Border.all(),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
+                                  color: Colors.blue.shade100,
+                                  border: Border.all(
+                                    color: Colors.transparent,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(0, 1), blurRadius: 2.0)
+                                  ],
+                                ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: DropdownButton<String>(
@@ -438,15 +462,23 @@ class _AnalyticsState extends State<Analytics> {
                                 buttonText: Text('Select columns'),
                                 buttonIcon: Icon(Icons.arrow_drop_down),
                                 decoration: BoxDecoration(
-                                    color: Colors.blue.shade100,
-                                    border: Border.all(),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
+                                  color: Colors.blue.shade100,
+                                  border: Border.all(
+                                    color: Colors.transparent,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(0, 1), blurRadius: 2.0)
+                                  ],
+                                ),
                                 initialValue: _selectedColumns,
                                 listType: MultiSelectListType.CHIP,
                                 chipDisplay: MultiSelectChipDisplay.none(),
                                 onConfirm: (values) {
-                                  _selectedColumns = values as List<String>;
+                                  _selectedColumns =
+                                      values.map((e) => e as String).toList();
                                 },
                               ),
                               SizedBox(width: 8.0),
