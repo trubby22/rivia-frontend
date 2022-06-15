@@ -95,7 +95,8 @@ Future<bool> postMeeting(Meeting meeting) async {
     meeting.participants.remove(organiser);
     final jason = meeting.toJson();
     jason[Fields.participants] = (jason[Fields.participants] as List<dynamic>)
-        .map((p) => p[Fields.participant]);
+        .map((p) => p[Fields.participant])
+        .toList();
 
     jason['organizer'] = {
       'name': organiser.participant.name,
