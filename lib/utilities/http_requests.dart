@@ -36,8 +36,7 @@ Future<List<String>> getMeetings() async {
     );
   }
 
-  var jsonList =
-      (jason[Fields.jsonData][Fields.meetings] as List<dynamic>).cast<String>();
+  var jsonList = (jason[Fields.jsonData] as List<dynamic>).cast<String>();
   return jsonList;
 }
 
