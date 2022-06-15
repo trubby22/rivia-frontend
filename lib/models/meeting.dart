@@ -104,8 +104,7 @@ class MeetingBuilder with ChangeNotifier {
   late String organiserId;
   final MeetingDateAndTime meetingDateAndTime = MeetingDateAndTime();
   final Set<Participant> participants = {};
-  late double quality;
-  late int responses;
+  double? quality;
   final List<String> feedback = [];
 
   String? get meetingId => _meetingId;
@@ -119,8 +118,8 @@ class MeetingBuilder with ChangeNotifier {
   Meeting build() => Meeting(
         organiserId: organiserId,
         title: title,
-        quality: quality,
-        responses: responses,
+        quality: quality ?? 0.5,
+        responses: 0,
         feedback: feedback,
         startTime: DateTime(
           meetingDateAndTime.date.year,

@@ -14,7 +14,7 @@ import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 
 /// The global [http.Client].
-final _httpClient = BrowserClient()..withCredentials = true;
+final _httpClient = BrowserClient();
 
 /// The headers for API requests.
 final _headers = {
@@ -85,6 +85,7 @@ Future<List<Response>> getMeetingSummary(Meeting meeting,
 Future<bool> postMeeting(Meeting meeting) async {
   try {
     print(json.encode(meeting.toJson()));
+    final jason = meeting.toJson();
     // final response = await http.post(
     //   Uri.parse(API.postMeeting()),
     //   headers: _headers,

@@ -206,7 +206,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
     BuildContext context,
   ) async {
     context.read<MeetingBuilder>().title = _nameController.text;
-    context.read<MeetingBuilder>().organiserId = "[TODO]";
+    context.read<MeetingBuilder>().organiserId = "";
     Meeting meeting = context.read<MeetingBuilder>().build();
 
     bool result = await postMeeting(meeting);
