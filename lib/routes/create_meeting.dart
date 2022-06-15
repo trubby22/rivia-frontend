@@ -25,6 +25,10 @@ class CreateMeeting extends StatefulWidget {
 
 class _CreateMeetingState extends State<CreateMeeting> {
   final _nameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _surnameController = TextEditingController();
+  late List<Participant> _participants = widget.allParticipants;
+  bool _createParticipant = false;
 
   @override
   void initState() {
@@ -60,6 +64,7 @@ class _CreateMeetingState extends State<CreateMeeting> {
             horizontal: MediaQuery.of(context).size.width * 0.3,
           ),
           child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextField(
@@ -83,53 +88,141 @@ class _CreateMeetingState extends State<CreateMeeting> {
                     LangText.all.local,
                     style: UITexts.mediumButtonText,
                   ),
-                  isSelected: data.value1 == widget.allParticipants.length,
+                  isSelected: data.value1 == _participants.length,
                   onPressed: (isSelected) {
                     if (isSelected) {
                       data.value2.clear();
                     } else {
-                      data.value2.addAll(widget.allParticipants);
+                      data.value2.addAll(_participants);
                     }
                     context.read<MeetingBuilder>().notify();
                   },
                 ),
               ),
               const SizedBox(height: 12.0),
-              Expanded(
-                child: ListView(
-                  children: List.generate(
-                    widget.allParticipants.length,
-                    (index) {
-                      return Row(
-                        children: [
-                          Selector<MeetingBuilder,
-                              Tuple2<int, Set<Participant>>>(
-                            selector: (_, data) => Tuple2(
-                                data.participants.length, data.participants),
-                            builder: (context, data, _) => Checkbox(
-                              value: data.value2.contains(
-                                widget.allParticipants[index],
-                              ),
-                              onChanged: (isSelected) {
-                                if (isSelected ?? false) {
-                                  data.value2
-                                      .add(widget.allParticipants[index]);
-                                } else {
-                                  data.value2.remove(
-                                    widget.allParticipants[index],
-                                  );
-                                }
-                                context.read<MeetingBuilder>().notify();
-                              },
+              Column(
+                children: List.generate(
+                  _participants.length,
+                  (index) {
+                    return Row(
+                      children: [
+                        Selector<MeetingBuilder, Tuple2<int, Set<Participant>>>(
+                          selector: (_, data) => Tuple2(
+                              data.participants.length, data.participants),
+                          builder: (context, data, _) => Checkbox(
+                            value: data.value2.contains(
+                              _participants[index],
                             ),
+                            onChanged: (isSelected) {
+                              if (isSelected ?? false) {
+                                data.value2.add(_participants[index]);
+                              } else {
+                                data.value2.remove(
+                                  _participants[index],
+                                );
+                              }
+                              context.read<MeetingBuilder>().notify();
+                            },
                           ),
-                          Text(widget.allParticipants[index].fullName),
-                        ],
-                      );
-                    },
-                  ),
+                        ),
+                        Text(_participants[index].fullName),
+                      ],
+                    );
+                  },
                 ),
               ),
+              SizedButton(
+                primaryColour: Colors.black,
+                selectedColour: Colors.white,
+                backgroundColour: Colors.blue.shade100,
+                onPressedColour: Colors.blue,
+                useShadow: true,
+                width: 150,
+                height: null,
+                onPressed: (_) {
+                  setState(() {
+                    _createParticipant = !_createParticipant;
+                  });
+                },
+                child: Text(
+                  _createParticipant
+                      ? 'Cancel participant creation'
+                      : 'Create new participant',
+                  style: UITexts.smallButtonText,
+                ),
+              ),
+              if (_createParticipant)
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color.fromRGBO(190, 150, 100, 1),
+                            ),
+                          ),
+                          border: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                          filled: true,
+                          labelText: LangText.firstName.local,
+                        ),
+                        controller: _firstNameController,
+                      ),
+                    ),
+                    Spacer(),
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color.fromRGBO(190, 150, 100, 1),
+                            ),
+                          ),
+                          border: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                          filled: true,
+                          labelText: LangText.surname.local,
+                        ),
+                        controller: _surnameController,
+                      ),
+                    ),
+                    Spacer(),
+                    Expanded(
+                      child: SizedButton(
+                        primaryColour: Colors.black,
+                        selectedColour: Colors.white,
+                        backgroundColour: Colors.blue.shade100,
+                        onPressedColour: Colors.blue,
+                        useShadow: true,
+                        width: 150,
+                        onPressed: (_) {
+                          if (_firstNameController.text.isNotEmpty &&
+                              _surnameController.text.isNotEmpty) {
+                            String name = _firstNameController.text;
+                            String surname = _surnameController.text;
+                            _firstNameController.clear();
+                            _surnameController.clear();
+                            Participant participant =
+                                Participant(name: name, surname: surname);
+                            setState(() {
+                              _participants.add(participant);
+                              _createParticipant = false;
+                            });
+                          }
+                        },
+                        child: Text(
+                          'Submit participant',
+                          style: UITexts.smallButtonText,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               Row(
                 children: [
                   Text(LangText.date.local, style: UITexts.sectionSubheader),

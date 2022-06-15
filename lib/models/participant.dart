@@ -5,13 +5,13 @@ class Participant {
   final String name;
   final String surname;
   final String? email;
-  final String id;
+  final String? id;
 
   Participant({
     required this.name,
     required this.surname,
     this.email,
-    required this.id,
+    this.id,
   });
 
   get fullName => name + " " + surname;

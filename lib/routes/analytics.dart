@@ -503,7 +503,7 @@ class _AnalyticsState extends State<Analytics> {
                                 selectedColour: Colors.white,
                                 backgroundColour: Colors.blue.shade100,
                                 onPressedColour: Colors.blue,
-                                useShadow: !_largeMeetings,
+                                useShadow: true,
                                 width: 150,
                                 height: null,
                                 isSelected: _largeMeetings,
