@@ -13,6 +13,8 @@ import 'package:multiselect/multiselect.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
+const bigMeetingSize = 5;
+
 class Analytics extends StatefulWidget {
   const Analytics({Key? key, required this.meetings}) : super(key: key);
 
@@ -87,6 +89,8 @@ class _AnalyticsState extends State<Analytics> {
         .where((element) =>
             element.quality * 100 >= _lowerSatisfaction &&
             element.quality * 100 <= _upperSatisfaction)
+        .where((element) =>
+            !_largeMeetings || element.participants.length >= bigMeetingSize)
         .toList();
 
     return Align(
@@ -389,6 +393,7 @@ class _AnalyticsState extends State<Analytics> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 8.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
