@@ -13,6 +13,8 @@ import 'package:multiselect/multiselect.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
+const bigMeetingSize = 5;
+
 class Analytics extends StatefulWidget {
   const Analytics({Key? key, required this.meetings}) : super(key: key);
 
@@ -24,31 +26,29 @@ class Analytics extends StatefulWidget {
 
 class _AnalyticsState extends State<Analytics> {
   int _highlightIndex = -1;
-  String? _organiser;
-  String? _lowerSatisfaction;
-  String? _upperSatisfaction;
+  Participant? _organiser;
+  int _lowerSatisfaction = 0;
+  int _upperSatisfaction = 100;
   bool _largeMeetings = false;
-  List<String> _selectedColumns = [
-    'Date',
-    'Start time',
-    'End time',
-    'Organiser',
-    'Number of participants',
-    'Level of satisfaction',
-    'Needed participants',
-    'Prepared participants',
+
+  final List<String> _allColumns = [
+    LangText.date.local,
+    LangText.startTime.local,
+    LangText.endTime.local,
+    LangText.organiser.local,
+    LangText.noParticipants.local,
+    LangText.lvlSat.local,
+    LangText.neededParticipants.local,
+    LangText.preparedParticipants.local,
   ];
-  final List<DropdownMenuItem<String>> _percentages = [
-    '0 %',
-    '20 %',
-    '40 %',
-    '60 %',
-    '80 %',
-    '100 %',
-  ].map<DropdownMenuItem<String>>((String value) {
-    return DropdownMenuItem<String>(
+
+  late List<String> _selectedColumns = _allColumns;
+
+  final List<DropdownMenuItem<int>> _percentages =
+      [0, 20, 40, 60, 80, 100].map<DropdownMenuItem<int>>((int value) {
+    return DropdownMenuItem<int>(
       value: value,
-      child: Text(value),
+      child: Text('$value %'),
     );
   }).toList();
 
@@ -82,6 +82,16 @@ class _AnalyticsState extends State<Analytics> {
 
   Widget tableBuilder(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    List<Meeting> meetings = widget.meetings;
+    List<Meeting> filteredMeetings = meetings
+        .where(
+            (element) => _organiser == null || element.organiser == _organiser)
+        .where((element) =>
+            element.quality * 100 >= _lowerSatisfaction &&
+            element.quality * 100 <= _upperSatisfaction)
+        .where((element) =>
+            !_largeMeetings || element.participants.length >= bigMeetingSize)
+        .toList();
 
     return Align(
       child: SizedBox(
@@ -98,101 +108,105 @@ class _AnalyticsState extends State<Analytics> {
             TableRow(
               decoration: const BoxDecoration(color: Colors.blue),
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    LangText.date.local,
-                    textAlign: TextAlign.center,
-                    style: UITexts.bigText.copyWith(
-                      color: Colors.white,
+                if (_selectedColumns.contains(LangText.date.local))
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      LangText.date.local,
+                      textAlign: TextAlign.center,
+                      style: UITexts.bigText.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    LangText.startTime.local,
-                    textAlign: TextAlign.center,
-                    style: UITexts.bigText.copyWith(
-                      color: Colors.white,
+                if (_selectedColumns.contains(LangText.startTime.local))
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      LangText.startTime.local,
+                      textAlign: TextAlign.center,
+                      style: UITexts.bigText.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    LangText.endTime.local,
-                    textAlign: TextAlign.center,
-                    style: UITexts.bigText.copyWith(
-                      color: Colors.white,
+                if (_selectedColumns.contains(LangText.endTime.local))
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      LangText.endTime.local,
+                      textAlign: TextAlign.center,
+                      style: UITexts.bigText.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    LangText.organiser.local,
-                    textAlign: TextAlign.center,
-                    style: UITexts.bigText.copyWith(
-                      color: Colors.white,
+                if (_selectedColumns.contains(LangText.organiser.local))
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      LangText.organiser.local,
+                      textAlign: TextAlign.center,
+                      style: UITexts.bigText.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    LangText.noParticipants.local,
-                    textAlign: TextAlign.center,
-                    style: UITexts.bigText.copyWith(
-                      color: Colors.white,
+                if (_selectedColumns.contains(LangText.noParticipants.local))
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      LangText.noParticipants.local,
+                      textAlign: TextAlign.center,
+                      style: UITexts.bigText.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    LangText.lvlSat.local,
-                    textAlign: TextAlign.center,
-                    style: UITexts.bigText.copyWith(
-                      color: Colors.white,
+                if (_selectedColumns.contains(LangText.lvlSat.local))
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      LangText.lvlSat.local,
+                      textAlign: TextAlign.center,
+                      style: UITexts.bigText.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    LangText.neededParticipants.local,
-                    textAlign: TextAlign.center,
-                    style: UITexts.bigText.copyWith(
-                      color: Colors.white,
+                if (_selectedColumns
+                    .contains(LangText.neededParticipants.local))
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      LangText.neededParticipants.local,
+                      textAlign: TextAlign.center,
+                      style: UITexts.bigText.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    LangText.preparedParticipants.local,
-                    textAlign: TextAlign.center,
-                    style: UITexts.bigText.copyWith(
-                      color: Colors.white,
+                if (_selectedColumns
+                    .contains(LangText.preparedParticipants.local))
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      LangText.preparedParticipants.local,
+                      textAlign: TextAlign.center,
+                      style: UITexts.bigText.copyWith(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
             ...List.generate(
-              widget.meetings.length,
+              filteredMeetings.length,
               (index) {
-                final meeting = widget.meetings[index];
+                final meeting = filteredMeetings[index];
                 final start = meeting.startTime;
                 final end = meeting.endTime;
-                Participant? organiser;
-                for (final p in meeting.participants) {
-                  if (p.participant.id == meeting.organiserId) {
-                    organiser = p.participant;
-                    break;
-                  }
-                }
+                final organiser = meeting.organiser;
                 final organiserName = organiser?.fullName ?? "[NULL]";
                 final participantNum = meeting.participants.length;
                 final notNeededNum =
@@ -212,46 +226,57 @@ class _AnalyticsState extends State<Analytics> {
                             : const Color.fromARGB(255, 255, 212, 150),
                   ),
                   children: [
-                    entryBuilder(
-                      context,
-                      index: index,
-                      text: '${start.day}/${start.month}/${start.year}',
-                    ),
-                    entryBuilder(
-                      context,
-                      index: index,
-                      text: TimeOfDay.fromDateTime(start).format(context),
-                    ),
-                    entryBuilder(
-                      context,
-                      index: index,
-                      text: TimeOfDay.fromDateTime(end).format(context),
-                    ),
-                    entryBuilder(
-                      context,
-                      index: index,
-                      text: organiserName,
-                    ),
-                    entryBuilder(
-                      context,
-                      index: index,
-                      text: '$participantNum',
-                    ),
-                    entryBuilder(
-                      context,
-                      index: index,
-                      text: '${(meeting.quality * 100).round()}%',
-                    ),
-                    entryBuilder(
-                      context,
-                      index: index,
-                      text: '${participantNum - notNeededNum}',
-                    ),
-                    entryBuilder(
-                      context,
-                      index: index,
-                      text: '${participantNum - notPreparedNum}',
-                    ),
+                    if (_selectedColumns.contains(LangText.date.local))
+                      entryBuilder(
+                        context,
+                        index: index,
+                        text: '${start.day}/${start.month}/${start.year}',
+                      ),
+                    if (_selectedColumns.contains(LangText.startTime.local))
+                      entryBuilder(
+                        context,
+                        index: index,
+                        text: TimeOfDay.fromDateTime(start).format(context),
+                      ),
+                    if (_selectedColumns.contains(LangText.endTime.local))
+                      entryBuilder(
+                        context,
+                        index: index,
+                        text: TimeOfDay.fromDateTime(end).format(context),
+                      ),
+                    if (_selectedColumns.contains(LangText.organiser.local))
+                      entryBuilder(
+                        context,
+                        index: index,
+                        text: organiserName,
+                      ),
+                    if (_selectedColumns
+                        .contains(LangText.noParticipants.local))
+                      entryBuilder(
+                        context,
+                        index: index,
+                        text: '$participantNum',
+                      ),
+                    if (_selectedColumns.contains(LangText.lvlSat.local))
+                      entryBuilder(
+                        context,
+                        index: index,
+                        text: '${(meeting.quality * 100).round()}%',
+                      ),
+                    if (_selectedColumns
+                        .contains(LangText.neededParticipants.local))
+                      entryBuilder(
+                        context,
+                        index: index,
+                        text: '${participantNum - notNeededNum}',
+                      ),
+                    if (_selectedColumns
+                        .contains(LangText.preparedParticipants.local))
+                      entryBuilder(
+                        context,
+                        index: index,
+                        text: '${participantNum - notPreparedNum}',
+                      ),
                   ],
                 );
               },
@@ -319,29 +344,31 @@ class _AnalyticsState extends State<Analytics> {
                                         offset: Offset(0, 1), blurRadius: 2.0)
                                   ],
                                 ),
-                                child: DropdownButton<String>(
+                                child: DropdownButton<Participant>(
                                   value: _organiser,
                                   underline: Container(),
+                                  style: TextStyle(),
                                   icon: const Icon(Icons.arrow_drop_down),
                                   borderRadius: BorderRadius.circular(10),
                                   elevation: 16,
-                                  onChanged: (String? newValue) {
-                                    if (_organiser == newValue) {
+                                  onChanged: (Participant? newValue) {
+                                    if (newValue == _organiser) {
                                       setState(() {
                                         _organiser = null;
                                       });
                                     } else {
                                       setState(() {
-                                        _organiser = newValue!;
+                                        _organiser = newValue;
                                       });
                                     }
                                   },
-                                  items: <String>['Akbar', 'Bali Organa']
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
+                                  items: widget.meetings
+                                      .map((e) => e.organiser)
+                                      .map<DropdownMenuItem<Participant>>(
+                                          (Participant? p) {
+                                    return DropdownMenuItem<Participant>(
+                                      value: p,
+                                      child: Text(p?.fullName),
                                     );
                                   }).toList(),
                                 ),
@@ -366,6 +393,7 @@ class _AnalyticsState extends State<Analytics> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 8.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -387,20 +415,17 @@ class _AnalyticsState extends State<Analytics> {
                                         offset: Offset(0, 1), blurRadius: 2.0)
                                   ],
                                 ),
-                                child: DropdownButton<String>(
+                                child: DropdownButton<int>(
                                   value: _lowerSatisfaction,
                                   underline: Container(),
                                   icon: const Icon(Icons.arrow_drop_down),
                                   borderRadius: BorderRadius.circular(10),
                                   elevation: 16,
-                                  onChanged: (String? newValue) {
-                                    if (_lowerSatisfaction == newValue) {
+                                  onChanged: (int? newValue) {
+                                    if (newValue != null &&
+                                        newValue <= _upperSatisfaction) {
                                       setState(() {
-                                        _lowerSatisfaction = null;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        _lowerSatisfaction = newValue!;
+                                        _lowerSatisfaction = newValue;
                                       });
                                     }
                                   },
@@ -424,20 +449,17 @@ class _AnalyticsState extends State<Analytics> {
                                         offset: Offset(0, 1), blurRadius: 2.0)
                                   ],
                                 ),
-                                child: DropdownButton<String>(
+                                child: DropdownButton<int>(
                                   value: _upperSatisfaction,
                                   underline: Container(),
                                   icon: const Icon(Icons.arrow_drop_down),
                                   borderRadius: BorderRadius.circular(10),
                                   elevation: 16,
-                                  onChanged: (String? newValue) {
-                                    if (_upperSatisfaction == newValue) {
+                                  onChanged: (int? newValue) {
+                                    if (newValue != null &&
+                                        newValue >= _lowerSatisfaction) {
                                       setState(() {
-                                        _upperSatisfaction = null;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        _upperSatisfaction = newValue!;
+                                        _upperSatisfaction = newValue;
                                       });
                                     }
                                   },
@@ -450,7 +472,7 @@ class _AnalyticsState extends State<Analytics> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               MultiSelectDialogField(
-                                items: _selectedColumns
+                                items: _allColumns
                                     .map((e) => MultiSelectItem(e, e))
                                     .toList(),
                                 buttonText: Text('Select columns'),
@@ -467,7 +489,7 @@ class _AnalyticsState extends State<Analytics> {
                                         offset: Offset(0, 1), blurRadius: 2.0)
                                   ],
                                 ),
-                                initialValue: _selectedColumns,
+                                initialValue: _allColumns,
                                 listType: MultiSelectListType.CHIP,
                                 chipDisplay: MultiSelectChipDisplay.none(),
                                 onConfirm: (values) {
