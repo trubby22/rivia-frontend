@@ -6,6 +6,7 @@ import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/login_credentials.dart';
+import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/language_switcher.dart';
@@ -213,7 +214,7 @@ class _LoginState extends State<Login> {
                           print(bar);
                           Navigator.of(context).popAndPushNamed(
                             RouteNames.analytics,
-                            arguments: [testMeeting, testMeeting2],
+                            arguments: bar.cast<Meeting>(),
                           );
                         }
                       },
