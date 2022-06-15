@@ -15,7 +15,7 @@ List<Participant> testParticipants = [
 Meeting testMeeting = Meeting(
   title: "Foo Meeting",
   organiserId: "0",
-  quality: 0.8,
+  qualities: [0.8],
   responses: 5,
   startTime: DateTime.now(),
   endTime: DateTime.now(),

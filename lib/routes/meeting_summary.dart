@@ -361,7 +361,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
 }
 
 Map<String, double> binQualityReviews(Meeting meeting) {
-  List<double> qualities = [meeting.quality];
+  List<double> qualities = meeting.qualities;
   List<double> sortedQualities = qualities.toList()..sort();
   int awful = sortedQualities.takeWhile((value) => value <= 0.2).length;
   int bad = sortedQualities

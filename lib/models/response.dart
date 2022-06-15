@@ -26,7 +26,7 @@ class Response {
 
   Response.fromJson(Map<String, dynamic> json)
       : participant = Participant.fromJson(json[Fields.participant]),
-        quality = json[Fields.quality],
+        quality = json[Fields.qualities],
         painPoints =
             (json[Fields.painPoints] as Map<String, dynamic>?)?.cast() ??
                 const {},
@@ -50,7 +50,7 @@ class Response {
 
   Map<String, dynamic> toJson() => {
         Fields.participant: participant.toJson(),
-        Fields.quality: quality,
+        Fields.qualities: quality,
         Fields.painPoints: painPoints,
         Fields.notNeeded: notNeeded.map((e) => e.toJson()).toList(),
         Fields.notPrepared: notPrepared.map((e) => e.toJson()).toList(),

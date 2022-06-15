@@ -28,7 +28,7 @@ List<Response> testResponses = [
 
 Meeting testMeeting = Meeting(
   title: "Bar Meeting",
-  quality: 0.5,
+  qualities: [0.5, 0.6],
   responses: 2,
   meetingId: "114514-1919810",
   organiserId: "3",
@@ -51,7 +51,7 @@ Meeting testMeeting = Meeting(
 Meeting testMeeting2 = Meeting(
   title: "Foo Meeting",
   meetingId: "132452",
-  quality: 0.8,
+  qualities: [0.8, 1.0, 0.4],
   responses: 5,
   startTime: DateTime(2022, 6, 14, 8),
   organiserId: "5",

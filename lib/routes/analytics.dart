@@ -87,9 +87,9 @@ class _AnalyticsState extends State<Analytics> {
     List<Meeting> filteredMeetings = meetings
         .where(
             (element) => _organiser == null || element.organiser == _organiser)
-        .where((element) =>
-            element.quality * 100 >= _lowerSatisfaction &&
-            element.quality * 100 <= _upperSatisfaction)
+        // .where((element) =>
+        //     element.qualities * 100 >= _lowerSatisfaction &&
+        //     element.qualities * 100 <= _upperSatisfaction)
         .where((element) =>
             !_largeMeetings || element.participants.length >= bigMeetingSize)
         .where((element) =>
@@ -265,7 +265,8 @@ class _AnalyticsState extends State<Analytics> {
                       entryBuilder(
                         context,
                         index: index,
-                        text: '${(meeting.quality * 100).round()}%',
+                        text:
+                            '${((meeting.qualities.isEmpty ? 0 : meeting.qualities[0]) * 100).round()}%',
                       ),
                     if (_selectedColumns
                         .contains(LangText.neededParticipants.local))

@@ -22,7 +22,7 @@ class Fields {
   static String responses = 'responses';
 
   static String participant = 'participant';
-  static String quality = 'quality';
+  static String qualities = 'qualities';
   static String painPoints = 'presetQs';
   static String notNeeded = 'notNeeded';
   static String notPrepared = 'notPrepared';
