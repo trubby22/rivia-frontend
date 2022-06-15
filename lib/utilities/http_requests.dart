@@ -37,10 +37,12 @@ Future<List<String>> getMeetings() async {
 
 /// Get the full content of one [Meeting] based on its id.
 Future<Meeting?> getMeetingContent(String meetingId) async {
-  final meetingResponse = json.decode((await http.get(
-    Uri.parse(API.meeting(meetingId)),
-  ))
-      .body);
+  final meetingResponse = json.decode(
+    (await http.get(
+      Uri.parse(API.meeting(meetingId)),
+    ))
+        .body,
+  );
 
   if (meetingResponse == null) {
     // Go to summary

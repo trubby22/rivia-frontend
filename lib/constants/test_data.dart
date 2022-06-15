@@ -77,7 +77,6 @@ Meeting testMeeting2 = Meeting(
       participant: Participant(
         name: "Mamezuku",
         surname: "Rai",
-        email: "",
         id: "4",
       ),
       notNeeded: 1,
@@ -87,7 +86,6 @@ Meeting testMeeting2 = Meeting(
       participant: Participant(
         name: "Albus Percival Wulfric Brian",
         surname: "Dumbledore",
-        email: "",
         id: "5",
       ),
       notNeeded: 0,
@@ -97,7 +95,6 @@ Meeting testMeeting2 = Meeting(
       participant: Participant(
         name: "Yui",
         surname: "Kusano",
-        email: "",
         id: "5",
       ),
       notNeeded: 0,
@@ -107,7 +104,6 @@ Meeting testMeeting2 = Meeting(
       participant: Participant(
         name: "Shadow Mistress",
         surname: "Yuko",
-        email: "",
         id: "6",
       ),
       notNeeded: 0,
@@ -117,7 +113,6 @@ Meeting testMeeting2 = Meeting(
       participant: Participant(
         name: "Jacen",
         surname: "Syndulla",
-        email: "",
         id: "7",
       ),
       notNeeded: 4,
@@ -127,7 +122,6 @@ Meeting testMeeting2 = Meeting(
       participant: Participant(
         name: "Piotr",
         surname: "Błaszyk",
-        email: "",
         id: "8",
       ),
       notNeeded: 0,

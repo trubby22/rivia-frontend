@@ -513,7 +513,7 @@ class _ReviewState extends State<Review> {
     context.read<ResponseBuilder>().feedback = _controller.text;
 
     Response response = context.read<ResponseBuilder>().build();
-
+    print(response.toJson());
     showToast(context: context, text: 'Review saved: ${response.toJson()}');
     if (widget.meeting.meetingId == null) {
       debugPrint("Bad meeting: NO ID!");

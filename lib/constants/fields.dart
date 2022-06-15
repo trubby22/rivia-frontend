@@ -22,8 +22,10 @@ class Fields {
   static String participant = 'participant';
   static String quality = 'quality';
   static String painPoints = 'preset_qs';
-  static String notNeeded = 'not_needed';
-  static String notPrepared = 'not_prepared';
+  static String notNeeded = 'notNeeded';
+  static String notPrepared = 'notPrepared';
+  static String needed = 'needed';
+  static String prepared = 'prepared';
   static String feedback = 'feedback';
 
   static String lang = 'lang';

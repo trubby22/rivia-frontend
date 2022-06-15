@@ -9,6 +9,8 @@ class Response {
   final Map<String, String> painPoints;
   final List<Participant> notNeeded;
   final List<Participant> notPrepared;
+  final List<Participant> needed;
+  final List<Participant> prepared;
   final String? feedback;
 
   Response({
@@ -17,6 +19,8 @@ class Response {
     this.painPoints = const {},
     this.notNeeded = const [],
     this.notPrepared = const [],
+    this.needed = const [],
+    this.prepared = const [],
     this.feedback,
   });
 
@@ -34,6 +38,14 @@ class Response {
                 ?.map((e) => Participant.fromJson(e))
                 .toList() ??
             const [],
+        needed = (json[Fields.needed] as List<dynamic>?)
+                ?.map((e) => Participant.fromJson(e))
+                .toList() ??
+            const [],
+        prepared = (json[Fields.prepared] as List<dynamic>?)
+                ?.map((e) => Participant.fromJson(e))
+                .toList() ??
+            const [],
         feedback = json[Fields.feedback];
 
   Map<String, dynamic> toJson() => {
@@ -42,6 +54,8 @@ class Response {
         Fields.painPoints: painPoints,
         Fields.notNeeded: notNeeded.map((e) => e.toJson()).toList(),
         Fields.notPrepared: notPrepared.map((e) => e.toJson()).toList(),
+        Fields.needed: needed.map((e) => e.toJson()).toList(),
+        Fields.prepared: prepared.map((e) => e.toJson()).toList(),
         if (feedback != null) Fields.feedback: feedback,
       };
 }
@@ -70,6 +84,8 @@ class ResponseBuilder with ChangeNotifier {
         painPoints: painPoints,
         notNeeded: notNeeded.toList(),
         notPrepared: notPrepared.toList(),
+        needed: needed.toList(),
+        prepared: prepared.toList(),
         feedback: feedback?.trim(),
       );
 
