@@ -64,8 +64,7 @@ class _LoginState extends State<Login> {
     final height = (_signup ? 1.15 : 1.0) *
         max(450.0, MediaQuery.of(context).size.height * 0.55);
 
-    return Container();
-    WillPopScope(
+    return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: const Color.fromRGBO(244, 242, 234, 1),
