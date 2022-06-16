@@ -19,6 +19,8 @@ import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/microsoft.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'utilities/http_requests.dart';
+
 void main() {
   setUrlStrategy(PathUrlStrategy());
   runApp(const MyApp());
@@ -86,7 +88,7 @@ class _MyAppState extends State<MyApp> {
             }
           case RouteNames.redirect:
             if (dict.isNotEmpty) {
-              microsoftGetTokens(dict["code"]);
+              microsoftGetTokens(dict["code"]).then((_) => bruh());
             }
             return MaterialPageRoute(builder: (_) => Redirect());
           case RouteNames.createMeeting:
@@ -129,6 +131,16 @@ class _MyAppState extends State<MyApp> {
             }
         }
       },
+    );
+  }
+
+  Future<void> bruh() async {
+    await microsoftGetUserId();
+    final foo = await getMeetings();
+    final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
+    Navigator.of(context).popAndPushNamed(
+      RouteNames.analytics,
+      arguments: bar.cast<Meeting>(),
     );
   }
 }

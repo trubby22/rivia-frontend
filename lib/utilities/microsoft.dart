@@ -26,9 +26,7 @@ void microsoftLogin() {
 /// Get the tokens based on the code and save them.
 Future<bool> microsoftGetTokens(String code) async {
   final response = await http.post(
-    Uri.parse(
-      '$_microsoftLoginBaseUrl/token',
-    ),
+    Uri.parse('$_microsoftLoginBaseUrl/token'),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
