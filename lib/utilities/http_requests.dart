@@ -60,7 +60,6 @@ Future<Meeting?> getMeetingContent(String meetingId) async {
     );
     response[Fields.meetingId] == meetingId;
   }
-  print(response);
   return Meeting.fromJson(response);
 }
 
@@ -101,14 +100,11 @@ Future<bool> postMeeting(Meeting meeting) async {
       'name': organiser.participant.name,
       'surname': organiser.participant.surname,
     };
-    print("JSON: $jason");
-    print("STR: ${json.encode(jason)}");
     final response = await http.post(
       Uri.parse(API.postMeeting()),
       headers: _headers,
       body: json.encode(jason),
     );
-    print(response.body);
     return true;
   } catch (e) {
     debugPrint(e.toString());
@@ -150,20 +146,18 @@ void postReview(String meetingId, Response review) async {
       (json[Fields.painPoints] as Map<String, String>).keys.toList();
   json[Fields.notNeeded] =
       (json[Fields.notNeeded] as List<Map<String, dynamic>>)
-          .map((e) => e[Fields.participantId])
+          .map((e) => e[Fields.id])
           .toList();
   json[Fields.notPrepared] =
       (json[Fields.notPrepared] as List<Map<String, dynamic>>)
-          .map((e) => e[Fields.participantId])
+          .map((e) => e[Fields.id])
           .toList();
   json[Fields.needed] = (json[Fields.needed] as List<Map<String, dynamic>>)
-      .map((e) => e[Fields.participantId])
+      .map((e) => e[Fields.id])
       .toList();
   json[Fields.prepared] = (json[Fields.prepared] as List<Map<String, dynamic>>)
-      .map((e) => e[Fields.participantId])
+      .map((e) => e[Fields.id])
       .toList();
-  print(API.getReview(meetingId));
-  print(jsonEncode(json));
   http.Response response = await http.post(
     Uri.parse(API.getReview(meetingId)),
     headers: _headers,

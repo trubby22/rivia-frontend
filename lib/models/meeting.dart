@@ -43,23 +43,35 @@ class Meeting {
   static Meeting? fromJson(Map<String, dynamic> json) {
     try {
       return Meeting(
-        feedback: (json[Fields.feedback] as List<dynamic>).cast(),
-        title: json[Fields.title],
+        feedback: JH.asList(
+          json[Fields.feedback],
+          listErrMsg: (t) => 'Field "feedback" should be a list, but is a $t',
+          castErrMsg:
+              'Field "feedback" should have an element type of "String"',
+        ),
+        title: json[Fields.title] ?? JH.toss('Field "title" is NULL'),
         meetingId: json[Fields.meetingId],
         startTime: DateTimeJson.fromJSON(json[Fields.startTime]) ??
             JH.toss('Field "startTime" is NULL'),
         endTime: DateTimeJson.fromJSON(json[Fields.endTime]) ??
             JH.toss('Field "endTime" is NULL'),
-        qualities: (json[Fields.qualities] as List<dynamic>).cast(),
-        responses: json[Fields.responses],
-        organiserId: json[Fields.organiserId],
+        qualities: JH.asList(
+          json[Fields.qualities],
+          listErrMsg: (t) => 'Field "qualities" should be a list, but is a $t',
+          castErrMsg:
+              'Field "qualities" should have an element type of "double"',
+        ),
+        responses:
+            json[Fields.responses] ?? JH.toss('Field "responses" is NULL'),
+        organiserId:
+            json[Fields.organiserId] ?? JH.toss('Field "organiserId" is NULL'),
         participants: (json[Fields.participants] as List<dynamic>?)
                 ?.map((e) => TaggedParticipant.fromJson(e)!)
                 .toList() ??
             const [],
         painPoints: Map.fromEntries((json[Fields.painPoints] as List<dynamic>?)
                 ?.map((e) =>
-                    MapEntry(e['presetQ']['id'], e['presetQ']['text'])) ??
+                    MapEntry(e['presetQ'][Fields.id], e['presetQ']['text'])) ??
             const []),
       );
     } catch (e) {
@@ -80,7 +92,7 @@ class Meeting {
             .map(
               (e) => {
                 'presetQ': {
-                  'id': e.key,
+                  Fields.id: e.key,
                   'text': e.value,
                 },
               },

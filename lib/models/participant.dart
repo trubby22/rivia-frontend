@@ -20,12 +20,12 @@ class Participant {
       : name = json[Fields.name],
         surname = json[Fields.surname],
         email = json[Fields.email],
-        id = json[Fields.participantId];
+        id = json[Fields.id];
 
   Map<String, dynamic> toJson() => {
         Fields.name: name,
         Fields.surname: surname,
         if (email != null) Fields.email: email,
-        Fields.participantId: id,
+        Fields.id: id,
       };
 }

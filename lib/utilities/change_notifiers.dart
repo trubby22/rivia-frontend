@@ -18,7 +18,7 @@ Future<void> getSharedPref(Function()? callback) async {
         Lang.values[instance.getInt(Fields.lang) ?? authToken.language.index];
     authToken.token = instance.getString(Fields.token);
     authToken.refreshToken = instance.getString(Fields.refreshToken);
-    authToken.userId = instance.getString(Fields.participantId);
+    authToken.userId = instance.getString(Fields.id);
     authToken.tenantDomain = instance.getString(Fields.organiserId);
   }
   callback?.call();
@@ -38,9 +38,9 @@ Future<void> setSharedPref() async {
     instance.setString(Fields.refreshToken, authToken.refreshToken!);
   }
   if (authToken.userId == null) {
-    instance.remove(Fields.participantId);
+    instance.remove(Fields.id);
   } else {
-    instance.setString(Fields.participantId, authToken.userId!);
+    instance.setString(Fields.id, authToken.userId!);
   }
   if (authToken.tenantDomain == null) {
     instance.remove(Fields.organiserId);
