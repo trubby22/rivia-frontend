@@ -437,10 +437,8 @@ class _ReviewState extends State<Review> {
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     onPressed: (_) {
                       submitReview(context);
-                      (Navigator.of(context)..pop()).pushNamed(
-                        RouteNames.analytics,
-                        arguments: [testMeeting, testMeeting2],
-                      );
+                      // TODO: Explicitly go to analytics instead of mere pop
+                      Navigator.of(context).pop();
                     },
                     isSelected: true,
                     child: Text(
