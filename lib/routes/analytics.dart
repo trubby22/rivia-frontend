@@ -46,6 +46,7 @@ class _AnalyticsState extends State<Analytics> {
     LangText.lvlSat,
     LangText.neededParticipants,
     LangText.preparedParticipants,
+    LangText.meetingName,
   ];
 
   late List<LangText> _selectedColumns = _allColumns;
@@ -148,6 +149,17 @@ class _AnalyticsState extends State<Analytics> {
             TableRow(
               decoration: const BoxDecoration(color: Colors.blue),
               children: [
+                if (_selectedColumns.contains(LangText.meetingName))
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      LangText.meetingName.local,
+                      textAlign: TextAlign.center,
+                      style: UITexts.bigText.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 if (_selectedColumns.contains(LangText.date))
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -242,6 +254,7 @@ class _AnalyticsState extends State<Analytics> {
               _filteredMeetings.length,
               (index) {
                 final meeting = _filteredMeetings[index];
+                final name = meeting.title;
                 final start = meeting.startTime;
                 final end = meeting.endTime;
                 final organiser = meeting.organiser;
@@ -266,6 +279,12 @@ class _AnalyticsState extends State<Analytics> {
                                 : const Color.fromARGB(255, 255, 212, 150),
                   ),
                   children: [
+                    if (_selectedColumns.contains(LangText.meetingName))
+                      entryBuilder(
+                        context,
+                        index: index,
+                        text: name,
+                      ),
                     if (_selectedColumns.contains(LangText.date))
                       entryBuilder(
                         context,
