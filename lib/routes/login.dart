@@ -15,7 +15,8 @@ import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/toast.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  const Login({Key? key, this.future}) : super(key: key);
+  final Future<bool>? future;
 
   @override
   State<Login> createState() => _LoginState();
@@ -32,11 +33,11 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     getSharedPref(() => setState(() {}));
-    // .then((_) => bruh());
   }
 
   Future<void> bruh() async {
-    if (authToken.token == null) {
+    await getSharedPref(null);
+    if (authToken.token == null && widget.future == null) {
       // Admin Consent
       // js.context.callMethod(
       //   'open',
@@ -44,8 +45,12 @@ class _LoginState extends State<Login> {
       //     "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
       //   ],
       // );
+      print('login');
       microsoftLogin();
     } else {
+      if (widget.future != null) {
+        await widget.future;
+      }
       await microsoftGetUserId();
       showToast(
         context: context,
@@ -65,6 +70,7 @@ class _LoginState extends State<Login> {
     final height = (_signup ? 1.15 : 1.0) *
         max(450.0, MediaQuery.of(context).size.height * 0.55);
 
+    print('Future: ${widget.future}');
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(

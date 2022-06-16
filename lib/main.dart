@@ -16,6 +16,7 @@ import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/microsoft.dart';
+import 'package:rivia/utilities/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'utilities/http_requests.dart';
@@ -85,10 +86,12 @@ class _MyAppState extends State<MyApp> {
               );
             }
           case RouteNames.login:
-            if (dict.isNotEmpty) {
-              microsoftGetTokens(dict["code"]).then((_) => bruh());
-            }
-            return MaterialPageRoute(builder: (_) => Login());
+            return MaterialPageRoute(
+              builder: (_) => Login(
+                future:
+                    dict.isNotEmpty ? microsoftGetTokens(dict["code"]) : null,
+              ),
+            );
           case RouteNames.createMeeting:
             try {
               return MaterialPageRoute(
@@ -129,16 +132,6 @@ class _MyAppState extends State<MyApp> {
             }
         }
       },
-    );
-  }
-
-  Future<void> bruh() async {
-    await microsoftGetUserId();
-    final foo = await getMeetings();
-    final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
-    Navigator.of(context).popAndPushNamed(
-      RouteNames.analytics,
-      arguments: bar.cast<Meeting>(),
     );
   }
 }

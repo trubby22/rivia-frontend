@@ -79,13 +79,15 @@ class _AnalyticsState extends State<Analytics> {
     required String text,
   }) {
     return TableRowInkWell(
-      onTap: () {
+      onTap: () async {
         Meeting meeting = widget.meetings[index];
         if (_multiselect) {
           _selectedMeetings[index] = !_selectedMeetings[index];
         } else {
           Navigator.of(context).pushNamed(
-            RouteNames.review,
+            (await getIsReviewed(meeting.meetingId!))
+                ? RouteNames.summary
+                : RouteNames.review,
             arguments: meeting,
           );
         }
