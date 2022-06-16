@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
-import 'package:rivia/constants/settings.dart';
 import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/login_credentials.dart';
@@ -32,7 +31,32 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    getSharedPref(() => setState(() {}));
+    getSharedPref(() => setState(() {})).then((_) => bruh());
+  }
+
+  Future<void> bruh() async {
+    if (authToken.token == null) {
+      // Admin Consent
+      // js.context.callMethod(
+      //   'open',
+      //   [
+      //     "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
+      //   ],
+      // );
+      microsoftLogin();
+    } else {
+      await microsoftGetUserId();
+      showToast(
+        context: context,
+        text: authToken.tenantDomain ?? "[ERROR: NOT LOGGED IN]",
+      );
+    }
+    final foo = await getMeetings();
+    final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
+    Navigator.of(context).popAndPushNamed(
+      RouteNames.analytics,
+      arguments: bar.cast<Meeting>(),
+    );
   }
 
   @override
@@ -40,7 +64,8 @@ class _LoginState extends State<Login> {
     final height = (_signup ? 1.15 : 1.0) *
         max(450.0, MediaQuery.of(context).size.height * 0.55);
 
-    return WillPopScope(
+    return Container();
+    WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: const Color.fromRGBO(244, 242, 234, 1),
