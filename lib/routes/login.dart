@@ -198,6 +198,7 @@ class _LoginState extends State<Login> {
                         style: UITexts.mediumButtonText,
                       ),
                     ),
+                    SizedBox(height: 8.0),
                     SizedButton(
                       primaryColour: Colors.black,
                       height: null,

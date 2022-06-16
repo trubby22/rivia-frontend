@@ -32,6 +32,7 @@ enum LangText {
 
   meetings,
   dashboard,
+  select,
   meetingName,
   participants,
   date,
@@ -118,6 +119,7 @@ extension LangTextContent on LangText {
     ],
     LangText.submit: ['Submit', 'Отправлять'],
     LangText.meetings: ['Meetings', 'Встречи'],
+    LangText.select: ['Select', 'Выбрать'],
     LangText.dashboard: ['Dashboard', 'Приборная доска'],
     LangText.meetingName: ['Meeting Name', 'Название встречи'],
     LangText.participants: ['Participants', 'Участники'],

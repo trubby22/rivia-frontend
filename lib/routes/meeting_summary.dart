@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
+import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/bar_graph.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/language_switcher.dart';
@@ -11,9 +12,9 @@ import 'package:pie_chart/pie_chart.dart';
 import 'package:rivia/utilities/sized_button.dart';
 
 class MeetingSummary extends StatefulWidget {
-  const MeetingSummary({Key? key, required this.meeting}) : super(key: key);
+  const MeetingSummary({Key? key, required this.meetings}) : super(key: key);
 
-  final Meeting meeting;
+  final Set<Meeting> meetings;
 
   @override
   State<MeetingSummary> createState() => _MeetingSummaryState();
@@ -24,7 +25,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
 
   Widget pieChartBuilder(BuildContext context) {
     return PieChart(
-      dataMap: binQualityReviews(widget.meeting),
+      dataMap: binQualityReviews(widget.meetings),
       chartRadius: MediaQuery.of(context).size.width / 4,
       chartValuesOptions: const ChartValuesOptions(
         showChartValuesInPercentage: true,
@@ -63,10 +64,12 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                 ),
                 BarGraph(
                   dicts: Map.fromEntries(
-                    widget.meeting.participants
+                    widget.meetings
+                        .map((e) => e.participants)
+                        .expand((element) => element)
                         .map((p) => MapEntry(p.participant, p.notNeeded))
                         .where((p) => p.value != 0),
-                  ),
+                  ).group(),
                 ),
               ],
             ),
@@ -95,10 +98,12 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                 ),
                 BarGraph(
                   dicts: Map.fromEntries(
-                    widget.meeting.participants
+                    widget.meetings
+                        .map((e) => e.participants)
+                        .expand((element) => element)
                         .map((p) => MapEntry(p.participant, p.notPrepared))
                         .where((p) => p.value != 0),
-                  ),
+                  ).group(),
                 ),
               ],
             ),
@@ -206,13 +211,14 @@ class _MeetingSummaryState extends State<MeetingSummary> {
           ),
           child: Column(
             children: [
-              Text(
-                '${widget.meeting.title} '
-                '${TimeOfDay.fromDateTime(widget.meeting.startTime).format(context)} - '
-                '${TimeOfDay.fromDateTime(widget.meeting.endTime).format(context)} '
-                '${widget.meeting.startTime.day}/${widget.meeting.startTime.month}/${widget.meeting.startTime.year}',
-                style: UITexts.sectionHeader,
-              ),
+              if (widget.meetings.length == 1)
+                Text(
+                  '${widget.meetings.first.title} '
+                  '${TimeOfDay.fromDateTime(widget.meetings.first.startTime).format(context)} - '
+                  '${TimeOfDay.fromDateTime(widget.meetings.first.endTime).format(context)} '
+                  '${widget.meetings.first.startTime.day}/${widget.meetings.first.startTime.month}/${widget.meetings.first.startTime.year}',
+                  style: UITexts.sectionHeader,
+                ),
               SizedBox(height: height * 0.03),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -312,7 +318,10 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                           ],
                         ),
                         child: _tagsBuilder(
-                          widget.meeting.feedback,
+                          widget.meetings
+                              .map((e) => e.feedback)
+                              .expand((element) => element)
+                              .toList(),
                           width * 0.65,
                         ),
                       ),
@@ -360,8 +369,9 @@ class _MeetingSummaryState extends State<MeetingSummary> {
   }
 }
 
-Map<String, double> binQualityReviews(Meeting meeting) {
-  List<double> qualities = meeting.qualities;
+Map<String, double> binQualityReviews(Set<Meeting> meetings) {
+  List<double> qualities =
+      meetings.map((e) => e.qualities).expand((element) => element).toList();
   List<double> sortedQualities = qualities.toList()..sort();
   int awful = sortedQualities.takeWhile((value) => value <= 0.2).length;
   int bad = sortedQualities
@@ -382,10 +392,25 @@ Map<String, double> binQualityReviews(Meeting meeting) {
       .length;
 
   return {
-    'Awful': awful.toDouble(),
+    'Unsatisfactory': awful.toDouble(),
     'Bad': bad.toDouble(),
     'Ok': ok.toDouble(),
     'Great': great.toDouble(),
     'Amazing': amazing.toDouble(),
   };
+}
+
+extension ParticipantMapExtension on Map<Participant, int> {
+  Map<Participant, int> group() {
+    Map map = {};
+    forEach((participant, notNeeded) {
+      if (map.containsKey(participant)) {
+        int temp = map[participant];
+        map[participant] = temp + notNeeded;
+      } else {
+        map[participant] = notNeeded;
+      }
+    });
+    return map.map((key, value) => MapEntry(key as Participant, value as int));
+  }
 }
