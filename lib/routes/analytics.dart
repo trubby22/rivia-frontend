@@ -80,7 +80,7 @@ class _AnalyticsState extends State<Analytics> {
   }) {
     return TableRowInkWell(
       onTap: () async {
-        Meeting meeting = widget.meetings[index];
+        Meeting meeting = _filteredMeetings[index];
         if (_multiselect) {
           _selectedMeetings[index] = !_selectedMeetings[index];
         } else {
@@ -115,15 +115,15 @@ class _AnalyticsState extends State<Analytics> {
     _filteredMeetings = meetings
         .where(
             (element) => _organiser == null || element.organiser == _organiser)
-        // .where((element) =>
-        //     element.qualities.reduce((a, b) => a + b) /
-        //             element.qualities.length *
-        //             100 >=
-        //         _lowerSatisfaction &&
-        //     element.qualities.reduce((a, b) => a + b) /
-        //             element.qualities.length *
-        //             100 <=
-        //         _upperSatisfaction)
+        .where((element) =>
+            element.qualities.reduce((a, b) => a + b) /
+                    element.qualities.length *
+                    100 >=
+                _lowerSatisfaction &&
+            element.qualities.reduce((a, b) => a + b) /
+                    element.qualities.length *
+                    100 <=
+                _upperSatisfaction)
         .where((element) =>
             !_largeMeetings || element.participants.length >= bigMeetingSize)
         .where((element) =>
