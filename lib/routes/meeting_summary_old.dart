@@ -45,25 +45,25 @@ class _MeetingSummaryOldState extends State<MeetingSummaryOld> {
     Map<Participant, List<Participant>> notNeeded = {};
     Map<Participant, List<Participant>> notPrepared = {};
 
-    for (final response in _responses) {
-      for (final participant in response.notNeeded) {
-        if (notNeeded.containsKey(participant)) {
-          notNeeded[participant]!.add(response.participant);
-        } else {
-          notNeeded[participant] = [response.participant];
-        }
-      }
-    }
+    // for (final response in _responses) {
+    //   for (final participant in response.notNeeded) {
+    //     if (notNeeded.containsKey(participant)) {
+    //       notNeeded[participant]!.add(response.participant);
+    //     } else {
+    //       notNeeded[participant] = [response.participant];
+    //     }
+    //   }
+    // }
 
-    for (final response in _responses) {
-      for (final participant in response.notPrepared) {
-        if (notPrepared.containsKey(participant)) {
-          notPrepared[participant]!.add(response.participant);
-        } else {
-          notPrepared[participant] = [response.participant];
-        }
-      }
-    }
+    // for (final response in _responses) {
+    //   for (final participant in response.notPrepared) {
+    //     if (notPrepared.containsKey(participant)) {
+    //       notPrepared[participant]!.add(response.participant);
+    //     } else {
+    //       notPrepared[participant] = [response.participant];
+    //     }
+    //   }
+    // }
 
     return Scaffold(
       appBar: AppBar(

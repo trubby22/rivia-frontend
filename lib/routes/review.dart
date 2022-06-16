@@ -509,7 +509,7 @@ class _ReviewState extends State<Review> {
   }
 
   void submitReview(BuildContext context) {
-    context.read<ResponseBuilder>().participant = widget.participant;
+    // context.read<ResponseBuilder>().participant = widget.participant;
     context.read<ResponseBuilder>().feedback = _controller.text;
 
     Response response = context.read<ResponseBuilder>().build();

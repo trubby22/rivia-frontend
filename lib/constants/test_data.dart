@@ -9,7 +9,6 @@ List<Participant> testParticipants = [
 
 List<Response> testResponses = [
   Response(
-    participant: testParticipants[0],
     quality: 114.514,
     painPoints: {'0': "PAINTOS"},
     notNeeded: List.of(testParticipants),
@@ -17,7 +16,6 @@ List<Response> testResponses = [
     feedback: "HOT PASSION 暑く強い思い",
   ),
   Response(
-    participant: testParticipants[1],
     quality: 114.514,
     painPoints: {'0': "PAINTOS"},
     notNeeded: [testParticipants[0]],
@@ -52,8 +50,8 @@ Meeting testMeeting2 = Meeting(
   title: "Foo Meeting",
   meetingId: "132452",
   qualities:
-  // [],
-  [0.8, 1.0, 0.4],
+      // [],
+      [0.8, 1.0, 0.4],
   responses: 5,
   startTime: DateTime(2022, 6, 14, 8),
   organiserId: "5",

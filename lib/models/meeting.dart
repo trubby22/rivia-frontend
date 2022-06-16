@@ -44,7 +44,7 @@ class Meeting {
     try {
       return Meeting(
         feedback: JH.asList(
-          json[Fields.feedback],
+          json[Fields.feedbacks],
           listErrMsg: (t) => 'Field "feedback" should be a list, but is a $t',
           castErrMsg:
               'Field "feedback" should have an element type of "String"',
@@ -81,7 +81,7 @@ class Meeting {
   }
 
   Map<String, dynamic> toJson() => {
-        Fields.feedback: feedback,
+        Fields.feedbacks: feedback,
         Fields.title: title,
         Fields.startTime: startTime.toJSON(),
         Fields.endTime: endTime.toJSON(),

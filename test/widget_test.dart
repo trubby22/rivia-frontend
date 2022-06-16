@@ -34,7 +34,6 @@ Meeting testMeeting = Meeting(
 );
 
 Response testResponse = Response(
-  participant: testParticipants[0],
   quality: 114.514,
   painPoints: {'0': "PAINTOS"},
   notNeeded: List.of(testParticipants),

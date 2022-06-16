@@ -16,19 +16,21 @@ class Fields {
   static String participants = 'participants';
   static String meeting = 'meeting';
   static String meetings = 'meetings';
-  static String meetingId = 'meeting_id';
+  static String meetingId = 'meetingId';
   static String organisation = 'organisation';
   static String reviews = 'reviews';
   static String responses = 'responses';
 
   static String participant = 'participant';
+  static String quality = 'quality';
   static String qualities = 'qualities';
   static String painPoints = 'presetQs';
   static String notNeeded = 'notNeeded';
   static String notPrepared = 'notPrepared';
   static String needed = 'needed';
   static String prepared = 'prepared';
-  static String feedback = 'feedbacks';
+  static String feedback = 'feedback';
+  static String feedbacks = 'feedbacks';
 
   static String lang = 'lang';
   static String token = 'token';

@@ -20,6 +20,10 @@ class API {
   static String getMeetings() =>
       '$apiGateway/tenants/${authToken.tenantDomain}/meetings?user=${authToken.userId}';
 
+  /// Get isReviewed.
+  static String getIsReviewed(String meetingId) =>
+      '$apiGateway/tenants/${authToken.tenantDomain}/meetings/$meetingId/reviews?user=${authToken.userId}';
+
   /// Get the [Meeting] corresponding to the meetingId.
   static String getMeeting(String meetingId) =>
       '$apiGateway/tenants/${authToken.tenantDomain}/meetings/$meetingId?user=${authToken.userId}';

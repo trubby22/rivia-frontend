@@ -53,13 +53,14 @@ Future<Meeting?> getMeetingContent(String meetingId) async {
 
   final response = meetingResponse as Map<String, dynamic>;
   if (response[Fields.meetingId] == null) {
-    response[Fields.meetingId] == meetingId;
+    response[Fields.meetingId] = meetingId;
   } else if (response[Fields.meetingId] != meetingId) {
     debugPrint(
       "The meeting id from the response differs from the provided one! Using the latter.",
     );
-    response[Fields.meetingId] == meetingId;
+    response[Fields.meetingId] = meetingId;
   }
+
   return Meeting.fromJson(response);
 }
 
@@ -137,6 +138,24 @@ Future<void> postLoginCredentialsToBackend(
       body: json.encode(loginCredentials.toJson()),
     );
   }
+}
+
+/// See if the current user has reviewed this meeting.
+Future<bool> getIsReviewed(String meetingId) async {
+  http.Response response = await _httpClient.get(
+    Uri.parse(API.getIsReviewed(meetingId)),
+    headers: _headers,
+  );
+
+  final jason = json.decode(response.body);
+
+  if (jason[Fields.errorCode] != null && jason[Fields.errorCode] != 200) {
+    return Future.error(
+      "Get isReviewed Failed!\nError Code: ${jason[Fields.errorCode]}",
+    );
+  }
+
+  return jason[Fields.jsonData];
 }
 
 /// Post the review to the database.

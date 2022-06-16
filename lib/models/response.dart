@@ -4,7 +4,6 @@ import 'package:rivia/models/participant.dart';
 
 /// The class for user responses.
 class Response {
-  final Participant participant;
   final double quality;
   final Map<String, String> painPoints;
   final List<Participant> notNeeded;
@@ -14,7 +13,6 @@ class Response {
   final String? feedback;
 
   Response({
-    required this.participant,
     required this.quality,
     this.painPoints = const {},
     this.notNeeded = const [],
@@ -25,8 +23,7 @@ class Response {
   });
 
   Response.fromJson(Map<String, dynamic> json)
-      : participant = Participant.fromJson(json[Fields.participant]),
-        quality = json[Fields.qualities],
+      : quality = json[Fields.quality],
         painPoints =
             (json[Fields.painPoints] as Map<String, dynamic>?)?.cast() ??
                 const {},
@@ -46,11 +43,10 @@ class Response {
                 ?.map((e) => Participant.fromJson(e))
                 .toList() ??
             const [],
-        feedback = json[Fields.feedback];
+        feedback = json[Fields.feedbacks];
 
   Map<String, dynamic> toJson() => {
-        Fields.participant: participant.toJson(),
-        Fields.qualities: quality,
+        Fields.quality: quality,
         Fields.painPoints: painPoints,
         Fields.notNeeded: notNeeded.map((e) => e.toJson()).toList(),
         Fields.notPrepared: notPrepared.map((e) => e.toJson()).toList(),
@@ -62,7 +58,6 @@ class Response {
 
 /// A builder for [Response].
 class ResponseBuilder with ChangeNotifier {
-  late Participant participant;
   double _quality = 0.5;
   Map<String, String> painPoints = {};
   final Set<Participant> notNeeded = {};
@@ -79,7 +74,6 @@ class ResponseBuilder with ChangeNotifier {
 
   /// Build to [Response].
   Response build() => Response(
-        participant: participant,
         quality: quality,
         painPoints: painPoints,
         notNeeded: notNeeded.toList(),

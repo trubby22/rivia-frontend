@@ -9,6 +9,7 @@ import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/date_picker.dart';
+import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/language_switcher.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -73,10 +74,19 @@ class _AnalyticsState extends State<Analytics> {
     required String text,
   }) {
     return TableRowInkWell(
-      onTap: () => Navigator.of(context).pushNamed(
-        RouteNames.review,
-        arguments: widget.meetings[index],
-      ),
+      onTap: () async {
+        if (await getIsReviewed(widget.meetings[index].meetingId!)) {
+          Navigator.of(context).pushNamed(
+            RouteNames.summary,
+            arguments: widget.meetings[index],
+          );
+        } else {
+          Navigator.of(context).pushNamed(
+            RouteNames.review,
+            arguments: widget.meetings[index],
+          );
+        }
+      },
       child: MouseRegion(
         onEnter: (_) => setState(() => _highlightIndex = index),
         onExit: (_) => setState(() => _highlightIndex = -1),
