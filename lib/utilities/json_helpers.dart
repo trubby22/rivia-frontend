@@ -1,4 +1,4 @@
-class JEH {
+class JH {
   static T toss<T>(String errMsg) {
     throw Exception(errMsg);
   }

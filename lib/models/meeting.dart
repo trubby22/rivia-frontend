@@ -3,7 +3,7 @@ import 'package:rivia/constants/fields.dart';
 import 'package:rivia/models/date_time_json.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
-import 'package:rivia/utilities/json_error_handler.dart';
+import 'package:rivia/utilities/json_helpers.dart';
 
 /// The model for meetings.
 class Meeting {
@@ -41,22 +41,15 @@ class Meeting {
   }
 
   static Meeting? fromJson(Map<String, dynamic> json) {
-    // Flatten the json if necessary.
-    if (json[Fields.meeting] != null) {
-      json[Fields.title] = json[Fields.meeting]![Fields.title];
-      json[Fields.startTime] = json[Fields.meeting]![Fields.startTime];
-      json[Fields.endTime] = json[Fields.meeting]![Fields.endTime];
-    }
-
     try {
       return Meeting(
         feedback: (json[Fields.feedback] as List<dynamic>).cast(),
         title: json[Fields.title],
         meetingId: json[Fields.meetingId],
         startTime: DateTimeJson.fromJSON(json[Fields.startTime]) ??
-            JEH.toss('Field "startTime" is NULL'),
+            JH.toss('Field "startTime" is NULL'),
         endTime: DateTimeJson.fromJSON(json[Fields.endTime]) ??
-            JEH.toss('Field "endTime" is NULL'),
+            JH.toss('Field "endTime" is NULL'),
         qualities: (json[Fields.qualities] as List<dynamic>).cast(),
         responses: json[Fields.responses],
         organiserId: json[Fields.organiserId],
@@ -95,12 +88,6 @@ class Meeting {
             .toList(),
         Fields.participants: participants.map((e) => e.toJson()).toList(),
         if (meetingId != null) Fields.meetingId: meetingId,
-        Fields.meeting: {
-          Fields.title: title,
-          Fields.startTime: startTime.toJSON(),
-          Fields.endTime: endTime.toJSON(),
-          Fields.participants: participants.map((e) => e.toJson()).toList(),
-        },
       };
 }
 
