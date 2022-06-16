@@ -69,179 +69,185 @@ class _LoginState extends State<Login> {
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: const Color.fromRGBO(244, 242, 234, 1),
-        body: Stack(
-          children: [
-            LanguageSwitcher(callback: () => setState(() => {})),
-            Center(
-              child: Container(
-                width: max(350, MediaQuery.of(context).size.width * 0.25),
-                height: height,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(32.0)),
-                  color: Colors.blue.shade100,
-                ),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 32.0),
-                    Text(LangText.rivia.local, style: UITexts.iconHeader),
-                    SizedBox(
-                      height: (_signup ? 0.6 : 0.5) * height,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (_signup) ...[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 32.0),
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color.fromRGBO(190, 150, 100, 1),
-                                    ),
-                                  ),
-                                  border: const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black),
-                                  ),
-                                  filled: true,
-                                  labelText: LangText.firstName.local,
-                                ),
-                                controller: _firstNameController,
-                              ),
-                            ),
-                            const SizedBox(height: 24.0),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 32.0),
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color.fromRGBO(190, 150, 100, 1),
-                                    ),
-                                  ),
-                                  border: const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black),
-                                  ),
-                                  filled: true,
-                                  labelText: LangText.surname.local,
-                                ),
-                                controller: _surnameController,
-                              ),
-                            ),
-                            const SizedBox(height: 24.0),
-                          ],
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 32.0),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color.fromRGBO(190, 150, 100, 1),
-                                  ),
-                                ),
-                                border: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                ),
-                                filled: true,
-                                labelText: LangText.email.local,
-                              ),
-                              controller: _loginController,
-                            ),
-                          ),
-                          const SizedBox(height: 24.0),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 32.0),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color.fromRGBO(190, 150, 100, 1),
-                                  ),
-                                ),
-                                border: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                ),
-                                filled: true,
-                                labelText: LangText.password.local,
-                              ),
-                              obscureText: true,
-                              controller: _passwordController,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedButton(
-                      backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
-                      primaryColour: Colors.black,
-                      onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
-                      height: 64.0,
-                      width:
-                          max(350, MediaQuery.of(context).size.width * 0.25) *
-                              0.7,
-                      onPressed: (_) async {
-                        Navigator.of(context).pushNamed(
-                          RouteNames.review,
-                          arguments: testMeeting2,
-                        );
-                        // await login(context);
-                      },
-                      child: Text(
-                        _signup ? LangText.signUp.local : LangText.login.local,
-                        style: UITexts.mediumButtonText,
-                      ),
-                    ),
-                    SizedBox(height: 8.0),
-                    SizedButton(
-                      primaryColour: Colors.black,
-                      height: null,
-                      width:
-                          max(350, MediaQuery.of(context).size.width * 0.25) *
-                              0.7,
-                      onPressed: (_) async {
-                        if (authToken.token == null) {
-                          // Admin Consent
-                          // js.context.callMethod(
-                          //   'open',
-                          //   [
-                          //     "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
-                          //   ],
-                          // );
-                          microsoftLogin();
-                        } else {
-                          await microsoftGetUserId();
-                          showToast(
-                            context: context,
-                            text: authToken.tenantDomain ??
-                                "[ERROR: NOT LOGGED IN]",
-                          );
-                        }
-                        final foo = await getMeetings();
-                        final bar = await Future.wait(
-                            foo.map((f) => getMeetingContent(f)));
-                        print(bar);
-                        Navigator.of(context).popAndPushNamed(
-                          RouteNames.analytics,
-                          arguments: bar.cast<Meeting>(),
-                        );
-                      },
-                      child: Text(
-                        'Click here to ${_signup ? 'Log In' : 'Sign Up'} instead',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+        body: FutureBuilder(
+          future: bruh(),
+          builder: (context, snapshot) {
+            return Container();
+          },
         ),
+        // Stack(
+        //   children: [
+        //     LanguageSwitcher(callback: () => setState(() => {})),
+        //     Center(
+        //       child: Container(
+        //         width: max(350, MediaQuery.of(context).size.width * 0.25),
+        //         height: height,
+        //         decoration: BoxDecoration(
+        //           borderRadius: const BorderRadius.all(Radius.circular(32.0)),
+        //           color: Colors.blue.shade100,
+        //         ),
+        //         child: Column(
+        //           children: [
+        //             const SizedBox(height: 32.0),
+        //             Text(LangText.rivia.local, style: UITexts.iconHeader),
+        //             SizedBox(
+        //               height: (_signup ? 0.6 : 0.5) * height,
+        //               child: Column(
+        //                 mainAxisAlignment: MainAxisAlignment.center,
+        //                 children: [
+        //                   if (_signup) ...[
+        //                     Padding(
+        //                       padding:
+        //                           const EdgeInsets.symmetric(horizontal: 32.0),
+        //                       child: TextField(
+        //                         decoration: InputDecoration(
+        //                           fillColor: Colors.white,
+        //                           focusedBorder: const OutlineInputBorder(
+        //                             borderSide: BorderSide(
+        //                               color: Color.fromRGBO(190, 150, 100, 1),
+        //                             ),
+        //                           ),
+        //                           border: const OutlineInputBorder(
+        //                             borderSide: BorderSide(color: Colors.black),
+        //                           ),
+        //                           filled: true,
+        //                           labelText: LangText.firstName.local,
+        //                         ),
+        //                         controller: _firstNameController,
+        //                       ),
+        //                     ),
+        //                     const SizedBox(height: 24.0),
+        //                     Padding(
+        //                       padding:
+        //                           const EdgeInsets.symmetric(horizontal: 32.0),
+        //                       child: TextField(
+        //                         decoration: InputDecoration(
+        //                           fillColor: Colors.white,
+        //                           focusedBorder: const OutlineInputBorder(
+        //                             borderSide: BorderSide(
+        //                               color: Color.fromRGBO(190, 150, 100, 1),
+        //                             ),
+        //                           ),
+        //                           border: const OutlineInputBorder(
+        //                             borderSide: BorderSide(color: Colors.black),
+        //                           ),
+        //                           filled: true,
+        //                           labelText: LangText.surname.local,
+        //                         ),
+        //                         controller: _surnameController,
+        //                       ),
+        //                     ),
+        //                     const SizedBox(height: 24.0),
+        //                   ],
+        //                   Padding(
+        //                     padding:
+        //                         const EdgeInsets.symmetric(horizontal: 32.0),
+        //                     child: TextField(
+        //                       decoration: InputDecoration(
+        //                         fillColor: Colors.white,
+        //                         focusedBorder: const OutlineInputBorder(
+        //                           borderSide: BorderSide(
+        //                             color: Color.fromRGBO(190, 150, 100, 1),
+        //                           ),
+        //                         ),
+        //                         border: const OutlineInputBorder(
+        //                           borderSide: BorderSide(color: Colors.black),
+        //                         ),
+        //                         filled: true,
+        //                         labelText: LangText.email.local,
+        //                       ),
+        //                       controller: _loginController,
+        //                     ),
+        //                   ),
+        //                   const SizedBox(height: 24.0),
+        //                   Padding(
+        //                     padding:
+        //                         const EdgeInsets.symmetric(horizontal: 32.0),
+        //                     child: TextField(
+        //                       decoration: InputDecoration(
+        //                         fillColor: Colors.white,
+        //                         focusedBorder: const OutlineInputBorder(
+        //                           borderSide: BorderSide(
+        //                             color: Color.fromRGBO(190, 150, 100, 1),
+        //                           ),
+        //                         ),
+        //                         border: const OutlineInputBorder(
+        //                           borderSide: BorderSide(color: Colors.black),
+        //                         ),
+        //                         filled: true,
+        //                         labelText: LangText.password.local,
+        //                       ),
+        //                       obscureText: true,
+        //                       controller: _passwordController,
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //             SizedButton(
+        //               backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
+        //               primaryColour: Colors.black,
+        //               onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
+        //               height: 64.0,
+        //               width:
+        //                   max(350, MediaQuery.of(context).size.width * 0.25) *
+        //                       0.7,
+        //               onPressed: (_) async {
+        //                 Navigator.of(context).pushNamed(
+        //                   RouteNames.review,
+        //                   arguments: testMeeting2,
+        //                 );
+        //                 // await login(context);
+        //               },
+        //               child: Text(
+        //                 _signup ? LangText.signUp.local : LangText.login.local,
+        //                 style: UITexts.mediumButtonText,
+        //               ),
+        //             ),
+        //             SizedBox(height: 8.0),
+        //             SizedButton(
+        //               primaryColour: Colors.black,
+        //               height: null,
+        //               width:
+        //                   max(350, MediaQuery.of(context).size.width * 0.25) *
+        //                       0.7,
+        //               onPressed: (_) async {
+        //                 if (authToken.token == null) {
+        //                   // Admin Consent
+        //                   // js.context.callMethod(
+        //                   //   'open',
+        //                   //   [
+        //                   //     "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
+        //                   //   ],
+        //                   // );
+        //                   microsoftLogin();
+        //                 } else {
+        //                   await microsoftGetUserId();
+        //                   showToast(
+        //                     context: context,
+        //                     text: authToken.tenantDomain ??
+        //                         "[ERROR: NOT LOGGED IN]",
+        //                   );
+        //                 }
+        //                 final foo = await getMeetings();
+        //                 final bar = await Future.wait(
+        //                     foo.map((f) => getMeetingContent(f)));
+        //                 print(bar);
+        //                 Navigator.of(context).popAndPushNamed(
+        //                   RouteNames.analytics,
+        //                   arguments: bar.cast<Meeting>(),
+        //                 );
+        //               },
+        //               child: Text(
+        //                 'Click here to ${_signup ? 'Log In' : 'Sign Up'} instead',
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }

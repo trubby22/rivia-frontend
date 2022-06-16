@@ -9,7 +9,7 @@ const String _microsoftLoginBaseUrl =
     'https://login.microsoftonline.com/common/oauth2/v2.0';
 const String _microsoftGraphBaseUrl = 'https://graph.microsoft.com/v1.0';
 const String _clientId = '491d67e2-00cf-46ce-87cc-7e315c09b59f';
-const String _redirectUri = 'https%3A%2F%2Fapp.rivia.me/redirect';
+const String _redirectUri = 'https%3A%2F%2Fapp.rivia.me/';
 const String _pxceChallenge = 'OE_eNjbm4B4BlNKXbY8mQQrz6EblczecsaCeLwdS2Mw';
 const String _pxceVerifier = '114514';
 

@@ -7,7 +7,6 @@ import 'package:rivia/routes/analytics.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
 import 'package:rivia/routes/login.dart';
-import 'package:rivia/routes/redirect.dart';
 import 'package:rivia/routes/review.dart';
 import 'package:rivia/routes/create_meeting.dart';
 import 'package:rivia/routes/meeting_summary.dart';
@@ -55,7 +54,6 @@ class _MyAppState extends State<MyApp> {
       initialRoute: RouteNames.login,
       routes: {
         '/welcome_screen': (_) => WelcomeScreen(),
-        RouteNames.login: (_) => Login(),
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
         // RouteNames.login: (_) => Login(),
@@ -86,11 +84,11 @@ class _MyAppState extends State<MyApp> {
                 "ERROR: Did not pass a valid list of Meetings for Analytics page! Type: ${routeSettings.arguments.runtimeType}",
               );
             }
-          case RouteNames.redirect:
+          case RouteNames.login:
             if (dict.isNotEmpty) {
               microsoftGetTokens(dict["code"]).then((_) => bruh());
             }
-            return MaterialPageRoute(builder: (_) => Redirect());
+            return MaterialPageRoute(builder: (_) => Login());
           case RouteNames.createMeeting:
             try {
               return MaterialPageRoute(
