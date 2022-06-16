@@ -58,8 +58,8 @@ class _AnalyticsState extends State<Analytics> {
     );
   }).toList();
 
-  DateTime _startDate = DateTime.now().subtract(Duration(days: 7));
-  DateTime _endDate = DateTime.now().add(Duration(days: 7));
+  DateTime _startDate = DateTime.now().subtract(Duration(days: 28));
+  DateTime _endDate = DateTime.now().add(Duration(days: 28));
 
   void setStartDate(DateTime date) {
     setState(() {
@@ -114,14 +114,22 @@ class _AnalyticsState extends State<Analytics> {
     _filteredMeetings = meetings
         .where(
             (element) => _organiser == null || element.organiser == _organiser)
-        // .where((element) =>
-        //     element.qualities * 100 >= _lowerSatisfaction &&
-        //     element.qualities * 100 <= _upperSatisfaction)
+        .where((element) =>
+            element.qualities.reduce((a, b) => a + b) /
+                    element.qualities.length *
+                    100 >=
+                _lowerSatisfaction &&
+            element.qualities.reduce((a, b) => a + b) /
+                    element.qualities.length *
+                    100 <=
+                _upperSatisfaction)
         .where((element) =>
             !_largeMeetings || element.participants.length >= bigMeetingSize)
         .where((element) =>
-            element.startTime.isAfter(_startDate) &&
-            element.endTime.isBefore(_endDate))
+            (element.startTime.isAfter(_startDate) ||
+                element.startTime.isAtSameMomentAs(_startDate)) &&
+            (element.endTime.isBefore(_endDate) ||
+                element.endTime.isAtSameMomentAs(_endDate)))
         .toList();
 
     return Align(
