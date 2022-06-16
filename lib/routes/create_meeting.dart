@@ -29,8 +29,29 @@ class _CreateMeetingState extends State<CreateMeeting> {
   final _surnameController = TextEditingController();
   final _organiserFirstNameController = TextEditingController();
   final _organiserSurnameController = TextEditingController();
-  late List<Participant> _participants = widget.allParticipants;
+  late final List<Participant> _participants = widget.allParticipants;
   bool _createParticipant = false;
+  DateTime _date = DateTime.now();
+  TimeOfDay _startTime = TimeOfDay.now();
+  TimeOfDay _endTime = TimeOfDay.now();
+
+  void setDate(DateTime date) {
+    setState(() {
+      _date = date;
+    });
+  }
+
+  void setStartTime(TimeOfDay time) {
+    setState(() {
+      _startTime = time;
+    });
+  }
+
+  void setEndTime(TimeOfDay time) {
+    setState(() {
+      _endTime = time;
+    });
+  }
 
   @override
   void initState() {
@@ -283,12 +304,10 @@ class _CreateMeetingState extends State<CreateMeeting> {
                 children: [
                   Text(LangText.date.local, style: UITexts.sectionSubheader),
                   SizedBox(width: 8.0),
-                  Selector<MeetingBuilder, MeetingDateAndTime>(
-                    selector: (_, data) => data.meetingDateAndTime,
-                    builder: (context, data, _) => DatePicker(
-                      restorationId: 'meetingDate',
-                      meetingDate: data,
-                    ),
+                  DatePicker(
+                    restorationId: 'meetingDate',
+                    initialDate: _date,
+                    notifyParent: setDate,
                   ),
                 ],
               ),
@@ -300,12 +319,9 @@ class _CreateMeetingState extends State<CreateMeeting> {
                     style: UITexts.sectionSubheader,
                   ),
                   SizedBox(width: 8.0),
-                  Selector<MeetingBuilder, MeetingDateAndTime>(
-                    selector: (_, data) => data.meetingDateAndTime,
-                    builder: (context, data, _) => TimePicker(
-                      startEnd: StartEnd.start,
-                      meetingTime: data,
-                    ),
+                  TimePicker(
+                    initialTime: _startTime,
+                    notifyParent: setStartTime,
                   ),
                 ],
               ),
@@ -317,12 +333,9 @@ class _CreateMeetingState extends State<CreateMeeting> {
                     style: UITexts.sectionSubheader,
                   ),
                   SizedBox(width: 8.0),
-                  Selector<MeetingBuilder, MeetingDateAndTime>(
-                    selector: (_, data) => data.meetingDateAndTime,
-                    builder: (context, data, _) => TimePicker(
-                      startEnd: StartEnd.end,
-                      meetingTime: data,
-                    ),
+                  TimePicker(
+                    initialTime: _endTime,
+                    notifyParent: setEndTime,
                   ),
                 ],
               ),
@@ -371,6 +384,8 @@ class _CreateMeetingState extends State<CreateMeeting> {
         notPrepared: 0,
       ),
     );
+    meeting.startTime = _date.addTime(_startTime);
+    meeting.endTime = _date.addTime(_endTime);
 
     bool result = await postMeeting(meeting);
 

@@ -52,6 +52,21 @@ class _AnalyticsState extends State<Analytics> {
     );
   }).toList();
 
+  DateTime _startDate = DateTime.now().subtract(Duration(days: 7));
+  DateTime _endDate = DateTime.now().add(Duration(days: 7));
+
+  void setStartDate(DateTime date) {
+    setState(() {
+      _startDate = date;
+    });
+  }
+
+  void setEndDate(DateTime date) {
+    setState(() {
+      _endDate = date;
+    });
+  }
+
   Widget entryBuilder(
     BuildContext context, {
     required int index,
@@ -80,8 +95,7 @@ class _AnalyticsState extends State<Analytics> {
     );
   }
 
-  Widget tableBuilder(BuildContext context, MeetingStartDate meetingStartDate,
-      MeetingEndDate meetingEndDate) {
+  Widget tableBuilder(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     List<Meeting> meetings = widget.meetings;
     List<Meeting> filteredMeetings = meetings
@@ -93,8 +107,8 @@ class _AnalyticsState extends State<Analytics> {
         .where((element) =>
             !_largeMeetings || element.participants.length >= bigMeetingSize)
         .where((element) =>
-            element.startTime.isAfter(meetingStartDate.date) &&
-            element.endTime.isBefore(meetingEndDate.date))
+            element.startTime.isAfter(_startDate) &&
+            element.endTime.isBefore(_endDate))
         .toList();
 
     return Align(
@@ -315,227 +329,225 @@ class _AnalyticsState extends State<Analytics> {
             borderRadius: BorderRadius.all(Radius.circular(48.0)),
             boxShadow: [BoxShadow(offset: Offset(0, 1), blurRadius: 2.0)],
           ),
-          child: Consumer2<MeetingStartDate, MeetingEndDate>(
-            builder: (context, meetingStartDate, meetingEndDate, child) {
-              return Column(
-                children: [
-                  Align(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          top: height * 0.06, bottom: height * 0.06),
-                      // width: width * 0.72,
-                      child: Column(
+          child: Column(
+            children: [
+              Align(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: height * 0.06, bottom: height * 0.06),
+                  // width: width * 0.72,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  Text('Organiser:'),
-                                  SizedBox(width: 8.0),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.shade100,
-                                      border: Border.all(
-                                        color: Colors.transparent,
-                                      ),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: Offset(0, 1),
-                                            blurRadius: 2.0)
-                                      ],
-                                    ),
-                                    child: DropdownButton<Participant>(
-                                      value: _organiser,
-                                      underline: Container(),
-                                      style: TextStyle(),
-                                      icon: const Icon(Icons.arrow_drop_down),
-                                      borderRadius: BorderRadius.circular(10),
-                                      elevation: 16,
-                                      onChanged: (Participant? newValue) {
-                                        if (newValue == _organiser) {
-                                          setState(() {
-                                            _organiser = null;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            _organiser = newValue;
-                                          });
-                                        }
-                                      },
-                                      items: widget.meetings
-                                          .map((e) => e.organiser)
-                                          .map<DropdownMenuItem<Participant>>(
-                                              (Participant? p) {
-                                        return DropdownMenuItem<Participant>(
-                                          value: p,
-                                          child: Text(p?.fullName),
-                                        );
-                                      }).toList(),
-                                    ),
+                              Text('Organiser:'),
+                              SizedBox(width: 8.0),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.shade100,
+                                  border: Border.all(
+                                    color: Colors.transparent,
                                   ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text('From:'),
-                                  SizedBox(width: 8.0),
-                                  DatePicker(
-                                      restorationId: 'analytics',
-                                      meetingDate: meetingStartDate),
-                                  SizedBox(width: 8.0),
-                                  Text('To:'),
-                                  SizedBox(width: 8.0),
-                                  DatePicker(
-                                      restorationId: 'analytics',
-                                      meetingDate: meetingEndDate),
-                                ],
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(0, 1), blurRadius: 2.0)
+                                  ],
+                                ),
+                                child: DropdownButton<Participant>(
+                                  value: _organiser,
+                                  underline: Container(),
+                                  style: TextStyle(),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  borderRadius: BorderRadius.circular(10),
+                                  elevation: 16,
+                                  onChanged: (Participant? newValue) {
+                                    if (newValue == _organiser) {
+                                      setState(() {
+                                        _organiser = null;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        _organiser = newValue;
+                                      });
+                                    }
+                                  },
+                                  items: widget.meetings
+                                      .map((e) => e.organiser)
+                                      .map<DropdownMenuItem<Participant>>(
+                                          (Participant? p) {
+                                    return DropdownMenuItem<Participant>(
+                                      value: p,
+                                      child: Text(p?.fullName),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 8.0),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Row(
-                                children: [
-                                  Text('Meeting satisfaction between'),
-                                  SizedBox(width: 8.0),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.shade100,
-                                      border: Border.all(
-                                        color: Colors.transparent,
-                                      ),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: Offset(0, 1),
-                                            blurRadius: 2.0)
-                                      ],
-                                    ),
-                                    child: DropdownButton<int>(
-                                      value: _lowerSatisfaction,
-                                      underline: Container(),
-                                      icon: const Icon(Icons.arrow_drop_down),
-                                      borderRadius: BorderRadius.circular(10),
-                                      elevation: 16,
-                                      onChanged: (int? newValue) {
-                                        if (newValue != null &&
-                                            newValue <= _upperSatisfaction) {
-                                          setState(() {
-                                            _lowerSatisfaction = newValue;
-                                          });
-                                        }
-                                      },
-                                      items: _percentages,
-                                    ),
-                                  ),
-                                  SizedBox(width: 8.0),
-                                  Text('and'),
-                                  SizedBox(width: 8.0),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.shade100,
-                                      border: Border.all(
-                                        color: Colors.transparent,
-                                      ),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: Offset(0, 1),
-                                            blurRadius: 2.0)
-                                      ],
-                                    ),
-                                    child: DropdownButton<int>(
-                                      value: _upperSatisfaction,
-                                      underline: Container(),
-                                      icon: const Icon(Icons.arrow_drop_down),
-                                      borderRadius: BorderRadius.circular(10),
-                                      elevation: 16,
-                                      onChanged: (int? newValue) {
-                                        if (newValue != null &&
-                                            newValue >= _lowerSatisfaction) {
-                                          setState(() {
-                                            _upperSatisfaction = newValue;
-                                          });
-                                        }
-                                      },
-                                      items: _percentages,
-                                    ),
-                                  ),
-                                ],
+                              Text('From:'),
+                              SizedBox(width: 8.0),
+                              DatePicker(
+                                restorationId: 'analytics',
+                                initialDate: _startDate,
+                                notifyParent: setStartDate,
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  MultiSelectDialogField(
-                                    items: _allColumns
-                                        .map((e) => MultiSelectItem(e, e.local))
-                                        .toList(),
-                                    buttonText: Text('Select columns'),
-                                    buttonIcon: Icon(Icons.arrow_drop_down),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.shade100,
-                                      border: Border.all(
-                                        color: Colors.transparent,
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: Offset(0, 1),
-                                            blurRadius: 2.0)
-                                      ],
-                                    ),
-                                    initialValue: _allColumns,
-                                    listType: MultiSelectListType.CHIP,
-                                    chipDisplay: MultiSelectChipDisplay.none(),
-                                    onConfirm: (values) {
-                                      _selectedColumns = values.cast();
-                                    },
-                                  ),
-                                  SizedBox(width: 8.0),
-                                  SizedButton(
-                                    primaryColour: Colors.black,
-                                    selectedColour: Colors.white,
-                                    backgroundColour: Colors.blue.shade100,
-                                    onPressedColour: Colors.blue,
-                                    useShadow: true,
-                                    width: 150,
-                                    height: null,
-                                    isSelected: _largeMeetings,
-                                    onPressed: (_) {
-                                      setState(() {
-                                        _largeMeetings = !_largeMeetings;
-                                      });
-                                    },
-                                    child: Text(
-                                      'Large meetings',
-                                      style: UITexts.smallButtonText,
-                                    ),
-                                  ),
-                                ],
+                              SizedBox(width: 8.0),
+                              Text('To:'),
+                              SizedBox(width: 8.0),
+                              DatePicker(
+                                restorationId: 'analytics',
+                                initialDate: _endDate,
+                                notifyParent: setEndDate,
                               ),
                             ],
                           ),
                         ],
                       ),
-                    ),
+                      SizedBox(height: 8.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text('Meeting satisfaction between'),
+                              SizedBox(width: 8.0),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.shade100,
+                                  border: Border.all(
+                                    color: Colors.transparent,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(0, 1), blurRadius: 2.0)
+                                  ],
+                                ),
+                                child: DropdownButton<int>(
+                                  value: _lowerSatisfaction,
+                                  underline: Container(),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  borderRadius: BorderRadius.circular(10),
+                                  elevation: 16,
+                                  onChanged: (int? newValue) {
+                                    if (newValue != null &&
+                                        newValue <= _upperSatisfaction) {
+                                      setState(() {
+                                        _lowerSatisfaction = newValue;
+                                      });
+                                    }
+                                  },
+                                  items: _percentages,
+                                ),
+                              ),
+                              SizedBox(width: 8.0),
+                              Text('and'),
+                              SizedBox(width: 8.0),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.shade100,
+                                  border: Border.all(
+                                    color: Colors.transparent,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(0, 1), blurRadius: 2.0)
+                                  ],
+                                ),
+                                child: DropdownButton<int>(
+                                  value: _upperSatisfaction,
+                                  underline: Container(),
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  borderRadius: BorderRadius.circular(10),
+                                  elevation: 16,
+                                  onChanged: (int? newValue) {
+                                    if (newValue != null &&
+                                        newValue >= _lowerSatisfaction) {
+                                      setState(() {
+                                        _upperSatisfaction = newValue;
+                                      });
+                                    }
+                                  },
+                                  items: _percentages,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              MultiSelectDialogField(
+                                items: _allColumns
+                                    .map(
+                                        (e) => MultiSelectItem(e, e.toString()))
+                                    .toList(),
+                                buttonText: Text('Select columns'),
+                                buttonIcon: Icon(Icons.arrow_drop_down),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.shade100,
+                                  border: Border.all(
+                                    color: Colors.transparent,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        offset: Offset(0, 1), blurRadius: 2.0)
+                                  ],
+                                ),
+                                initialValue: _allColumns,
+                                listType: MultiSelectListType.CHIP,
+                                chipDisplay: MultiSelectChipDisplay.none(),
+                                onConfirm: (values) {
+                                  _selectedColumns =
+                                      values.map((e) => e as LangText).toList();
+                                },
+                              ),
+                              SizedBox(width: 8.0),
+                              SizedButton(
+                                primaryColour: Colors.black,
+                                selectedColour: Colors.white,
+                                backgroundColour: Colors.blue.shade100,
+                                onPressedColour: Colors.blue,
+                                useShadow: true,
+                                width: 150,
+                                height: null,
+                                isSelected: _largeMeetings,
+                                onPressed: (_) {
+                                  setState(() {
+                                    _largeMeetings = !_largeMeetings;
+                                  });
+                                },
+                                child: Text(
+                                  'Large meetings',
+                                  style: UITexts.smallButtonText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  tableBuilder(context, meetingStartDate, meetingEndDate),
-                  SizedBox(height: height * 0.02),
-                ],
-              );
-            },
+                ),
+              ),
+              tableBuilder(context),
+              SizedBox(height: height * 0.02),
+            ],
           ),
         ),
       ],
@@ -545,44 +557,34 @@ class _AnalyticsState extends State<Analytics> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-              create: (_) => MeetingStartDate(
-                  DateTime.now().subtract(Duration(days: 30)))),
-          ChangeNotifierProvider(
-              create: (_) =>
-                  MeetingEndDate(DateTime.now().add(Duration(days: 30)))),
-        ],
-        child: Stack(
-          children: [
-            Image.asset(
-              'assets/images/general_bg.png',
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              fit: BoxFit.fill,
-            ),
-            foregroundBuilder(context),
-            LanguageSwitcher(callback: () => setState(() => {})),
-            Positioned(
-              bottom: 32.0,
-              right: 64.0,
-              child: SizedButton(
-                backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
-                primaryColour: Colors.black,
-                onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
-                height: null,
-                width: null,
-                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-                child: Text("Create New Meeting", style: UITexts.bigButtonText),
-                onPressed: (_) => Navigator.of(context).pushNamed(
-                  RouteNames.createMeeting,
-                  arguments: [],
-                ),
+      body: Stack(
+        children: [
+          Image.asset(
+            'assets/images/general_bg.png',
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            fit: BoxFit.fill,
+          ),
+          foregroundBuilder(context),
+          LanguageSwitcher(callback: () => setState(() => {})),
+          Positioned(
+            bottom: 32.0,
+            right: 64.0,
+            child: SizedButton(
+              backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
+              primaryColour: Colors.black,
+              onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
+              height: null,
+              width: null,
+              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+              child: Text("Create New Meeting", style: UITexts.bigButtonText),
+              onPressed: (_) => Navigator.of(context).pushNamed(
+                RouteNames.createMeeting,
+                arguments: [],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -6,25 +6,24 @@ class DatePicker extends StatefulWidget {
   const DatePicker({
     Key? key,
     required this.restorationId,
-    required this.meetingDate,
+    required this.initialDate,
+    required this.notifyParent,
   }) : super(key: key);
 
   final String? restorationId;
-  final MeetingDate meetingDate;
+  final DateTime initialDate;
+  final void Function(DateTime dateTime) notifyParent;
 
   @override
   State<DatePicker> createState() => _DatePickerState();
 }
 
-/// RestorationProperty objects can be used because of RestorationMixin.
 class _DatePickerState extends State<DatePicker> with RestorationMixin {
-  // In this example, the restoration ID for the mixin is passed in through
-  // the [StatefulWidget]'s constructor.
   @override
   String? get restorationId => widget.restorationId;
 
   late final RestorableDateTime _selectedDate =
-      RestorableDateTime(widget.meetingDate.date);
+      RestorableDateTime(widget.initialDate);
   late final RestorableRouteFuture<DateTime?> _restorableDatePickerRouteFuture =
       RestorableRouteFuture<DateTime?>(
     onComplete: _selectDate,
@@ -66,7 +65,7 @@ class _DatePickerState extends State<DatePicker> with RestorationMixin {
       setState(() {
         _selectedDate.value = newSelectedDate;
       });
-      widget.meetingDate.date = newSelectedDate;
+      widget.notifyParent(newSelectedDate);
     }
   }
 
@@ -86,5 +85,11 @@ class _DatePickerState extends State<DatePicker> with RestorationMixin {
         '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}',
       ),
     );
+  }
+}
+
+extension DateTimeExtension on DateTime {
+  DateTime addTime(TimeOfDay time) {
+    return DateTime(year, month, day, time.hour, time.minute);
   }
 }

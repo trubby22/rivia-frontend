@@ -9,8 +9,8 @@ import 'package:rivia/utilities/json_helpers.dart';
 class Meeting {
   final String? meetingId;
   final String title;
-  final DateTime startTime;
-  final DateTime endTime;
+  DateTime startTime;
+  DateTime endTime;
   final String organiserId;
   final List<TaggedParticipant> participants;
   final Map<String, String> painPoints;
@@ -109,7 +109,7 @@ class MeetingBuilder with ChangeNotifier {
   String? _meetingId;
   late String title;
   late String organiserId;
-  final MeetingDateAndTime meetingDateAndTime = MeetingDateAndTime();
+  // final MeetingDateAndTime meetingDateAndTime = MeetingDateAndTime();
   final Set<Participant> participants = {};
   double? quality;
   final List<String> feedback = [];
@@ -128,20 +128,8 @@ class MeetingBuilder with ChangeNotifier {
         qualities: [],
         responses: 0,
         feedback: feedback,
-        startTime: DateTime(
-          meetingDateAndTime.date.year,
-          meetingDateAndTime.date.month,
-          meetingDateAndTime.date.day,
-          meetingDateAndTime.startTime.hour,
-          meetingDateAndTime.startTime.minute,
-        ),
-        endTime: DateTime(
-          meetingDateAndTime.date.year,
-          meetingDateAndTime.date.month,
-          meetingDateAndTime.date.day,
-          meetingDateAndTime.endTime.hour,
-          meetingDateAndTime.endTime.minute,
-        ),
+        startTime: DateTime.fromMillisecondsSinceEpoch(0),
+        endTime: DateTime.fromMillisecondsSinceEpoch(0),
         participants: participants
             .map(
               (p) => TaggedParticipant(

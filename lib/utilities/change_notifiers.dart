@@ -76,57 +76,61 @@ abstract class MeetingDate {
   set date(DateTime date);
 }
 
-class MeetingStartDate extends ChangeNotifier implements MeetingDate {
-  DateTime _date;
+// class MeetingStartDate implements MeetingDate {
+//   final void Function(DateTime date) notifyParent;
+//   DateTime _date;
+//
+//   MeetingStartDate({
+//     required date,
+//     required this.notifyParent,
+//   }) : _date = date;
+//
+//   @override
+//   DateTime get date => _date;
+//
+//   @override
+//   set date(DateTime date) {
+//     _date = date;
+//     notifyParent(date);
+//   }
+// }
+//
+// class MeetingEndDate extends ChangeNotifier implements MeetingDate {
+//   DateTime _date;
+//
+//   MeetingEndDate(date) : _date = date;
+//
+//   @override
+//   DateTime get date => _date;
+//
+//   @override
+//   set date(DateTime date) {
+//     _date = date;
+//     notifyListeners();
+//   }
+// }
 
-  MeetingStartDate(date) : _date = date;
-
-  @override
-  DateTime get date => _date;
-
-  @override
-  set date(DateTime date) {
-    _date = date;
-    notifyListeners();
-  }
-}
-
-class MeetingEndDate extends ChangeNotifier implements MeetingDate {
-  DateTime _date;
-
-  MeetingEndDate(date) : _date = date;
-
-  @override
-  DateTime get date => _date;
-
-  @override
-  set date(DateTime date) {
-    _date = date;
-    notifyListeners();
-  }
-}
-
-class MeetingDateAndTime extends ChangeNotifier implements MeetingDate {
-  DateTime _date = DateTime.now();
-  TimeOfDay startTime = TimeOfDay.now();
-  TimeOfDay endTime = TimeOfDay.now();
-
-  @override
-  DateTime get date => _date;
-
-  @override
-  set date(DateTime date) {
-    _date = date;
-    notifyListeners();
-  }
-
-  void setStartTime(TimeOfDay time) {
-    startTime = time;
-    notifyListeners();
-  }
-
-  void setEndTime(TimeOfDay time) {
-    endTime = time;
-    notifyListeners();
-  }
-}
+// class MeetingDateAndTime extends ChangeNotifier implements MeetingDate {
+//   DateTime _date = DateTime.now();
+//   TimeOfDay startTime = TimeOfDay.now();
+//   TimeOfDay endTime = TimeOfDay.now();
+//
+//   @override
+//   DateTime get date => _date;
+//
+//   @override
+//   set date(DateTime date) {
+//     _date = date;
+//     notifyListeners();
+//   }
+//
+//   void setStartTime(TimeOfDay time) {
+//     startTime = time;
+//     notifyListeners();
+//   }
+//
+//   void setEndTime(TimeOfDay time) {
+//     endTime = time;
+//     notifyListeners();
+//   }
+// }

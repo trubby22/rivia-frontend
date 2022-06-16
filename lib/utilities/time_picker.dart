@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/sized_button.dart';
 
-enum StartEnd {
-  start,
-  end,
-}
-
 class TimePicker extends StatefulWidget {
-  final MeetingDateAndTime meetingTime;
-  final StartEnd startEnd;
+  final TimeOfDay initialTime;
+  final void Function(TimeOfDay timeOfDay) notifyParent;
 
   const TimePicker({
     Key? key,
-    required this.meetingTime,
-    required this.startEnd,
+    required this.initialTime,
+    required this.notifyParent,
   }) : super(key: key);
 
   @override
@@ -22,7 +17,7 @@ class TimePicker extends StatefulWidget {
 }
 
 class _TimePickerState extends State<TimePicker> {
-  TimeOfDay _time = TimeOfDay.now();
+  late TimeOfDay _time = widget.initialTime;
 
   void _selectTime(BuildContext context) async {
     final TimeOfDay? newTime = await showTimePicker(
@@ -34,11 +29,7 @@ class _TimePickerState extends State<TimePicker> {
       setState(() {
         _time = newTime;
       });
-      if (widget.startEnd == StartEnd.start) {
-        widget.meetingTime.setStartTime(newTime);
-      } else {
-        widget.meetingTime.setEndTime(newTime);
-      }
+      widget.notifyParent(newTime);
     }
   }
 
