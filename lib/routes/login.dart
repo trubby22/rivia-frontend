@@ -15,8 +15,8 @@ import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/toast.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key, this.future}) : super(key: key);
-  final Future<bool>? future;
+  const Login({Key? key, this.code}) : super(key: key);
+  final String? code;
 
   @override
   State<Login> createState() => _LoginState();
@@ -27,7 +27,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
-  final bool _signup = false;
+  bool _signup = false;
 
   @override
   void initState() {
@@ -36,8 +36,12 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> bruh() async {
+    if (_signup) {
+      return;
+    }
+    _signup = true;
     await getSharedPref(null);
-    if (authToken.token == null && widget.future == null) {
+    if (authToken.token == null && widget.code == null) {
       // Admin Consent
       // js.context.callMethod(
       //   'open',
@@ -48,8 +52,8 @@ class _LoginState extends State<Login> {
       await setSharedPref();
       microsoftLogin();
     } else {
-      if (widget.future != null) {
-        await widget.future;
+      if (widget.code != null) {
+        await microsoftGetTokens(widget.code!);
       }
       await microsoftGetUserId();
       await setSharedPref();
@@ -57,15 +61,15 @@ class _LoginState extends State<Login> {
       //   context: context,
       //   text: authToken.tenantDomain ?? "[ERROR: NOT LOGGED IN]",
       // );
+      final foo = await getMeetings().onError(
+        (error, stackTrace) => Future.value([]),
+      );
+      final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
+      Navigator.of(context).popAndPushNamed(
+        RouteNames.analytics,
+        arguments: bar.cast<Meeting>(),
+      );
     }
-    final foo = await getMeetings().onError(
-      (error, stackTrace) => Future.value([]),
-    );
-    final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
-    Navigator.of(context).popAndPushNamed(
-      RouteNames.analytics,
-      arguments: bar.cast<Meeting>(),
-    );
   }
 
   @override

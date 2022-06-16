@@ -88,8 +88,7 @@ class _MyAppState extends State<MyApp> {
           case RouteNames.login:
             return MaterialPageRoute(
               builder: (_) => Login(
-                future:
-                    dict.isNotEmpty ? microsoftGetTokens(dict["code"]) : null,
+                code: dict["code"],
               ),
             );
           case RouteNames.createMeeting:
