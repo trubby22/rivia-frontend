@@ -26,7 +26,7 @@ class LogOutButton extends StatelessWidget {
           if (!testMode) {
             await authToken.reset();
           }
-          Navigator.of(context).pushNamed(RouteNames.login);
+          Navigator.of(context).pushNamed(RouteNames.login, arguments: true);
         },
         child: const Icon(
           Icons.logout,

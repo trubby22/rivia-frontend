@@ -3,24 +3,20 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
-import 'package:rivia/constants/settings.dart';
 import 'package:rivia/routes/analytics.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
 import 'package:rivia/routes/login.dart';
+import 'package:rivia/routes/redirect.dart';
 import 'package:rivia/routes/review.dart';
 import 'package:rivia/routes/create_meeting.dart';
 import 'package:rivia/routes/meeting_summary.dart';
 import 'package:rivia/routes/welcome_screen.dart';
-
+import 'dart:html';
 import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
-import 'package:rivia/utilities/microsoft.dart';
-import 'package:rivia/utilities/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'utilities/http_requests.dart';
 
 void main() {
   setUrlStrategy(PathUrlStrategy());
@@ -62,6 +58,7 @@ class _MyAppState extends State<MyApp> {
         // RouteNames.summary: (_) => MeetingSummary(meetings: [testMeeting2]),
       },
       onGenerateRoute: (routeSettings) {
+        print(window.location.href);
         assert(routeSettings.name != null);
         final names = routeSettings.name!.split('?');
         final name = names[0];
@@ -85,17 +82,22 @@ class _MyAppState extends State<MyApp> {
               );
             }
           case RouteNames.login:
+            if (routeSettings.arguments == true) {
+              return MaterialPageRoute(builder: (_) => Login());
+            }
+            final locSplit = window.location.href.split('/');
+            print(locSplit);
+            if (dict["code"] == null &&
+                (locSplit.isEmpty || locSplit.last.isEmpty)) {
+              return MaterialPageRoute(builder: (_) => Login());
+            }
             return MaterialPageRoute(
-              builder: (_) => Login(
-                code: dict["code"],
-              ),
+              builder: (_) => Redirect(code: dict["code"]),
             );
           case RouteNames.createMeeting:
             try {
               return MaterialPageRoute(
-                builder: (_) => CreateMeeting(
-                  allParticipants: [],
-                ),
+                builder: (_) => CreateMeeting(allParticipants: []),
               );
             } catch (_) {
               throw Exception(

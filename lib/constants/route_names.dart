@@ -7,4 +7,5 @@ class RouteNames {
   static const String analytics = '/analytics';
   static const String login = '/';
   static const String summary = '/summary';
+  static const String redirect = '/redirect';
 }

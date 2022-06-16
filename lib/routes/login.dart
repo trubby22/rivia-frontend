@@ -1,22 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
-import 'package:rivia/constants/test_data.dart';
-import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/login_credentials.dart';
-import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
-import 'package:rivia/utilities/language_switcher.dart';
 import 'package:rivia/utilities/microsoft.dart';
-import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/toast.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key, this.code}) : super(key: key);
-  final String? code;
+  const Login({Key? key}) : super(key: key);
 
   @override
   State<Login> createState() => _LoginState();
@@ -33,42 +26,10 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     getSharedPref(() => setState(() {}));
-  }
-
-  Future<void> bruh() async {
-    if (_signup) {
-      return;
-    }
-    _signup = true;
-    await getSharedPref(null);
-    if (authToken.token == null && widget.code == null) {
-      // Admin Consent
-      // js.context.callMethod(
-      //   'open',
-      //   [
-      //     "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
-      //   ],
-      // );
-      await setSharedPref();
+    if (authToken.token == null) {
       microsoftLogin();
     } else {
-      if (widget.code != null) {
-        await microsoftGetTokens(widget.code!);
-      }
-      await microsoftGetUserId();
-      await setSharedPref();
-      // showToast(
-      //   context: context,
-      //   text: authToken.tenantDomain ?? "[ERROR: NOT LOGGED IN]",
-      // );
-      final foo = await getMeetings().onError(
-        (error, stackTrace) => Future.value([]),
-      );
-      final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
-      Navigator.of(context).popAndPushNamed(
-        RouteNames.analytics,
-        arguments: bar.cast<Meeting>(),
-      );
+      Navigator.of(context).popAndPushNamed(RouteNames.redirect);
     }
   }
 
@@ -81,12 +42,7 @@ class _LoginState extends State<Login> {
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: const Color.fromRGBO(244, 242, 234, 1),
-        body: FutureBuilder(
-          future: bruh(),
-          builder: (context, snapshot) {
-            return Container();
-          },
-        ),
+        body: Container(),
         // Stack(
         //   children: [
         //     LanguageSwitcher(callback: () => setState(() => {})),
