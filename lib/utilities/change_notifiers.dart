@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
+import 'package:rivia/constants/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final authToken = AuthToken();
 
 Future<void> getSharedPref(Function()? callback) async {
   final instance = await SharedPreferences.getInstance();
-  authToken.language =
-      Lang.values[instance.getInt(Fields.lang) ?? authToken.language.index];
-  authToken.token = instance.getString(Fields.token);
-  authToken.refreshToken = instance.getString(Fields.refreshToken);
-  authToken.userId = instance.getString(Fields.participantId);
-  authToken.tenantDomain = instance.getString(Fields.organiserId);
+  if (testMode) {
+    authToken.token = 'test-token';
+    authToken.refreshToken = 'test-token';
+    authToken.userId = testUser;
+    authToken.tenantDomain = testTenant;
+  } else {
+    authToken.language =
+        Lang.values[instance.getInt(Fields.lang) ?? authToken.language.index];
+    authToken.token = instance.getString(Fields.token);
+    authToken.refreshToken = instance.getString(Fields.refreshToken);
+    authToken.userId = instance.getString(Fields.participantId);
+    authToken.tenantDomain = instance.getString(Fields.organiserId);
+  }
   callback?.call();
 }
 

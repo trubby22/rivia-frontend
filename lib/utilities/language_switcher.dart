@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
+import 'package:rivia/constants/settings.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
@@ -21,7 +22,9 @@ class LanguageSwitcher extends StatelessWidget {
         height: 48.0,
         width: 64.0,
         onPressed: (_) async {
-          await authToken.reset();
+          if (!testMode) {
+            await authToken.reset();
+          }
           if (authToken.language == Lang.en) {
             authToken.language = Lang.ru;
           } else {

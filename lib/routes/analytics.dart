@@ -31,18 +31,18 @@ class _AnalyticsState extends State<Analytics> {
   int _upperSatisfaction = 100;
   bool _largeMeetings = false;
 
-  final List<String> _allColumns = [
-    LangText.date.local,
-    LangText.startTime.local,
-    LangText.endTime.local,
-    LangText.organiser.local,
-    LangText.noParticipants.local,
-    LangText.lvlSat.local,
-    LangText.neededParticipants.local,
-    LangText.preparedParticipants.local,
+  final List<LangText> _allColumns = [
+    LangText.date,
+    LangText.startTime,
+    LangText.endTime,
+    LangText.organiser,
+    LangText.noParticipants,
+    LangText.lvlSat,
+    LangText.neededParticipants,
+    LangText.preparedParticipants,
   ];
 
-  late List<String> _selectedColumns = _allColumns;
+  late List<LangText> _selectedColumns = _allColumns;
 
   final List<DropdownMenuItem<int>> _percentages =
       [0, 20, 40, 60, 80, 100].map<DropdownMenuItem<int>>((int value) {
@@ -112,7 +112,7 @@ class _AnalyticsState extends State<Analytics> {
             TableRow(
               decoration: const BoxDecoration(color: Colors.blue),
               children: [
-                if (_selectedColumns.contains(LangText.date.local))
+                if (_selectedColumns.contains(LangText.date))
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -123,7 +123,7 @@ class _AnalyticsState extends State<Analytics> {
                       ),
                     ),
                   ),
-                if (_selectedColumns.contains(LangText.startTime.local))
+                if (_selectedColumns.contains(LangText.startTime))
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -134,7 +134,7 @@ class _AnalyticsState extends State<Analytics> {
                       ),
                     ),
                   ),
-                if (_selectedColumns.contains(LangText.endTime.local))
+                if (_selectedColumns.contains(LangText.endTime))
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -145,7 +145,7 @@ class _AnalyticsState extends State<Analytics> {
                       ),
                     ),
                   ),
-                if (_selectedColumns.contains(LangText.organiser.local))
+                if (_selectedColumns.contains(LangText.organiser))
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -156,7 +156,7 @@ class _AnalyticsState extends State<Analytics> {
                       ),
                     ),
                   ),
-                if (_selectedColumns.contains(LangText.noParticipants.local))
+                if (_selectedColumns.contains(LangText.noParticipants))
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -167,7 +167,7 @@ class _AnalyticsState extends State<Analytics> {
                       ),
                     ),
                   ),
-                if (_selectedColumns.contains(LangText.lvlSat.local))
+                if (_selectedColumns.contains(LangText.lvlSat))
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -178,8 +178,7 @@ class _AnalyticsState extends State<Analytics> {
                       ),
                     ),
                   ),
-                if (_selectedColumns
-                    .contains(LangText.neededParticipants.local))
+                if (_selectedColumns.contains(LangText.neededParticipants))
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -190,8 +189,7 @@ class _AnalyticsState extends State<Analytics> {
                       ),
                     ),
                   ),
-                if (_selectedColumns
-                    .contains(LangText.preparedParticipants.local))
+                if (_selectedColumns.contains(LangText.preparedParticipants))
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -230,53 +228,51 @@ class _AnalyticsState extends State<Analytics> {
                             : const Color.fromARGB(255, 255, 212, 150),
                   ),
                   children: [
-                    if (_selectedColumns.contains(LangText.date.local))
+                    if (_selectedColumns.contains(LangText.date))
                       entryBuilder(
                         context,
                         index: index,
                         text: '${start.day}/${start.month}/${start.year}',
                       ),
-                    if (_selectedColumns.contains(LangText.startTime.local))
+                    if (_selectedColumns.contains(LangText.startTime))
                       entryBuilder(
                         context,
                         index: index,
                         text: TimeOfDay.fromDateTime(start).format(context),
                       ),
-                    if (_selectedColumns.contains(LangText.endTime.local))
+                    if (_selectedColumns.contains(LangText.endTime))
                       entryBuilder(
                         context,
                         index: index,
                         text: TimeOfDay.fromDateTime(end).format(context),
                       ),
-                    if (_selectedColumns.contains(LangText.organiser.local))
+                    if (_selectedColumns.contains(LangText.organiser))
                       entryBuilder(
                         context,
                         index: index,
                         text: organiserName,
                       ),
-                    if (_selectedColumns
-                        .contains(LangText.noParticipants.local))
+                    if (_selectedColumns.contains(LangText.noParticipants))
                       entryBuilder(
                         context,
                         index: index,
                         text: '$participantNum',
                       ),
-                    if (_selectedColumns.contains(LangText.lvlSat.local))
+                    if (_selectedColumns.contains(LangText.lvlSat))
                       entryBuilder(
                         context,
                         index: index,
                         text:
                             '${meeting.qualities.isEmpty ? 50 : (meeting.qualities.reduce((a, b) => a + b) / meeting.qualities.length * 100).round()}%',
                       ),
-                    if (_selectedColumns
-                        .contains(LangText.neededParticipants.local))
+                    if (_selectedColumns.contains(LangText.neededParticipants))
                       entryBuilder(
                         context,
                         index: index,
                         text: '${participantNum - notNeededNum}',
                       ),
                     if (_selectedColumns
-                        .contains(LangText.preparedParticipants.local))
+                        .contains(LangText.preparedParticipants))
                       entryBuilder(
                         context,
                         index: index,
@@ -483,7 +479,7 @@ class _AnalyticsState extends State<Analytics> {
                                 children: [
                                   MultiSelectDialogField(
                                     items: _allColumns
-                                        .map((e) => MultiSelectItem(e, e))
+                                        .map((e) => MultiSelectItem(e, e.local))
                                         .toList(),
                                     buttonText: Text('Select columns'),
                                     buttonIcon: Icon(Icons.arrow_drop_down),
@@ -504,9 +500,7 @@ class _AnalyticsState extends State<Analytics> {
                                     listType: MultiSelectListType.CHIP,
                                     chipDisplay: MultiSelectChipDisplay.none(),
                                     onConfirm: (values) {
-                                      _selectedColumns = values
-                                          .map((e) => e as String)
-                                          .toList();
+                                      _selectedColumns = values.cast();
                                     },
                                   ),
                                   SizedBox(width: 8.0),
