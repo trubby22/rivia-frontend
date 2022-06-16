@@ -3,6 +3,7 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
+import 'package:rivia/constants/settings.dart';
 import 'package:rivia/routes/analytics.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
@@ -58,7 +59,7 @@ class _MyAppState extends State<MyApp> {
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
         // RouteNames.login: (_) => Login(),
-        // RouteNames.summary: (_) => MeetingSummary(meetings: {testMeeting2}),
+        // RouteNames.summary: (_) => MeetingSummary(meetings: [testMeeting2]),
       },
       onGenerateRoute: (routeSettings) {
         assert(routeSettings.name != null);
@@ -75,9 +76,9 @@ class _MyAppState extends State<MyApp> {
             try {
               return MaterialPageRoute(
                 builder: (_) => Analytics(
-                  meetings:
-                      // [testMeeting, testMeeting2],
-                      routeSettings.arguments as List<Meeting>,
+                  meetings: testMode
+                      ? [testMeeting, testMeeting2]
+                      : routeSettings.arguments as List<Meeting>,
                 ),
               );
             } catch (_) {
@@ -119,9 +120,9 @@ class _MyAppState extends State<MyApp> {
             try {
               return MaterialPageRoute(
                 builder: (_) => MeetingSummary(
-                  meetings:
-                      // {testMeeting2},
-                      routeSettings.arguments as List<Meeting>,
+                  meetings: testMode
+                      ? [testMeeting2]
+                      : routeSettings.arguments as List<Meeting>,
                 ),
               );
             } catch (_) {
