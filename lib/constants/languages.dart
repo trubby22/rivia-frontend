@@ -7,7 +7,6 @@ enum LangText {
   langCode,
   langSwitchMsg,
   rivia,
-
   aggregateStats,
   aggregateParticipants,
   aggregateNotNeeded,
@@ -18,7 +17,6 @@ enum LangText {
   noOneNotNeeded,
   noOneNotPrepared,
   voters,
-
   confidentialSurvey,
   bad,
   good,
@@ -29,7 +27,6 @@ enum LangText {
   no,
   additionalComments,
   submit,
-
   meetings,
   dashboard,
   select,
@@ -40,25 +37,21 @@ enum LangText {
   startTime,
   endTime,
   createMeeting,
-
   signUp,
   login,
   firstName,
   surname,
   email,
   password,
-
   analytics,
   organiser,
   noParticipants,
   lvlSat,
   neededParticipants,
   preparedParticipants,
-
   summary,
   overallSat,
   feedback,
-
   from,
   to,
   meetingSatisfactionBetween,
@@ -69,6 +62,11 @@ enum LangText {
   multiSelect,
   showMultiSelectSummary,
   createNewMeeting,
+  amazing,
+  great,
+  ok,
+  bad2,
+  inadequate,
 }
 
 extension LangTextContent on LangText {
@@ -162,13 +160,27 @@ extension LangTextContent on LangText {
     LangText.feedback: ['Feedback', 'Обратная связь'],
     LangText.from: ['From', 'Из'],
     LangText.to: ['To', 'К'],
-    LangText.meetingSatisfactionBetween: ['Meeting satisfaction between', 'Встреча удовлетворения между'],
+    LangText.meetingSatisfactionBetween: [
+      'Meeting satisfaction between',
+      'Встреча удовлетворения между'
+    ],
     LangText.and: ['and', 'а также'],
     LangText.selectColumns: ['Select columns', 'Выберите столбцы'],
     LangText.largeMeetings: ['Large meetings', 'Большие встречи'],
-    LangText.cancelMultiUser: ['Cancel multi-select', 'Отменить множественный выбор'],
+    LangText.cancelMultiUser: [
+      'Cancel multi-select',
+      'Отменить множественный выбор'
+    ],
     LangText.multiSelect: ['Multi-select', 'Выбор из нескольких вариантов'],
-    LangText.showMultiSelectSummary: ['Show multi-select summary', 'Показать сводку множественного выбора'],
+    LangText.showMultiSelectSummary: [
+      'Show multi-select summary',
+      'Показать сводку множественного выбора'
+    ],
     LangText.createNewMeeting: ['Create new meeting', 'Создать новую встречу'],
+    LangText.amazing: ['Amazing', 'Удивительно'],
+    LangText.great: ['Great', 'Большой'],
+    LangText.ok: ['Ok', 'Ok'],
+    LangText.inadequate: ['Inadequate', 'Неадекватно'],
+    LangText.bad2: ['Bad', 'Плохо'],
   };
 }

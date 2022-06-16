@@ -27,10 +27,18 @@ class _MeetingSummaryState extends State<MeetingSummary> {
     return PieChart(
       dataMap: binQualityReviews(widget.meetings),
       chartRadius: MediaQuery.of(context).size.width / 4,
+      initialAngleInDegree: 270,
       chartValuesOptions: const ChartValuesOptions(
         showChartValuesInPercentage: true,
         decimalPlaces: 0,
       ),
+      colorList: [
+        Colors.green,
+        Colors.green.shade200,
+        Colors.yellow,
+        Colors.orange,
+        Colors.red,
+      ],
     );
   }
 
@@ -392,11 +400,11 @@ Map<String, double> binQualityReviews(List<Meeting> meetings) {
       .length;
 
   return {
-    'Unsatisfactory': awful.toDouble(),
-    'Bad': bad.toDouble(),
-    'Ok': ok.toDouble(),
-    'Great': great.toDouble(),
-    'Amazing': amazing.toDouble(),
+    LangText.amazing.local: amazing.toDouble(),
+    LangText.great.local: great.toDouble(),
+    LangText.ok.local: ok.toDouble(),
+    LangText.bad2.local: bad.toDouble(),
+    LangText.inadequate.local: awful.toDouble(),
   };
 }
 
