@@ -51,7 +51,9 @@ Meeting testMeeting = Meeting(
 Meeting testMeeting2 = Meeting(
   title: "Foo Meeting",
   meetingId: "132452",
-  qualities: [0.8, 1.0, 0.4],
+  qualities:
+  // [],
+  [0.8, 1.0, 0.4],
   responses: 5,
   startTime: DateTime(2022, 6, 14, 8),
   organiserId: "5",

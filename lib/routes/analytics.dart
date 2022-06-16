@@ -266,7 +266,7 @@ class _AnalyticsState extends State<Analytics> {
                         context,
                         index: index,
                         text:
-                            '${((meeting.qualities.isEmpty ? 0 : meeting.qualities[0]) * 100).round()}%',
+                            '${meeting.qualities.isEmpty ? 50 : (meeting.qualities.reduce((a, b) => a + b) / meeting.qualities.length * 100).round()}%',
                       ),
                     if (_selectedColumns
                         .contains(LangText.neededParticipants.local))

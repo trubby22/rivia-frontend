@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
         RouteNames.login: (_) => Login(),
-        // RouteNames.summary: (_) => MeetingSummary(meeting: testMeeting2),
+        RouteNames.summary: (_) => MeetingSummary(meeting: testMeeting2),
       },
       onGenerateRoute: (routeSettings) {
         assert(routeSettings.name != null);
@@ -73,7 +73,9 @@ class _MyAppState extends State<MyApp> {
             try {
               return MaterialPageRoute(
                 builder: (_) => Analytics(
-                  meetings: routeSettings.arguments as List<Meeting>,
+                  meetings:
+                  // [testMeeting, testMeeting2],
+                  routeSettings.arguments as List<Meeting>,
                 ),
               );
             } catch (_) {
@@ -110,17 +112,19 @@ class _MyAppState extends State<MyApp> {
                 participant: testParticipants[0],
               ),
             );
-          case RouteNames.summary:
-            if (routeSettings.arguments.runtimeType != Meeting) {
-              throw Exception(
-                "ERROR: Did not pass a valid Meeting for Summary page!",
-              );
-            }
-            return MaterialPageRoute(
-              builder: (_) => MeetingSummary(
-                meeting: routeSettings.arguments as Meeting,
-              ),
-            );
+          // case RouteNames.summary:
+          //   if (routeSettings.arguments.runtimeType != Meeting) {
+          //     throw Exception(
+          //       "ERROR: Did not pass a valid Meeting for Summary page!",
+          //     );
+          //   }
+          //   return MaterialPageRoute(
+          //     builder: (_) => MeetingSummary(
+          //       meeting:
+          //         testMeeting2,
+          //       // routeSettings.arguments as Meeting,
+          //     ),
+          //   );
         }
       },
     );
