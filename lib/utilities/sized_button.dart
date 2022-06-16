@@ -45,7 +45,7 @@ class SizedButton extends StatelessWidget {
       ),
       child: TextButton(
         child: Container(child: child),
-        onPressed: () => onPressed?.call(isSelected),
+        onPressed: onPressed == null ? null : () => onPressed?.call(isSelected),
         style: TextButton.styleFrom(
           primary:
               isSelected ? selectedColour ?? backgroundColour : primaryColour,
