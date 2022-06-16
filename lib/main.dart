@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
         '/welcome_screen': (_) => WelcomeScreen(),
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
-        RouteNames.login: (_) => Login(),
+        // RouteNames.login: (_) => Login(),
         RouteNames.summary: (_) => MeetingSummary(meeting: testMeeting2),
       },
       onGenerateRoute: (routeSettings) {
