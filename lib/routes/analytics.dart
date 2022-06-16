@@ -31,6 +31,9 @@ class _AnalyticsState extends State<Analytics> {
   int _lowerSatisfaction = 0;
   int _upperSatisfaction = 100;
   bool _largeMeetings = false;
+  bool _multiselect = false;
+  late List<Meeting> _filteredMeetings = widget.meetings;
+  Set<Meeting> _selectedMeetings = {};
 
   final List<LangText> _allColumns = [
     LangText.date,
@@ -74,16 +77,18 @@ class _AnalyticsState extends State<Analytics> {
     required String text,
   }) {
     return TableRowInkWell(
-      onTap: () async {
-        if (await getIsReviewed(widget.meetings[index].meetingId!)) {
-          Navigator.of(context).pushNamed(
-            RouteNames.summary,
-            arguments: widget.meetings[index],
-          );
+      onTap: () {
+        Meeting meeting = widget.meetings[index];
+        if (_multiselect) {
+          if (_selectedMeetings.contains(meeting)) {
+            _selectedMeetings.remove(meeting);
+          } else {
+            _selectedMeetings.add(meeting);
+          }
         } else {
           Navigator.of(context).pushNamed(
             RouteNames.review,
-            arguments: widget.meetings[index],
+            arguments: meeting,
           );
         }
       },
@@ -108,7 +113,7 @@ class _AnalyticsState extends State<Analytics> {
   Widget tableBuilder(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     List<Meeting> meetings = widget.meetings;
-    List<Meeting> filteredMeetings = meetings
+    _filteredMeetings = meetings
         .where(
             (element) => _organiser == null || element.organiser == _organiser)
         // .where((element) =>
@@ -227,9 +232,9 @@ class _AnalyticsState extends State<Analytics> {
               ],
             ),
             ...List.generate(
-              filteredMeetings.length,
+              _filteredMeetings.length,
               (index) {
-                final meeting = filteredMeetings[index];
+                final meeting = _filteredMeetings[index];
                 final start = meeting.startTime;
                 final end = meeting.endTime;
                 final organiser = meeting.organiser;
@@ -502,8 +507,7 @@ class _AnalyticsState extends State<Analytics> {
                             children: [
                               MultiSelectDialogField(
                                 items: _allColumns
-                                    .map(
-                                        (e) => MultiSelectItem(e, e.toString()))
+                                    .map((e) => MultiSelectItem(e, e.local))
                                     .toList(),
                                 buttonText: Text('Select columns'),
                                 buttonIcon: Icon(Icons.arrow_drop_down),
@@ -549,6 +553,53 @@ class _AnalyticsState extends State<Analytics> {
                               ),
                             ],
                           ),
+                        ],
+                      ),
+                      SizedBox(height: 8.0),
+                      Row(
+                        children: [
+                          SizedButton(
+                            primaryColour: Colors.black,
+                            selectedColour: Colors.white,
+                            backgroundColour: Colors.blue.shade100,
+                            onPressedColour: Colors.blue,
+                            useShadow: true,
+                            width: 150,
+                            height: null,
+                            onPressed: (_) {
+                              setState(() {
+                                _selectedMeetings = {};
+                                _multiselect = !_multiselect;
+                              });
+                            },
+                            child: Text(
+                              _multiselect
+                                  ? 'Cancel multi-select'
+                                  : 'Multi-select',
+                              style: UITexts.smallButtonText,
+                            ),
+                          ),
+                          SizedBox(width: 8.0),
+                          if (_multiselect)
+                            SizedButton(
+                              primaryColour: Colors.black,
+                              selectedColour: Colors.white,
+                              backgroundColour: Colors.blue.shade100,
+                              onPressedColour: Colors.blue,
+                              useShadow: true,
+                              width: 150,
+                              height: null,
+                              onPressed: (_) {
+                                print(_selectedMeetings);
+                                Navigator.of(context).pushNamed(
+                                    RouteNames.summary,
+                                    arguments: _selectedMeetings);
+                              },
+                              child: Text(
+                                'Show multi-select summary',
+                                style: UITexts.smallButtonText,
+                              ),
+                            ),
                         ],
                       ),
                     ],
