@@ -31,7 +31,8 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    getSharedPref(() => setState(() {})).then((_) => bruh());
+    getSharedPref(() => setState(() {}));
+    // .then((_) => bruh());
   }
 
   Future<void> bruh() async {
