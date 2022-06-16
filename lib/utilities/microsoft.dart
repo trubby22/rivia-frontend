@@ -33,7 +33,7 @@ Future<bool> microsoftGetTokens(String code) async {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body:
-        "client_id=$_clientId&scope=User.Read&code=$code&redirect_uri=https%3A%2F%2Fapp.rivia.me&grant_type=authorization_code&code_verifier=$_pxceVerifier",
+        "client_id=$_clientId&scope=User.Read&code=$code&redirect_uri=$_redirectUri&grant_type=authorization_code&code_verifier=$_pxceVerifier",
   );
 
   if (response.statusCode == 200) {
