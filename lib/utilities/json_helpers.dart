@@ -8,8 +8,10 @@ class JH {
     String? Function(Type)? listErrMsg,
     String? castErrMsg,
   }) {
-    if (jason.runtimeType != List) {
-      throw Exception(
+    try {
+      final List<dynamic> _ = jason;
+    } catch (_) {
+      Exception(
         listErrMsg?.call(jason.runtimeType) ??
             "The type of the JSON object should be a list, but is a ${jason.runtimeType}",
       );
