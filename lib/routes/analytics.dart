@@ -12,6 +12,7 @@ import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/date_picker.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/language_switcher.dart';
+import 'package:rivia/utilities/log_out_button.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
@@ -672,6 +673,7 @@ class _AnalyticsState extends State<Analytics> {
             fit: BoxFit.fill,
           ),
           foregroundBuilder(context),
+          const LogOutButton(),
           LanguageSwitcher(callback: () => setState(() => {})),
           Positioned(
             bottom: 32.0,

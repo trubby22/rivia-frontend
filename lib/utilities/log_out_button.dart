@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
+import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/settings.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 
-class LanguageSwitcher extends StatelessWidget {
-  const LanguageSwitcher({Key? key, this.callback}) : super(key: key);
+class LogOutButton extends StatelessWidget {
+  const LogOutButton({Key? key, this.callback}) : super(key: key);
 
   final Function()? callback;
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      right: 64.0,
+      right: 140.0,
       top: 24.0,
       child: SizedButton(
         backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
@@ -22,17 +23,15 @@ class LanguageSwitcher extends StatelessWidget {
         height: 48.0,
         width: 64.0,
         onPressed: (_) async {
-          if (authToken.language == Lang.en) {
-            authToken.language = Lang.ru;
-          } else {
-            authToken.language = Lang.en;
+          if (!testMode) {
+            await authToken.reset();
           }
-          await setSharedPref();
-          callback?.call();
+          Navigator.of(context).pushNamed(RouteNames.login);
         },
-        child: Text(
-          LangText.langCode.local,
-          style: UITexts.mediumButtonText,
+        child: const Icon(
+          Icons.logout,
+          size: FontSizes.bigTextSize,
+          color: Colors.black,
         ),
       ),
     );

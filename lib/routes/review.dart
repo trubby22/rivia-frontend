@@ -13,6 +13,7 @@ import 'package:rivia/models/response.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/language_switcher.dart';
+import 'package:rivia/utilities/log_out_button.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/toast.dart';
 
@@ -476,6 +477,7 @@ class _ReviewState extends State<Review> {
               fit: BoxFit.fill,
             ),
             foregroundBuilder(context),
+            const LogOutButton(),
             LanguageSwitcher(callback: () => setState(() => {})),
             Positioned(
               left: 64.0,
