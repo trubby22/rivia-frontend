@@ -5,11 +5,13 @@ import 'package:rivia/utilities/sized_button.dart';
 class TimePicker extends StatefulWidget {
   final TimeOfDay initialTime;
   final void Function(TimeOfDay timeOfDay) notifyParent;
+  final bool enabled;
 
   const TimePicker({
     Key? key,
     required this.initialTime,
     required this.notifyParent,
+    this.enabled = true,
   }) : super(key: key);
 
   @override
@@ -42,7 +44,7 @@ class _TimePickerState extends State<TimePicker> {
       onPressedColour: Colors.blue,
       height: null,
       width: null,
-      onPressed: (_) => _selectTime(context),
+      onPressed: widget.enabled ? (_) => _selectTime(context) : null,
       child: Text(_time.format(context)),
     );
   }

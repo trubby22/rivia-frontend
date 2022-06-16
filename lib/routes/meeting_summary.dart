@@ -14,7 +14,7 @@ import 'package:rivia/utilities/sized_button.dart';
 class MeetingSummary extends StatefulWidget {
   const MeetingSummary({Key? key, required this.meetings}) : super(key: key);
 
-  final Set<Meeting> meetings;
+  final List<Meeting> meetings;
 
   @override
   State<MeetingSummary> createState() => _MeetingSummaryState();
@@ -369,7 +369,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
   }
 }
 
-Map<String, double> binQualityReviews(Set<Meeting> meetings) {
+Map<String, double> binQualityReviews(List<Meeting> meetings) {
   List<double> qualities =
       meetings.map((e) => e.qualities).expand((element) => element).toList();
   List<double> sortedQualities = qualities.toList()..sort();

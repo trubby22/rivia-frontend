@@ -8,11 +8,13 @@ class DatePicker extends StatefulWidget {
     required this.restorationId,
     required this.initialDate,
     required this.notifyParent,
+    this.enabled = true,
   }) : super(key: key);
 
   final String? restorationId;
   final DateTime initialDate;
   final void Function(DateTime dateTime) notifyParent;
+  final bool enabled;
 
   @override
   State<DatePicker> createState() => _DatePickerState();
@@ -72,9 +74,9 @@ class _DatePickerState extends State<DatePicker> with RestorationMixin {
   @override
   Widget build(BuildContext context) {
     return SizedButton(
-      onPressed: (_) {
+      onPressed: widget.enabled ? (_) {
         _restorableDatePickerRouteFuture.present();
-      },
+      } : null,
       primaryColour: Colors.black,
       selectedColour: Colors.white,
       backgroundColour: Colors.blue.shade100,

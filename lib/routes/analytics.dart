@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:collection/collection.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,8 @@ class _AnalyticsState extends State<Analytics> {
   bool _largeMeetings = false;
   bool _multiselect = false;
   late List<Meeting> _filteredMeetings = widget.meetings;
-  Set<Meeting> _selectedMeetings = {};
+  late List<bool> _selectedMeetings =
+      List.generate(_filteredMeetings.length, (index) => false);
 
   final List<LangText> _allColumns = [
     LangText.date,
@@ -80,11 +82,7 @@ class _AnalyticsState extends State<Analytics> {
       onTap: () {
         Meeting meeting = widget.meetings[index];
         if (_multiselect) {
-          if (_selectedMeetings.contains(meeting)) {
-            _selectedMeetings.remove(meeting);
-          } else {
-            _selectedMeetings.add(meeting);
-          }
+          _selectedMeetings[index] = !_selectedMeetings[index];
         } else {
           Navigator.of(context).pushNamed(
             RouteNames.review,
@@ -248,13 +246,15 @@ class _AnalyticsState extends State<Analytics> {
 
                 return TableRow(
                   decoration: BoxDecoration(
-                    color: _highlightIndex == index
-                        ? index.isOdd
-                            ? Colors.blue.shade50
-                            : Colors.orange.shade50
-                        : index.isOdd
-                            ? const Color.fromARGB(255, 150, 210, 255)
-                            : const Color.fromARGB(255, 255, 212, 150),
+                    color: _selectedMeetings[index]
+                        ? Colors.green.shade200
+                        : _highlightIndex == index
+                            ? index.isOdd
+                                ? Colors.blue.shade50
+                                : Colors.orange.shade50
+                            : index.isOdd
+                                ? const Color.fromARGB(255, 150, 210, 255)
+                                : const Color.fromARGB(255, 255, 212, 150),
                   ),
                   children: [
                     if (_selectedColumns.contains(LangText.date))
@@ -381,17 +381,19 @@ class _AnalyticsState extends State<Analytics> {
                                   icon: const Icon(Icons.arrow_drop_down),
                                   borderRadius: BorderRadius.circular(10),
                                   elevation: 16,
-                                  onChanged: (Participant? newValue) {
-                                    if (newValue == _organiser) {
-                                      setState(() {
-                                        _organiser = null;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        _organiser = newValue;
-                                      });
-                                    }
-                                  },
+                                  onChanged: _multiselect
+                                      ? null
+                                      : (Participant? newValue) {
+                                          if (newValue == _organiser) {
+                                            setState(() {
+                                              _organiser = null;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              _organiser = newValue;
+                                            });
+                                          }
+                                        },
                                   items: widget.meetings
                                       .map((e) => e.organiser)
                                       .map<DropdownMenuItem<Participant>>(
@@ -414,6 +416,7 @@ class _AnalyticsState extends State<Analytics> {
                                 restorationId: 'analytics',
                                 initialDate: _startDate,
                                 notifyParent: setStartDate,
+                                enabled: !_multiselect,
                               ),
                               SizedBox(width: 8.0),
                               Text('To:'),
@@ -422,6 +425,7 @@ class _AnalyticsState extends State<Analytics> {
                                 restorationId: 'analytics',
                                 initialDate: _endDate,
                                 notifyParent: setEndDate,
+                                enabled: !_multiselect,
                               ),
                             ],
                           ),
@@ -455,14 +459,16 @@ class _AnalyticsState extends State<Analytics> {
                                   icon: const Icon(Icons.arrow_drop_down),
                                   borderRadius: BorderRadius.circular(10),
                                   elevation: 16,
-                                  onChanged: (int? newValue) {
-                                    if (newValue != null &&
-                                        newValue <= _upperSatisfaction) {
-                                      setState(() {
-                                        _lowerSatisfaction = newValue;
-                                      });
-                                    }
-                                  },
+                                  onChanged: _multiselect
+                                      ? null
+                                      : (int? newValue) {
+                                          if (newValue != null &&
+                                              newValue <= _upperSatisfaction) {
+                                            setState(() {
+                                              _lowerSatisfaction = newValue;
+                                            });
+                                          }
+                                        },
                                   items: _percentages,
                                 ),
                               ),
@@ -489,14 +495,16 @@ class _AnalyticsState extends State<Analytics> {
                                   icon: const Icon(Icons.arrow_drop_down),
                                   borderRadius: BorderRadius.circular(10),
                                   elevation: 16,
-                                  onChanged: (int? newValue) {
-                                    if (newValue != null &&
-                                        newValue >= _lowerSatisfaction) {
-                                      setState(() {
-                                        _upperSatisfaction = newValue;
-                                      });
-                                    }
-                                  },
+                                  onChanged: _multiselect
+                                      ? null
+                                      : (int? newValue) {
+                                          if (newValue != null &&
+                                              newValue >= _lowerSatisfaction) {
+                                            setState(() {
+                                              _upperSatisfaction = newValue;
+                                            });
+                                          }
+                                        },
                                   items: _percentages,
                                 ),
                               ),
@@ -541,11 +549,13 @@ class _AnalyticsState extends State<Analytics> {
                                 width: 150,
                                 height: null,
                                 isSelected: _largeMeetings,
-                                onPressed: (_) {
-                                  setState(() {
-                                    _largeMeetings = !_largeMeetings;
-                                  });
-                                },
+                                onPressed: _multiselect
+                                    ? null
+                                    : (_) {
+                                        setState(() {
+                                          _largeMeetings = !_largeMeetings;
+                                        });
+                                      },
                                 child: Text(
                                   'Large meetings',
                                   style: UITexts.smallButtonText,
@@ -568,7 +578,8 @@ class _AnalyticsState extends State<Analytics> {
                             height: null,
                             onPressed: (_) {
                               setState(() {
-                                _selectedMeetings = {};
+                                _selectedMeetings = List.generate(
+                                    _filteredMeetings.length, (index) => false);
                                 _multiselect = !_multiselect;
                               });
                             },
@@ -593,7 +604,13 @@ class _AnalyticsState extends State<Analytics> {
                                 print(_selectedMeetings);
                                 Navigator.of(context).pushNamed(
                                     RouteNames.summary,
-                                    arguments: _selectedMeetings);
+                                    arguments: IterableZip([
+                                      _filteredMeetings,
+                                      _selectedMeetings
+                                    ])
+                                        .where((element) => element[1] as bool)
+                                        .map((e) => e[0] as Meeting)
+                                        .toList());
                               },
                               child: Text(
                                 'Show multi-select summary',
@@ -639,10 +656,12 @@ class _AnalyticsState extends State<Analytics> {
               width: null,
               padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
               child: Text("Create New Meeting", style: UITexts.bigButtonText),
-              onPressed: (_) => Navigator.of(context).pushNamed(
-                RouteNames.createMeeting,
-                arguments: [],
-              ),
+              onPressed: _multiselect
+                  ? null
+                  : (_) => Navigator.of(context).pushNamed(
+                        RouteNames.createMeeting,
+                        arguments: [],
+                      ),
             ),
           ),
         ],

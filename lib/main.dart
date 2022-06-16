@@ -119,7 +119,7 @@ class _MyAppState extends State<MyApp> {
                 builder: (_) => MeetingSummary(
                   meetings:
                       // {testMeeting2},
-                      routeSettings.arguments as Set<Meeting>,
+                      routeSettings.arguments as List<Meeting>,
                 ),
               );
             } catch (_) {
