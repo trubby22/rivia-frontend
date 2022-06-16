@@ -17,8 +17,6 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 const bigMeetingSize = 5;
 
-Participant? allParticipants = Participant(name: 'ALL', surname: '');
-
 class Analytics extends StatefulWidget {
   const Analytics({Key? key, required this.meetings}) : super(key: key);
 
@@ -30,7 +28,7 @@ class Analytics extends StatefulWidget {
 
 class _AnalyticsState extends State<Analytics> {
   int _highlightIndex = -1;
-  Participant? _organiser = allParticipants;
+  late Participant? _organiser = allParticipants;
   int _lowerSatisfaction = 0;
   int _upperSatisfaction = 100;
   bool _largeMeetings = false;
@@ -38,6 +36,8 @@ class _AnalyticsState extends State<Analytics> {
   late List<Meeting> _filteredMeetings = widget.meetings;
   late List<bool> _selectedMeetings =
       List.generate(_filteredMeetings.length, (index) => false);
+  Participant? allParticipants =
+      Participant(name: LangText.all.local, surname: '');
 
   final List<LangText> _allColumns = [
     LangText.date,
@@ -291,7 +291,7 @@ class _AnalyticsState extends State<Analytics> {
                       entryBuilder(
                         context,
                         index: index,
-                        text: '${start.day}/${start.month}/${start.year}',
+                        text: '${start.day}.${start.month}.${start.year}',
                       ),
                     if (_selectedColumns.contains(LangText.startTime))
                       entryBuilder(
@@ -384,11 +384,11 @@ class _AnalyticsState extends State<Analytics> {
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              Text('Organiser:'),
+                              Text('${LangText.organiser.local}:'),
                               SizedBox(width: 8.0),
                               Container(
                                 decoration: BoxDecoration(
@@ -431,12 +431,13 @@ class _AnalyticsState extends State<Analytics> {
                                   }).toList(),
                                 ),
                               ),
+                              SizedBox(width: 8.0),
                             ],
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text('From:'),
+                              Text('${LangText.from.local}:'),
                               SizedBox(width: 8.0),
                               DatePicker(
                                 restorationId: 'analytics',
@@ -445,7 +446,7 @@ class _AnalyticsState extends State<Analytics> {
                                 enabled: !_multiselect,
                               ),
                               SizedBox(width: 8.0),
-                              Text('To:'),
+                              Text('${LangText.to.local}:'),
                               SizedBox(width: 8.0),
                               DatePicker(
                                 restorationId: 'analytics',
@@ -459,11 +460,11 @@ class _AnalyticsState extends State<Analytics> {
                       ),
                       SizedBox(height: 8.0),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              Text('Meeting satisfaction between'),
+                              Text(LangText.meetingSatisfactionBetween.local),
                               SizedBox(width: 8.0),
                               Container(
                                 decoration: BoxDecoration(
@@ -499,7 +500,7 @@ class _AnalyticsState extends State<Analytics> {
                                 ),
                               ),
                               SizedBox(width: 8.0),
-                              Text('and'),
+                              Text(LangText.and.local),
                               SizedBox(width: 8.0),
                               Container(
                                 decoration: BoxDecoration(
@@ -534,16 +535,17 @@ class _AnalyticsState extends State<Analytics> {
                                   items: _percentages,
                                 ),
                               ),
+                              SizedBox(width: 8.0),
                             ],
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               MultiSelectDialogField(
                                 items: _allColumns
                                     .map((e) => MultiSelectItem(e, e.local))
                                     .toList(),
-                                buttonText: Text('Select columns'),
+                                buttonText: Text(LangText.selectColumns.local),
                                 buttonIcon: Icon(Icons.arrow_drop_down),
                                 decoration: BoxDecoration(
                                   color: Colors.blue.shade100,
@@ -583,7 +585,7 @@ class _AnalyticsState extends State<Analytics> {
                               //           });
                               //         },
                               //   child: Text(
-                              //     'Large meetings',
+                              //     LangText.largeMeetings.local,
                               //     style: UITexts.smallButtonText,
                               //   ),
                               // ),
@@ -611,8 +613,8 @@ class _AnalyticsState extends State<Analytics> {
                             },
                             child: Text(
                               _multiselect
-                                  ? 'Cancel multi-select'
-                                  : 'Multi-select',
+                                  ? LangText.cancelMultiUser.local
+                                  : LangText.multiSelect.local,
                               style: UITexts.smallButtonText,
                             ),
                           ),
@@ -639,7 +641,7 @@ class _AnalyticsState extends State<Analytics> {
                                         .toList());
                               },
                               child: Text(
-                                'Show multi-select summary',
+                                LangText.showMultiSelectSummary.local,
                                 style: UITexts.smallButtonText,
                               ),
                             ),
@@ -681,7 +683,8 @@ class _AnalyticsState extends State<Analytics> {
               height: null,
               width: null,
               padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-              child: Text("Create New Meeting", style: UITexts.bigButtonText),
+              child: Text(LangText.createNewMeeting.local,
+                  style: UITexts.bigButtonText),
               onPressed: _multiselect
                   ? null
                   : (_) => Navigator.of(context).pushNamed(

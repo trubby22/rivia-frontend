@@ -58,6 +58,17 @@ enum LangText {
   summary,
   overallSat,
   feedback,
+
+  from,
+  to,
+  meetingSatisfactionBetween,
+  and,
+  selectColumns,
+  largeMeetings,
+  cancelMultiUser,
+  multiSelect,
+  showMultiSelectSummary,
+  createNewMeeting,
 }
 
 extension LangTextContent on LangText {
@@ -149,5 +160,15 @@ extension LangTextContent on LangText {
     LangText.summary: ['Summary', 'Резюме'],
     LangText.overallSat: ['Overall Satisfaction', 'Удовлетворение'],
     LangText.feedback: ['Feedback', 'Обратная связь'],
+    LangText.from: ['From', 'Из'],
+    LangText.to: ['To', 'К'],
+    LangText.meetingSatisfactionBetween: ['Meeting satisfaction between', 'Встреча удовлетворения между'],
+    LangText.and: ['and', 'а также'],
+    LangText.selectColumns: ['Select columns', 'Выберите столбцы'],
+    LangText.largeMeetings: ['Large meetings', 'Большие встречи'],
+    LangText.cancelMultiUser: ['Cancel multi-select', 'Отменить множественный выбор'],
+    LangText.multiSelect: ['Multi-select', 'Выбор из нескольких вариантов'],
+    LangText.showMultiSelectSummary: ['Show multi-select summary', 'Показать сводку множественного выбора'],
+    LangText.createNewMeeting: ['Create new meeting', 'Создать новую встречу'],
   };
 }
