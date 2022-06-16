@@ -76,9 +76,7 @@ class _MyAppState extends State<MyApp> {
             try {
               return MaterialPageRoute(
                 builder: (_) => Analytics(
-                  meetings: testMode
-                      ? [testMeeting, testMeeting2]
-                      : routeSettings.arguments as List<Meeting>,
+                  meetings: routeSettings.arguments as List<Meeting>,
                 ),
               );
             } catch (_) {
@@ -120,9 +118,7 @@ class _MyAppState extends State<MyApp> {
             try {
               return MaterialPageRoute(
                 builder: (_) => MeetingSummary(
-                  meetings: testMode
-                      ? [testMeeting2]
-                      : routeSettings.arguments as List<Meeting>,
+                  meetings: routeSettings.arguments as List<Meeting>,
                 ),
               );
             } catch (_) {
