@@ -84,11 +84,10 @@ class _AnalyticsState extends State<Analytics> {
         if (_multiselect) {
           _selectedMeetings[index] = !_selectedMeetings[index];
         } else {
+          final isReviewed = await getIsReviewed(meeting.meetingId!);
           Navigator.of(context).pushNamed(
-            (await getIsReviewed(meeting.meetingId!))
-                ? RouteNames.summary
-                : RouteNames.review,
-            arguments: meeting,
+            isReviewed ? RouteNames.summary : RouteNames.review,
+            arguments: isReviewed ? [meeting] : meeting,
           );
         }
       },
