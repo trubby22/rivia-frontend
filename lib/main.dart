@@ -74,8 +74,8 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute(
                 builder: (_) => Analytics(
                   meetings:
-                  // [testMeeting, testMeeting2],
-                  routeSettings.arguments as List<Meeting>,
+                      // [testMeeting, testMeeting2],
+                      routeSettings.arguments as List<Meeting>,
                 ),
               );
             } catch (_) {
@@ -85,6 +85,7 @@ class _MyAppState extends State<MyApp> {
             }
           case RouteNames.login:
             if (dict.isNotEmpty) {
+              return MaterialPageRoute(builder: (_) => Login());
               microsoftGetTokens(dict["code"]);
             }
             return MaterialPageRoute(builder: (_) => Login());
