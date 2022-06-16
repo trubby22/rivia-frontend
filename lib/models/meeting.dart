@@ -3,6 +3,7 @@ import 'package:rivia/constants/fields.dart';
 import 'package:rivia/models/date_time_json.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
+import 'package:rivia/utilities/json_error_handler.dart';
 
 /// The model for meetings.
 class Meeting {
@@ -48,14 +49,14 @@ class Meeting {
     }
 
     try {
-      print("ORG:");
-      print(json[Fields.organiserId]);
       return Meeting(
         feedback: (json[Fields.feedback] as List<dynamic>).cast(),
         title: json[Fields.title],
-        meetingId: json[Fields.meetingId] ?? "1",
-        startTime: DateTimeJson.fromJSON(json[Fields.startTime]),
-        endTime: DateTimeJson.fromJSON(json[Fields.endTime]),
+        meetingId: json[Fields.meetingId],
+        startTime: DateTimeJson.fromJSON(json[Fields.startTime]) ??
+            JEH.toss('Field "startTime" is NULL'),
+        endTime: DateTimeJson.fromJSON(json[Fields.endTime]) ??
+            JEH.toss('Field "endTime" is NULL'),
         qualities: (json[Fields.qualities] as List<dynamic>).cast(),
         responses: json[Fields.responses],
         organiserId: json[Fields.organiserId],
@@ -75,6 +76,7 @@ class Meeting {
   }
 
   Map<String, dynamic> toJson() => {
+        Fields.feedback: feedback,
         Fields.title: title,
         Fields.startTime: startTime.toJSON(),
         Fields.endTime: endTime.toJSON(),
@@ -84,8 +86,10 @@ class Meeting {
         Fields.painPoints: painPoints.entries
             .map(
               (e) => {
-                'preset_q_id': e.key,
-                'preset_q_text': e.value,
+                'presetQ': {
+                  'id': e.key,
+                  'text': e.value,
+                },
               },
             )
             .toList(),
