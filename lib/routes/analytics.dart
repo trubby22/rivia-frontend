@@ -568,27 +568,27 @@ class _AnalyticsState extends State<Analytics> {
                                 },
                               ),
                               SizedBox(width: 8.0),
-                              SizedButton(
-                                primaryColour: Colors.black,
-                                selectedColour: Colors.white,
-                                backgroundColour: Colors.blue.shade100,
-                                onPressedColour: Colors.blue,
-                                useShadow: true,
-                                width: 150,
-                                height: null,
-                                isSelected: _largeMeetings,
-                                onPressed: _multiselect
-                                    ? null
-                                    : (_) {
-                                        setState(() {
-                                          _largeMeetings = !_largeMeetings;
-                                        });
-                                      },
-                                child: Text(
-                                  'Large meetings',
-                                  style: UITexts.smallButtonText,
-                                ),
-                              ),
+                              // SizedButton(
+                              //   primaryColour: Colors.black,
+                              //   selectedColour: Colors.white,
+                              //   backgroundColour: Colors.blue.shade100,
+                              //   onPressedColour: Colors.blue,
+                              //   useShadow: true,
+                              //   width: 150,
+                              //   height: null,
+                              //   isSelected: _largeMeetings,
+                              //   onPressed: _multiselect
+                              //       ? null
+                              //       : (_) {
+                              //           setState(() {
+                              //             _largeMeetings = !_largeMeetings;
+                              //           });
+                              //         },
+                              //   child: Text(
+                              //     'Large meetings',
+                              //     style: UITexts.smallButtonText,
+                              //   ),
+                              // ),
                             ],
                           ),
                         ],
