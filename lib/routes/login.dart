@@ -35,28 +35,28 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> bruh() async {
-    if (authToken.token == null) {
-      // Admin Consent
-      // js.context.callMethod(
-      //   'open',
-      //   [
-      //     "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
-      //   ],
-      // );
-      microsoftLogin();
-    } else {
-      await microsoftGetUserId();
-      showToast(
-        context: context,
-        text: authToken.tenantDomain ?? "[ERROR: NOT LOGGED IN]",
-      );
-    }
-    final foo = await getMeetings();
-    final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
-    Navigator.of(context).popAndPushNamed(
-      RouteNames.analytics,
-      arguments: bar.cast<Meeting>(),
-    );
+    // if (authToken.token == null) {
+    //   // Admin Consent
+    //   // js.context.callMethod(
+    //   //   'open',
+    //   //   [
+    //   //     "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
+    //   //   ],
+    //   // );
+    //   microsoftLogin();
+    // } else {
+    //   await microsoftGetUserId();
+    //   showToast(
+    //     context: context,
+    //     text: authToken.tenantDomain ?? "[ERROR: NOT LOGGED IN]",
+    //   );
+    // }
+    // final foo = await getMeetings();
+    // final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
+    // Navigator.of(context).popAndPushNamed(
+    //   RouteNames.analytics,
+    //   arguments: bar.cast<Meeting>(),
+    // );
   }
 
   @override
