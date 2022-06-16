@@ -225,6 +225,7 @@ class _LoginState extends State<Login> {
                         final foo = await getMeetings();
                         final bar = await Future.wait(
                             foo.map((f) => getMeetingContent(f)));
+                        print(bar);
                         Navigator.of(context).popAndPushNamed(
                           RouteNames.analytics,
                           arguments: bar.cast<Meeting>(),
