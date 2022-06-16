@@ -45,18 +45,22 @@ class _LoginState extends State<Login> {
       //     "https://login.microsoftonline.com/common/adminconsent?client_id=491d67e2-00cf-46ce-87cc-7e315c09b59f&redirect_uri=https%3A%2F%2Fapp.rivia.me"
       //   ],
       // );
+      await setSharedPref();
       microsoftLogin();
     } else {
       if (widget.future != null) {
         await widget.future;
       }
       await microsoftGetUserId();
-      showToast(
-        context: context,
-        text: authToken.tenantDomain ?? "[ERROR: NOT LOGGED IN]",
-      );
+      await setSharedPref();
+      // showToast(
+      //   context: context,
+      //   text: authToken.tenantDomain ?? "[ERROR: NOT LOGGED IN]",
+      // );
     }
-    final foo = await getMeetings();
+    final foo = await getMeetings().onError(
+      (error, stackTrace) => Future.value([]),
+    );
     final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
     Navigator.of(context).popAndPushNamed(
       RouteNames.analytics,
