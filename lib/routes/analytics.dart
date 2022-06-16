@@ -17,6 +17,8 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 const bigMeetingSize = 5;
 
+Participant? allParticipants = Participant(name: 'ALL', surname: '');
+
 class Analytics extends StatefulWidget {
   const Analytics({Key? key, required this.meetings}) : super(key: key);
 
@@ -28,7 +30,7 @@ class Analytics extends StatefulWidget {
 
 class _AnalyticsState extends State<Analytics> {
   int _highlightIndex = -1;
-  Participant? _organiser;
+  Participant? _organiser = allParticipants;
   int _lowerSatisfaction = 0;
   int _upperSatisfaction = 100;
   bool _largeMeetings = false;
@@ -114,8 +116,8 @@ class _AnalyticsState extends State<Analytics> {
     final width = MediaQuery.of(context).size.width;
     List<Meeting> meetings = widget.meetings;
     _filteredMeetings = meetings
-        .where(
-            (element) => _organiser == null || element.organiser == _organiser)
+        .where((element) =>
+            _organiser == allParticipants || element.organiser == _organiser)
         .where((element) =>
             element.qualities.reduce((a, b) => a + b) /
                     element.qualities.length *
@@ -412,18 +414,14 @@ class _AnalyticsState extends State<Analytics> {
                                   onChanged: _multiselect
                                       ? null
                                       : (Participant? newValue) {
-                                          if (newValue == _organiser) {
-                                            setState(() {
-                                              _organiser = null;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              _organiser = newValue;
-                                            });
-                                          }
+                                          setState(() {
+                                            _organiser = newValue;
+                                          });
                                         },
-                                  items: widget.meetings
-                                      .map((e) => e.organiser)
+                                  items: (widget.meetings
+                                          .map((e) => e.organiser)
+                                          .toList()
+                                        ..insert(0, allParticipants))
                                       .map<DropdownMenuItem<Participant>>(
                                           (Participant? p) {
                                     return DropdownMenuItem<Participant>(
