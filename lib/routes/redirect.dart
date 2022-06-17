@@ -5,6 +5,7 @@ import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/microsoft.dart';
 import 'package:rivia/utilities/toast.dart';
+import 'dart:html';
 
 class Redirect extends StatefulWidget {
   const Redirect({Key? key, this.code}) : super(key: key);
@@ -12,6 +13,20 @@ class Redirect extends StatefulWidget {
 
   @override
   State<Redirect> createState() => _RedirectState();
+}
+
+Future<void> dashboard(context) async {
+  await microsoftGetUserId();
+  final foo = await getMeetings().onError(
+    (error, stackTrace) => Future.value([]),
+  );
+
+  final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
+  window.history.pushState(null, 'home', 'https://app.rivia.me');
+  Navigator.of(context).popAndPushNamed(
+    RouteNames.analytics,
+    arguments: bar.cast<Meeting>(),
+  );
 }
 
 class _RedirectState extends State<Redirect> {
@@ -25,14 +40,18 @@ class _RedirectState extends State<Redirect> {
     if (widget.code == null) {
       return;
     }
-    final result = await microsoftGetTokens(widget.code!);
+    await getSharedPref(null);
+    final result = authToken.userId == null
+        ? await microsoftGetTokens(widget.code!)
+        : true;
     if (result) {
       await microsoftGetUserId();
-      await setSharedPref();
       final foo = await getMeetings().onError(
         (error, stackTrace) => Future.value([]),
       );
+
       final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
+      window.history.pushState(null, 'home', 'https://app.rivia.me');
       Navigator.of(context).popAndPushNamed(
         RouteNames.analytics,
         arguments: bar.cast<Meeting>(),
@@ -43,5 +62,8 @@ class _RedirectState extends State<Redirect> {
   }
 
   @override
-  Widget build(BuildContext context) => Container();
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: const Color.fromRGBO(244, 242, 234, 1),
+        body: Container(),
+      );
 }

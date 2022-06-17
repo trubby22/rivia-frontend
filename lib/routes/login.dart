@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/models/login_credentials.dart';
+import 'package:rivia/routes/redirect.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/microsoft.dart';
+import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/toast.dart';
 
 class Login extends StatefulWidget {
@@ -25,12 +27,13 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    getSharedPref(() => setState(() {}));
-    if (authToken.token == null) {
-      microsoftLogin();
-    } else {
-      Navigator.of(context).popAndPushNamed(RouteNames.redirect);
-    }
+    getSharedPref(null).then((_) {
+      if (authToken.userId == null) {
+        microsoftLogin();
+      } else {
+        setState(() => _signup = true);
+      }
+    });
   }
 
   @override
@@ -42,7 +45,14 @@ class _LoginState extends State<Login> {
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: const Color.fromRGBO(244, 242, 234, 1),
-        body: Container(),
+        body: Builder(
+          builder: (context) {
+            if (_signup) {
+              dashboard(context);
+            }
+            return Container();
+          },
+        ),
         // Stack(
         //   children: [
         //     LanguageSwitcher(callback: () => setState(() => {})),

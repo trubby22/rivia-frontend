@@ -54,11 +54,11 @@ class _MyAppState extends State<MyApp> {
         '/welcome_screen': (_) => WelcomeScreen(),
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
+        RouteNames.redirect: (_) => Redirect(code: 'victory'),
         // RouteNames.login: (_) => Login(),
         // RouteNames.summary: (_) => MeetingSummary(meetings: [testMeeting2]),
       },
       onGenerateRoute: (routeSettings) {
-        print(window.location.href);
         assert(routeSettings.name != null);
         final names = routeSettings.name!.split('?');
         final name = names[0];
@@ -86,7 +86,6 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute(builder: (_) => Login());
             }
             final locSplit = window.location.href.split('/');
-            print(locSplit);
             if (dict["code"] == null &&
                 (locSplit.isEmpty || locSplit.last.isEmpty)) {
               return MaterialPageRoute(builder: (_) => Login());
