@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/route_names.dart';
+import 'package:rivia/constants/settings.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
@@ -22,7 +23,9 @@ Future<void> dashboard(context) async {
   );
 
   final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
-  window.history.pushState(null, 'home', 'https://app.rivia.me');
+  if (!testMode) {
+    window.history.pushState(null, 'home', 'https://app.rivia.me');
+  }
   Navigator.of(context).popAndPushNamed(
     RouteNames.analytics,
     arguments: bar.cast<Meeting>(),
@@ -45,17 +48,7 @@ class _RedirectState extends State<Redirect> {
         ? await microsoftGetTokens(widget.code!)
         : true;
     if (result) {
-      await microsoftGetUserId();
-      final foo = await getMeetings().onError(
-        (error, stackTrace) => Future.value([]),
-      );
-
-      final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
-      window.history.pushState(null, 'home', 'https://app.rivia.me');
-      Navigator.of(context).popAndPushNamed(
-        RouteNames.analytics,
-        arguments: bar.cast<Meeting>(),
-      );
+      dashboard(context);
     } else {
       showToast(context: context, text: 'Failed to login!');
     }
