@@ -89,10 +89,21 @@ class _AnalyticsState extends State<Analytics> {
           _selectedMeetings[index] = !_selectedMeetings[index];
         } else {
           final isReviewed = await getIsReviewed(meeting.meetingId!);
-          Navigator.of(context).pushNamed(
+          Navigator.of(context)
+              .pushNamed(
             isReviewed ? RouteNames.summary : RouteNames.review,
             arguments: isReviewed ? [meeting] : meeting,
-          );
+          )
+              .then((_) async {
+            final meetingIds = await getMeetings().onError(
+              (error, stackTrace) => Future.value([]),
+            );
+            final meetings =
+                (await Future.wait(meetingIds.map((f) => getMeetingContent(f))))
+                    .cast<Meeting>();
+            widget.meetings.clear();
+            setState(() => widget.meetings.addAll(meetings));
+          });
         }
       },
       child: MouseRegion(

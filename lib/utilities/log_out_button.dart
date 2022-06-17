@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/settings.dart';
 import 'package:rivia/constants/ui_texts.dart';
