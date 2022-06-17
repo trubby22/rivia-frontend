@@ -18,17 +18,18 @@ class Redirect extends StatefulWidget {
 
 Future<void> dashboard(context) async {
   await microsoftGetUserId();
-  final foo = await getMeetings().onError(
+  final meetingIds = await getMeetings().onError(
     (error, stackTrace) => Future.value([]),
   );
 
-  final bar = await Future.wait(foo.map((f) => getMeetingContent(f)));
+  final meetings =
+      await Future.wait(meetingIds.map((f) => getMeetingContent(f)));
   if (!testMode) {
     window.history.pushState(null, 'home', 'https://app.rivia.me');
   }
   Navigator.of(context).popAndPushNamed(
     RouteNames.analytics,
-    arguments: bar.cast<Meeting>(),
+    arguments: meetings.cast<Meeting>(),
   );
 }
 

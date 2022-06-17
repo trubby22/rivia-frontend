@@ -154,14 +154,14 @@ class _AnalyticsState extends State<Analytics> {
 
     return Align(
       child: SizedBox(
-        width: width * 0.72,
+        width: width * 0.78,
         child: Table(
           border: TableBorder.all(color: Colors.grey),
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           columnWidths: const {
-            0: IntrinsicColumnWidth(),
             1: IntrinsicColumnWidth(),
             2: IntrinsicColumnWidth(),
+            3: IntrinsicColumnWidth(),
           },
           children: [
             TableRow(
