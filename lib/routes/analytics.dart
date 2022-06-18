@@ -206,11 +206,15 @@ class _AnalyticsState extends State<Analytics> {
                       100 <=
                   _upperSatisfaction;
         })
-        .where((element) =>
-            (element.startTime.isAfter(_startDate) ||
-                element.startTime.isAtSameMomentAs(_startDate)) &&
-            (element.endTime.isBefore(_endDate) ||
-                element.endTime.isAtSameMomentAs(_endDate)))
+        .where(
+          (element) =>
+              (element.startTime.isAfter(_startDate) ||
+                  element.startTime.isAtSameMomentAs(_startDate)) &&
+              (element.endTime.isBefore(_endDate.add(
+                      const Duration(hours: 23, minutes: 59, seconds: 59))) ||
+                  element.endTime.isAtSameMomentAs(_endDate.add(
+                      const Duration(hours: 23, minutes: 59, seconds: 59)))),
+        )
         .toList();
 
     return SizedBox(

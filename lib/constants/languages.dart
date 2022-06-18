@@ -69,6 +69,7 @@ enum LangText {
   ok,
   bad2,
   inadequate,
+  reset,
 }
 
 extension LangTextContent on LangText {
