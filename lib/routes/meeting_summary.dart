@@ -74,6 +74,9 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                       style: UITexts.sectionSubheader,
                     ),
                     BarGraph(
+                      responseCount: widget.meetings
+                          .map((e) => e.responses)
+                          .fold(0, (x, y) => x! + y),
                       dicts: Map.fromEntries(
                         widget.meetings
                             .map((e) => e.participants)
@@ -108,6 +111,9 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                       style: UITexts.sectionSubheader,
                     ),
                     BarGraph(
+                      responseCount: widget.meetings
+                          .map((e) => e.responses)
+                          .fold(0, (x, y) => x! + y),
                       dicts: Map.fromEntries(
                         widget.meetings
                             .map((e) => e.participants)
@@ -143,15 +149,18 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                   children: [
                     SizedBox(height: height * 0.02),
                     Text(
-                      LangText.detailedNotNeeded.local,
+                      LangText.detailedNeeded.local,
                       style: UITexts.sectionSubheader,
                     ),
                     BarGraph(
+                      responseCount: widget.meetings
+                          .map((e) => e.responses)
+                          .fold(0, (x, y) => x! + y),
                       dicts: Map.fromEntries(
                         widget.meetings
                             .map((e) => e.participants)
                             .expand((element) => element)
-                            .map((p) => MapEntry(p.participant, p.notNeeded))
+                            .map((p) => MapEntry(p.participant, p.needed))
                             .where((p) => p.value != 0),
                       ).group(),
                     ),
@@ -177,15 +186,18 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                   children: [
                     SizedBox(height: height * 0.02),
                     Text(
-                      LangText.detailedNotPrepared.local,
+                      LangText.detailedPrepared.local,
                       style: UITexts.sectionSubheader,
                     ),
                     BarGraph(
+                      responseCount: widget.meetings
+                          .map((e) => e.responses)
+                          .fold(0, (x, y) => x! + y),
                       dicts: Map.fromEntries(
                         widget.meetings
                             .map((e) => e.participants)
                             .expand((element) => element)
-                            .map((p) => MapEntry(p.participant, p.notPrepared))
+                            .map((p) => MapEntry(p.participant, p.prepared))
                             .where((p) => p.value != 0),
                       ).group(),
                     ),

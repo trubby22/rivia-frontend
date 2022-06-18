@@ -6,15 +6,15 @@ build-job:
   script:
     - flutter build web
 
-# test-job:
-#   image: cirrusci/flutter:stable
-#   stage: test
-#   rules:
-#     - if: '$CI_COMMIT_REF_NAME == "master"'
-#     - when: manual
-#   script:
-#     - flutter pub get
-#     - flutter test
+test-job:
+  image: cirrusci/flutter:stable
+  stage: test
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+    - when: manual
+  script:
+    - flutter pub get
+    - flutter test
 
 deploy-job:
   image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest

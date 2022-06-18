@@ -12,10 +12,11 @@ class BarGraph extends StatefulWidget {
     Key? key,
     required this.dicts,
     this.nameSectionWidth = 150.0,
-    this.numberSectionWidth = 36.0,
+    this.numberSectionWidth = 48.0,
     this.rowHeight = 36.0,
     this.seperatorHeight = 12.0,
     this.callback,
+    this.responseCount,
   }) : super(key: key);
 
   final Map<Participant, int> dicts;
@@ -24,6 +25,7 @@ class BarGraph extends StatefulWidget {
   final double numberSectionWidth;
   final double rowHeight;
   final double seperatorHeight;
+  final int? responseCount;
 
   @override
   _BarGraphState createState() => _BarGraphState();
@@ -206,7 +208,9 @@ class _BarGraphState extends State<BarGraph> {
           width: widget.numberSectionWidth,
           padding: const EdgeInsets.only(left: 12.0),
           alignment: Alignment.centerLeft,
-          child: Text(count.toString()),
+          child: Text(widget.responseCount == null
+              ? count.toString()
+              : '${count * 100 ~/ widget.responseCount!}%'),
         ),
       ],
     );
