@@ -26,6 +26,8 @@ Meeting testMeeting = Meeting(
             participant: p,
             notNeeded: 0,
             notPrepared: 0,
+            needed: 0,
+            prepared: 0,
           ),
         )
         .toList(),

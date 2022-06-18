@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
-import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
+import 'package:rivia/utilities/toast.dart';
 
 /// A [Widget] showing the snapshot of a [Meeting] in the calendar.
 class MeetingEntry extends StatelessWidget {
@@ -35,9 +35,10 @@ class MeetingEntry extends StatelessWidget {
               arguments: meetingContent,
             );
           } else {
-            Navigator.of(context).pushNamed(
-              RouteNames.summaryOld,
-              arguments: testMeeting2,
+            showToast(
+              context: context,
+              text:
+                  'Invalid meeting ${meeting.meetingId}! Please report this bug to the developers',
             );
           }
         },

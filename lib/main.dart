@@ -11,9 +11,7 @@ import 'package:rivia/routes/redirect.dart';
 import 'package:rivia/routes/review.dart';
 import 'package:rivia/routes/create_meeting.dart';
 import 'package:rivia/routes/meeting_summary.dart';
-import 'package:rivia/routes/welcome_screen.dart';
 import 'dart:html';
-import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,7 +49,6 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       initialRoute: RouteNames.login,
       routes: {
-        '/welcome_screen': (_) => WelcomeScreen(),
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
         RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
         RouteNames.redirect: (_) => Redirect(code: 'victory'),
@@ -112,7 +109,7 @@ class _MyAppState extends State<MyApp> {
             return MaterialPageRoute(
               builder: (_) => Review(
                 meeting: routeSettings.arguments as Meeting,
-                participant: testParticipants[0],
+                participant: null,
               ),
             );
           case RouteNames.summary:

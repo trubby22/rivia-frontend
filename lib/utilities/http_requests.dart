@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/settings.dart';
-import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/models/login_credentials.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
@@ -69,18 +68,6 @@ Future<List<Participant>> getOrganisationParticipants({String? uuid}) async {
   Map<String, dynamic> bar = json.decode(foo.body);
   List<dynamic> jsonList = bar[Fields.participants];
   return jsonList.map((e) => Participant.fromJson(e)).toList();
-}
-
-Future<List<Response>> getMeetingSummary(Meeting meeting,
-    {String? uuid}) async {
-  if (testMode || true) {
-    return Future(() => testResponses);
-  }
-  // TODO: Back-end for this DNE yet
-  dynamic jsonList =
-      json.decode((await http.get(Uri.parse(API.meetingReviews()))).body);
-  print(jsonList);
-  return jsonList.map((e) => Response.fromJson(e)).toList();
 }
 
 // POST

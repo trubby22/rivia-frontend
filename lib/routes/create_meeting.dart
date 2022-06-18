@@ -382,6 +382,8 @@ class _CreateMeetingState extends State<CreateMeeting> {
         ),
         notNeeded: 0,
         notPrepared: 0,
+        needed: 0,
+        prepared: 0,
       ),
     );
     meeting.startTime = _date.addTime(_startTime);

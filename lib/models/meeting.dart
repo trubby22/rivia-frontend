@@ -136,6 +136,8 @@ class MeetingBuilder with ChangeNotifier {
                 participant: p,
                 notNeeded: 0,
                 notPrepared: 0,
+                needed: 0,
+                prepared: 0,
               ),
             )
             .toList(),
@@ -152,11 +154,15 @@ class TaggedParticipant {
   final Participant participant;
   final int notNeeded;
   final int notPrepared;
+  final int needed;
+  final int prepared;
 
   const TaggedParticipant({
     required this.participant,
     required this.notNeeded,
     required this.notPrepared,
+    required this.needed,
+    required this.prepared,
   });
 
   static TaggedParticipant? fromJson(Map<String, dynamic> json) {
@@ -165,6 +171,8 @@ class TaggedParticipant {
         participant: Participant.fromJson(json[Fields.participant]),
         notNeeded: json[Fields.notNeeded],
         notPrepared: json[Fields.notPrepared],
+        needed: json[Fields.needed],
+        prepared: json[Fields.prepared],
       );
     } catch (e) {
       debugPrint("Error on deserialising tagged participant: $e");
@@ -176,5 +184,7 @@ class TaggedParticipant {
         Fields.participant: participant.toJson(),
         Fields.notNeeded: notNeeded,
         Fields.notPrepared: notPrepared,
+        Fields.needed: needed,
+        Fields.prepared: prepared,
       };
 }

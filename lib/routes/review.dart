@@ -4,12 +4,11 @@ import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rivia/constants/languages.dart';
-import 'package:rivia/constants/route_names.dart';
-import 'package:rivia/constants/test_data.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
+import 'package:rivia/routes/redirect.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/language_switcher.dart';
@@ -19,12 +18,12 @@ import 'package:rivia/utilities/toast.dart';
 
 class Review extends StatefulWidget {
   final Meeting meeting;
-  final Participant participant;
+  final Participant? participant;
 
   const Review({
     Key? key,
     required this.meeting,
-    required this.participant,
+    this.participant,
   }) : super(key: key);
 
   @override
@@ -493,10 +492,7 @@ class _ReviewState extends State<Review> {
                   if (Navigator.of(context).canPop()) {
                     Navigator.of(context).pop();
                   } else {
-                    Navigator.of(context).popAndPushNamed(
-                      RouteNames.analytics,
-                      arguments: [testMeeting, testMeeting2],
-                    );
+                    dashboard(context);
                   }
                 },
                 child: const Icon(Icons.arrow_back, size: 32.0),
