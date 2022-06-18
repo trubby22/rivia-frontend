@@ -10,7 +10,6 @@ import 'package:rivia/models/login_credentials.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
-import 'package:rivia/utilities/change_notifiers.dart';
 
 /// The global [http.Client].
 final _httpClient = BrowserClient();

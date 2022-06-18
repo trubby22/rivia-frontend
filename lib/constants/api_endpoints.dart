@@ -11,29 +11,29 @@ class API {
 
   /// Post review to the [Meeting] corresponding to [meetingId].
   static String getReview(String meetingId) =>
-      '$apiGateway/tenants/${authToken.tenantDomain}/meetings/$meetingId/reviews?user=${authToken.userId}';
+      '$apiGateway/meetings/$meetingId/reviews?tenant=${authToken.tenantDomain}&user=${authToken.userId}';
 
   /// TODO: DEPRICATED
   static String meetingReviews() => '$apiGateway/reviews';
 
   /// Get all [Meeting]s.
   static String getMeetings() =>
-      '$apiGateway/tenants/${authToken.tenantDomain}/meetings?user=${authToken.userId}';
+      '$apiGateway/meetings?tenant=${authToken.tenantDomain}&user=${authToken.userId}';
 
   /// Get isReviewed.
   static String getIsReviewed(String meetingId) =>
-      '$apiGateway/tenants/${authToken.tenantDomain}/meetings/$meetingId/reviews?user=${authToken.userId}';
+      '$apiGateway/meetings/$meetingId/reviews?tenant=${authToken.tenantDomain}&user=${authToken.userId}';
 
   /// Get the [Meeting] corresponding to the meetingId.
   static String getMeeting(String meetingId) =>
-      '$apiGateway/tenants/${authToken.tenantDomain}/meetings/$meetingId?user=${authToken.userId}';
+      '$apiGateway/meetings/$meetingId?tenant=${authToken.tenantDomain}&user=${authToken.userId}';
 
   /// Get all [Participant]s.
   static String getParticipants() => '$apiGateway/meeting/create';
 
   /// Create a new [Meeting].
   static String postMeeting() =>
-      '$apiGateway/tenants/${authToken.tenantDomain}/meetings?user=${authToken.userId}';
+      '$apiGateway/meetings?tenant=${authToken.tenantDomain}&user=${authToken.userId}';
 
   /// Login.
   static String postLogin() => '$apiGateway/login';
