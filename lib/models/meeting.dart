@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:rivia/constants/fields.dart';
 import 'package:rivia/models/date_time_json.dart';
 import 'package:rivia/models/participant.dart';
-import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/json_helpers.dart';
 
 /// The model for meetings.

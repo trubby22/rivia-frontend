@@ -246,6 +246,8 @@ class _MeetingSummaryState extends State<MeetingSummary> {
   }
 
   Widget presetBuilder(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     final painPoints = <String, int>{};
 
     for (final ps in widget.meetings.map((m) => m.painPoints.values)) {
@@ -259,16 +261,69 @@ class _MeetingSummaryState extends State<MeetingSummary> {
         (x, y) => y.value.compareTo(x.value),
       );
 
-    return ListView.separated(
-      itemBuilder: (context, ix) => Row(
+    return Center(
+      child: Column(
         children: [
-          Text(sortedPainPoints[ix].key),
-          const SizedBox(width: 32.0),
-          Text('${sortedPainPoints[ix].value}'),
+          Text(LangText.presetNum.local, style: UITexts.sectionSubheader),
+          SizedBox(height: height * 0.02),
+          Container(
+            margin: const EdgeInsets.only(top: 12.0),
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade100,
+              borderRadius: BorderRadius.circular(20.0),
+              boxShadow: const [
+                BoxShadow(offset: Offset(0, 0.5), blurRadius: 1.0),
+              ],
+            ),
+            width: width * 0.5,
+            child: Column(
+              children: List.generate(
+                sortedPainPoints.length,
+                (ix) => Container(
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 12.0),
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        width: width * 0.4,
+                        child: Text(
+                          sortedPainPoints[ix].key,
+                          style: UITexts.bigText,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      SizedBox(width: width * 0.03),
+                      Container(
+                        width: FontSizes.bigTextSize + 20.0,
+                        margin: const EdgeInsets.symmetric(vertical: 12.0),
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(239, 198, 135, 1),
+                          borderRadius: BorderRadius.circular(
+                            FontSizes.bigTextSize + 10.0,
+                          ),
+                        ),
+                        child: Text(
+                          '${sortedPainPoints[ix].value}',
+                          style: UITexts.bigText,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
-      separatorBuilder: (context, ix) => const SizedBox(height: 24.0),
-      itemCount: sortedPainPoints.length,
     );
   }
 
