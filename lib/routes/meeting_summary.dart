@@ -46,7 +46,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
   Widget barGraphBuilder(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final allParticipants = <Participant>[];
+    final allParticipants = <Participant>{};
 
     for (final m in widget.meetings) {
       allParticipants.addAll(m.participants.map((p) => p.participant));

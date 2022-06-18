@@ -466,6 +466,7 @@ class _AnalyticsState extends State<Analytics> {
                                         },
                                   items: (widget.meetings
                                           .map((e) => e.organiser)
+                                          .toSet()
                                           .toList()
                                         ..insert(0, allParticipants))
                                       .map<DropdownMenuItem<Participant>>(
