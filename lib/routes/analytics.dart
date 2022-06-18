@@ -35,8 +35,7 @@ class _AnalyticsState extends State<Analytics> {
   late List<Meeting> _filteredMeetings = widget.meetings;
   late List<bool> _selectedMeetings =
       List.generate(_filteredMeetings.length, (index) => false);
-  Participant? allParticipants =
-      Participant(name: LangText.all.local, surname: '');
+  final allParticipants = Participant(name: LangText.all.local, surname: '');
   final columnWidths = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
   late final Map<int, String?> headerCache = Map.fromEntries(
     columnWidths.mapIndexed((i, _) => MapEntry(i, null)),

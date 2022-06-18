@@ -230,9 +230,11 @@ class _BarGraphState extends State<BarGraph> {
           width: widget.numberSectionWidth,
           padding: const EdgeInsets.only(left: 12.0),
           alignment: Alignment.centerLeft,
-          child: Text(widget.responseCount == null
-              ? count.value2.toString()
-              : '${(count.value1 * 100).toInt()}%'),
+          child: Text(
+            widget.responseCount == null
+                ? count.value2.toString()
+                : '${(count.value1 * 100).toInt()}%',
+          ),
         ),
       ],
     );

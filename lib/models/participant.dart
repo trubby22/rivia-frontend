@@ -14,6 +14,15 @@ class Participant {
     this.id,
   });
 
+  // @override
+  // operator ==(Object other) {
+  //   if (other.runtimeType != Participant) {
+  //     return false;
+  //   }
+
+  //   return (other as Participant).fullName == fullName;
+  // }
+
   get fullName => name + " " + surname;
 
   Participant.fromJson(Map<String, dynamic> json)
