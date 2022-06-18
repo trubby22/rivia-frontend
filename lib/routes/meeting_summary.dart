@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -244,6 +245,64 @@ class _MeetingSummaryState extends State<MeetingSummary> {
     );
   }
 
+  Widget presetBuilder(BuildContext context) {
+    final painPoints = <String, int>{};
+
+    for (final ps in widget.meetings.map((m) => m.painPoints.values)) {
+      for (final p in ps) {
+        painPoints[p] = (painPoints[p] ?? 0) + 1;
+      }
+    }
+
+    final sortedPainPoints = painPoints.entries.toList()
+      ..sort(
+        (x, y) => y.value.compareTo(x.value),
+      );
+
+    return ListView.separated(
+      itemBuilder: (context, ix) => Row(
+        children: [
+          Text(sortedPainPoints[ix].key),
+          const SizedBox(width: 32.0),
+          Text('${sortedPainPoints[ix].value}'),
+        ],
+      ),
+      separatorBuilder: (context, ix) => const SizedBox(height: 24.0),
+      itemCount: sortedPainPoints.length,
+    );
+  }
+
+  Widget feedbackBuilder(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
+        width: width * 0.7,
+        margin: EdgeInsets.only(
+          bottom: max(height * 0.05, 20.0),
+        ),
+        decoration: BoxDecoration(
+          color: Colors.blue.shade100,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(32.0),
+          ),
+          boxShadow: const [
+            BoxShadow(offset: Offset(0, 0.5), blurRadius: 1.0),
+          ],
+        ),
+        child: _tagsBuilder(
+          widget.meetings
+              .map((e) => e.feedback)
+              .expand((element) => element)
+              .toList(),
+          width * 0.65,
+        ),
+      ),
+    );
+  }
+
   Widget _tagsBuilder(List<String> texts, double maxWidth) {
     if (texts.isEmpty) {
       return const SizedBox();
@@ -417,6 +476,29 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                     child: SizedBox(
                       height: FontSizes.mediumTextSize * 1.5,
                       child: Text(
+                        LangText.preset.local,
+                        style: UITexts.smallButtonText,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4.0),
+                  SizedButton(
+                    primaryColour: Colors.black,
+                    selectedColour: Colors.white,
+                    backgroundColour: Colors.blue.shade100,
+                    onPressedColour: Colors.blue,
+                    useShadow: false,
+                    width: 180.0,
+                    height: null,
+                    isSelected: _selectedIndex == 3,
+                    onPressed: (_) {
+                      setState(() {
+                        _selectedIndex = 3;
+                      });
+                    },
+                    child: SizedBox(
+                      height: FontSizes.mediumTextSize * 1.5,
+                      child: Text(
                         LangText.feedback.local,
                         style: UITexts.smallButtonText,
                       ),
@@ -432,31 +514,8 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                   children: [
                     pieChartBuilder(context),
                     barGraphBuilder(context),
-                    Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        width: width * 0.7,
-                        margin: EdgeInsets.only(
-                          bottom: max(height * 0.05, 20.0),
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.shade100,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(32.0),
-                          ),
-                          boxShadow: const [
-                            BoxShadow(offset: Offset(0, 0.5), blurRadius: 1.0),
-                          ],
-                        ),
-                        child: _tagsBuilder(
-                          widget.meetings
-                              .map((e) => e.feedback)
-                              .expand((element) => element)
-                              .toList(),
-                          width * 0.65,
-                        ),
-                      ),
-                    ),
+                    presetBuilder(context),
+                    feedbackBuilder(context),
                   ],
                 ),
               ),

@@ -730,7 +730,16 @@ class _AnalyticsState extends State<Analytics> {
           ),
           foregroundBuilder(context),
           const LogOutButton(),
-          LanguageSwitcher(callback: () => setState(() => {})),
+          LanguageSwitcher(
+            callback: () => setState(
+              () {
+                headerCache.clear();
+                for (final cache in entryCache) {
+                  cache.clear();
+                }
+              },
+            ),
+          ),
           Positioned(
             bottom: 32.0,
             right: 64.0,

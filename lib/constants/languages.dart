@@ -70,6 +70,7 @@ enum LangText {
   bad2,
   inadequate,
   reset,
+  preset,
 }
 
 extension LangTextContent on LangText {
@@ -193,5 +194,6 @@ extension LangTextContent on LangText {
     LangText.ok: ['Ok', 'Ok'],
     LangText.inadequate: ['Inadequate', 'Неадекватно'],
     LangText.bad2: ['Bad', 'Плохо'],
+    LangText.preset: ['Preset', 'Пресет'],
   };
 }
