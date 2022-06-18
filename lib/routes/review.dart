@@ -16,6 +16,12 @@ import 'package:rivia/utilities/log_out_button.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/toast.dart';
 
+enum ReviewSteps {
+  slider,
+  selection,
+  feedback,
+}
+
 class Review extends StatefulWidget {
   final Meeting meeting;
   final Participant? participant;
@@ -32,13 +38,16 @@ class Review extends StatefulWidget {
 
 class _ReviewState extends State<Review> {
   final TextEditingController _controller = TextEditingController();
+  ReviewSteps _step = ReviewSteps.slider;
 
   /// Build the selection panel.
   Widget selectionPanelBuilder(
     BuildContext context, {
     required String title,
     required Tuple4<int, int, Set<Participant>, Set<Participant>> Function(
-            BuildContext, ResponseBuilder)
+      BuildContext,
+      ResponseBuilder,
+    )
         selector,
   }) {
     return Column(
@@ -75,15 +84,14 @@ class _ReviewState extends State<Review> {
                         ),
                         primaryColour: Colors.green,
                         onPressedColour: Colors.green.shade300,
-                        radius: index == 0
-                            ? const BorderRadius.only(
-                                topLeft: Radius.circular(16.0),
-                              )
-                            : index == widget.meeting.participants.length - 1
-                                ? const BorderRadius.only(
-                                    bottomLeft: Radius.circular(16.0),
-                                  )
-                                : const BorderRadius.only(),
+                        radius: BorderRadius.only(
+                          topLeft: Radius.circular(index == 0 ? 16.0 : 0.0),
+                          bottomLeft: Radius.circular(
+                            index == widget.meeting.participants.length - 1
+                                ? 16.0
+                                : 0.0,
+                          ),
+                        ),
                         child: Text(
                           LangText.yes.local,
                           style: UITexts.mediumButtonText,
@@ -110,15 +118,14 @@ class _ReviewState extends State<Review> {
                         ),
                         primaryColour: Colors.red,
                         onPressedColour: Colors.red.shade300,
-                        radius: index == 0
-                            ? const BorderRadius.only(
-                                topRight: Radius.circular(16.0),
-                              )
-                            : index == widget.meeting.participants.length - 1
-                                ? const BorderRadius.only(
-                                    bottomRight: Radius.circular(16.0),
-                                  )
-                                : const BorderRadius.only(),
+                        radius: BorderRadius.only(
+                          topRight: Radius.circular(index == 0 ? 16.0 : 0.0),
+                          bottomRight: Radius.circular(
+                            index == widget.meeting.participants.length - 1
+                                ? 16.0
+                                : 0.0,
+                          ),
+                        ),
                         useShadow: false,
                         child: Text(
                           LangText.no.local,
@@ -156,7 +163,7 @@ class _ReviewState extends State<Review> {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         selectionPanelBuilder(
           context,
@@ -168,6 +175,7 @@ class _ReviewState extends State<Review> {
             data.notNeeded,
           ),
         ),
+        SizedBox(width: width * 0.04),
         selectionPanelBuilder(
           context,
           title: LangText.prepared.local,
@@ -178,38 +186,410 @@ class _ReviewState extends State<Review> {
             data.notPrepared,
           ),
         ),
-        SizedBox(width: width * 0.01),
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 40.0),
-              ...List.generate(
-                widget.meeting.participants.length,
-                (index) => SizedBox(
-                  height: 52.0,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      widget.meeting.participants[index].participant.fullName,
-                      style: UITexts.bigText,
-                      maxLines: 2,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+        SizedBox(width: width * 0.07),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 40.0),
+            ...List.generate(
+              widget.meeting.participants.length,
+              (index) => SizedBox(
+                height: 52.0,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    widget.meeting.participants[index].participant.fullName,
+                    style: UITexts.bigText,
+                    maxLines: 2,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Widget foregroundBuilder(BuildContext context) {
+  Widget mainPageBuilder(BuildContext context) {
     final ppl = widget.meeting.painPoints.keys.toList();
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
+    switch (_step) {
+      case ReviewSteps.slider:
+        return Column(
+          children: [
+            Selector<ResponseBuilder, double>(
+              selector: (_, data) => data.quality,
+              builder: (context, quality, _) => Column(
+                children: [
+                  SizedBox(height: height * 0.02),
+                  Text(
+                    '${widget.meeting.title} '
+                    '${TimeOfDay.fromDateTime(widget.meeting.startTime).format(context)} - '
+                    '${TimeOfDay.fromDateTime(widget.meeting.endTime).format(context)} '
+                    '${widget.meeting.startTime.day}/${widget.meeting.startTime.month}/${widget.meeting.startTime.year}',
+                    style: UITexts.sectionHeader,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 100.0,
+                        child: Text(
+                          LangText.bad.local,
+                          textAlign: TextAlign.center,
+                          style: UITexts.sectionHeader.copyWith(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            inactiveTrackColor: Colors.white,
+                            trackHeight: 32.0,
+                            tickMarkShape: const RoundSliderTickMarkShape(
+                              tickMarkRadius: 0,
+                            ),
+                            trackShape: const BiColourSliderTrackShape(),
+                            thumbShape: const RoundSliderThumbShape(
+                              enabledThumbRadius: 32.0,
+                              elevation: 6.0,
+                              pressedElevation: 2.0,
+                            ),
+                            overlayShape: const RoundSliderOverlayShape(
+                              overlayRadius: 40.0,
+                            ),
+                          ),
+                          child: Slider(
+                            value: quality,
+                            activeColor: Colors.grey.shade500,
+                            min: 0,
+                            max: 1,
+                            divisions: 6,
+                            onChanged: (value) {
+                              context.read<ResponseBuilder>().quality = value;
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 100.0,
+                        child: Text(
+                          LangText.good.local,
+                          textAlign: TextAlign.center,
+                          style: UITexts.sectionHeader.copyWith(
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 12.0),
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(20.0),
+                boxShadow: const [
+                  BoxShadow(offset: Offset(0, 0.5), blurRadius: 1.0),
+                ],
+              ),
+              width: width * 0.7,
+              child: Column(
+                children: List.generate(
+                  widget.meeting.painPoints.length,
+                  (index) {
+                    return Selector<ResponseBuilder,
+                        Tuple2<int, Map<String, String>>>(
+                      selector: (_, data) => Tuple2(
+                        data.painPoints.length,
+                        data.painPoints,
+                      ),
+                      builder: (context, data, _) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12.0,
+                        ),
+                        child: SizedButton(
+                          primaryColour: Colors.black,
+                          selectedColour: Colors.white,
+                          onPressedColour: Colors.blue,
+                          backgroundColour: Colors.blue.shade100,
+                          width: width * 0.3,
+                          height: 52.0,
+                          radius: BorderRadius.circular(20.0),
+                          child: Text(
+                            widget.meeting.painPoints[ppl[index]]!,
+                            textAlign: TextAlign.center,
+                            style: UITexts.mediumButtonText.copyWith(
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          useShadow: !data.value2.containsKey(ppl[index]),
+                          isSelected: data.value2.containsKey(ppl[index]),
+                          onPressed: (isSelected) {
+                            if (isSelected) {
+                              data.value2.remove(ppl[index]);
+                            } else {
+                              data.value2[ppl[index]] =
+                                  widget.meeting.painPoints[ppl[index]]!;
+                            }
+                            context.read<ResponseBuilder>().notify();
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            SizedBox(height: height * 0.03),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  height: 48.0,
+                  width: width * 0.2,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(24.0),
+                    border: Border.all(color: Colors.grey.shade600),
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      width: width * 0.2 / 3.0,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(24.0),
+                        border: Border.all(style: BorderStyle.none),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: width * 0.04),
+                Consumer<ResponseBuilder>(
+                  builder: (context, data, _) => SizedButton(
+                    onPressedColour: Colors.grey.shade500,
+                    height: null,
+                    width: width * 0.12,
+                    radius: BorderRadius.circular(24.0),
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    onPressed: (_) {
+                      data.quality = 0.5;
+                      data.painPoints.clear();
+                      setState(() => _step = ReviewSteps.selection);
+                    },
+                    isSelected: true,
+                    child: Text(
+                      LangText.skip.local,
+                      style: UITexts.bigButtonText,
+                    ),
+                  ),
+                ),
+                SizedBox(width: width * 0.02),
+                SizedButton(
+                  height: null,
+                  width: width * 0.12,
+                  radius: BorderRadius.circular(24.0),
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  onPressed: (_) {
+                    setState(() => _step = ReviewSteps.selection);
+                  },
+                  isSelected: true,
+                  child: Text(
+                    LangText.next.local,
+                    style: UITexts.bigButtonText,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: height * 0.02),
+          ],
+        );
+      case ReviewSteps.selection:
+        return Column(
+          children: [
+            SizedBox(height: height * 0.02),
+            Text(
+              '${widget.meeting.title} '
+              '${TimeOfDay.fromDateTime(widget.meeting.startTime).format(context)} - '
+              '${TimeOfDay.fromDateTime(widget.meeting.endTime).format(context)} '
+              '${widget.meeting.startTime.day}/${widget.meeting.startTime.month}/${widget.meeting.startTime.year}',
+              style: UITexts.sectionHeader,
+            ),
+            SizedBox(height: height * 0.04),
+            SizedBox(
+              width: width * 0.7,
+              child: participantSelectionBuilder(context),
+            ),
+            SizedBox(height: height * 0.03),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 48.0,
+                  width: width * 0.2,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(24.0),
+                    border: Border.all(color: Colors.grey.shade600),
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      width: width * 0.4 / 3.0,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(24.0),
+                        border: Border.all(style: BorderStyle.none),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: width * 0.04),
+                Consumer<ResponseBuilder>(
+                  builder: (context, data, _) => SizedButton(
+                    onPressedColour: Colors.grey.shade500,
+                    height: null,
+                    width: width * 0.12,
+                    radius: BorderRadius.circular(24.0),
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    onPressed: (_) {
+                      data.needed.clear();
+                      data.prepared.clear();
+                      data.notNeeded.clear();
+                      data.notPrepared.clear();
+                      setState(() => _step = ReviewSteps.feedback);
+                    },
+                    isSelected: true,
+                    child: Text(
+                      LangText.skip.local,
+                      style: UITexts.bigButtonText,
+                    ),
+                  ),
+                ),
+                SizedBox(width: width * 0.02),
+                SizedButton(
+                  height: null,
+                  width: width * 0.12,
+                  radius: BorderRadius.circular(24.0),
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  onPressed: (_) {
+                    setState(() => _step = ReviewSteps.feedback);
+                  },
+                  isSelected: true,
+                  child: Text(
+                    LangText.next.local,
+                    style: UITexts.bigButtonText,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: height * 0.02),
+          ],
+        );
+      case ReviewSteps.feedback:
+        return Column(
+          children: [
+            SizedBox(height: height * 0.02),
+            Text(
+              '${widget.meeting.title} '
+              '${TimeOfDay.fromDateTime(widget.meeting.startTime).format(context)} - '
+              '${TimeOfDay.fromDateTime(widget.meeting.endTime).format(context)} '
+              '${widget.meeting.startTime.day}/${widget.meeting.startTime.month}/${widget.meeting.startTime.year}',
+              style: UITexts.sectionHeader,
+            ),
+            SizedBox(height: height * 0.04),
+            Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 0.5),
+                    blurRadius: 1.0,
+                  ),
+                ],
+              ),
+              child: TextField(
+                minLines: 10,
+                maxLines: null,
+                style: UITexts.bigText,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.all(20.0),
+                  fillColor: Colors.white,
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.lightBlue),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12.0),
+                    ),
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12.0),
+                    ),
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12.0),
+                    ),
+                  ),
+                  filled: true,
+                  labelText: LangText.additionalComments.local,
+                ),
+                controller: _controller,
+              ),
+            ),
+            SizedBox(height: height * 0.03),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 48.0,
+                  width: width * 0.2,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(24.0),
+                    border: Border.all(color: Colors.grey.shade600),
+                  ),
+                ),
+                SizedBox(width: width * 0.13),
+                SizedButton(
+                  height: null,
+                  width: width * 0.17,
+                  radius: BorderRadius.circular(24.0),
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  onPressed: (_) {
+                    submitReview(context);
+                    // TODO: Explicitly go to analytics instead of mere pop
+                    Navigator.of(context).pop();
+                  },
+                  isSelected: true,
+                  child: Text(
+                    LangText.next.local,
+                    style: UITexts.bigButtonText,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: height * 0.02),
+          ],
+        );
+    }
+  }
+
+  Widget foregroundBuilder(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
@@ -234,223 +614,9 @@ class _ReviewState extends State<Review> {
           decoration: const BoxDecoration(
             color: Color(0xFFE6E6E6),
             borderRadius: BorderRadius.all(Radius.circular(48.0)),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 1),
-                blurRadius: 2.0,
-              ),
-            ],
+            boxShadow: [BoxShadow(offset: Offset(0, 1), blurRadius: 2.0)],
           ),
-          child: Column(
-            children: [
-              Selector<ResponseBuilder, double>(
-                selector: (_, data) => data.quality,
-                builder: (context, quality, _) => Column(
-                  children: [
-                    SizedBox(height: height * 0.02),
-                    Text(
-                      '${widget.meeting.title} '
-                      '${TimeOfDay.fromDateTime(widget.meeting.startTime).format(context)} - '
-                      '${TimeOfDay.fromDateTime(widget.meeting.endTime).format(context)} '
-                      '${widget.meeting.startTime.day}/${widget.meeting.startTime.month}/${widget.meeting.startTime.year}',
-                      style: UITexts.sectionHeader,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 100.0,
-                          child: Text(
-                            LangText.bad.local,
-                            textAlign: TextAlign.center,
-                            style: UITexts.sectionHeader.copyWith(
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: SliderTheme(
-                            data: SliderTheme.of(context).copyWith(
-                              inactiveTrackColor: Colors.white,
-                              trackHeight: 32.0,
-                              tickMarkShape: const RoundSliderTickMarkShape(
-                                tickMarkRadius: 0,
-                              ),
-                              trackShape: const BiColourSliderTrackShape(),
-                              thumbShape: const RoundSliderThumbShape(
-                                enabledThumbRadius: 32.0,
-                                elevation: 6.0,
-                                pressedElevation: 2.0,
-                              ),
-                              overlayShape: const RoundSliderOverlayShape(
-                                overlayRadius: 40.0,
-                              ),
-                            ),
-                            child: Slider(
-                              value: quality,
-                              activeColor: Colors.grey.shade500,
-                              min: 0,
-                              max: 1,
-                              divisions: 6,
-                              onChanged: (value) {
-                                context.read<ResponseBuilder>().quality = value;
-                              },
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 100.0,
-                          child: Text(
-                            LangText.good.local,
-                            textAlign: TextAlign.center,
-                            style: UITexts.sectionHeader.copyWith(
-                              color: Colors.green,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: width * 0.35,
-                    child: participantSelectionBuilder(context),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 12.0),
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(20.0),
-                      boxShadow: const [
-                        BoxShadow(
-                          offset: Offset(0, 0.5),
-                          blurRadius: 1.0,
-                        ),
-                      ],
-                    ),
-                    width: width * 0.35,
-                    child: Column(
-                      children: List.generate(
-                        widget.meeting.painPoints.length,
-                        (index) {
-                          return Selector<ResponseBuilder,
-                              Tuple2<int, Map<String, String>>>(
-                            selector: (_, data) => Tuple2(
-                              data.painPoints.length,
-                              data.painPoints,
-                            ),
-                            builder: (context, data, _) => Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 12.0,
-                              ),
-                              child: SizedButton(
-                                primaryColour: Colors.black,
-                                selectedColour: Colors.white,
-                                onPressedColour: Colors.blue,
-                                backgroundColour: Colors.blue.shade100,
-                                width: width * 0.3,
-                                height: 52.0,
-                                radius: BorderRadius.circular(20.0),
-                                child: Text(
-                                  widget.meeting.painPoints[ppl[index]]!,
-                                  textAlign: TextAlign.center,
-                                  style: UITexts.mediumButtonText.copyWith(
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                                useShadow: !data.value2.containsKey(ppl[index]),
-                                isSelected: data.value2.containsKey(ppl[index]),
-                                onPressed: (isSelected) {
-                                  if (isSelected) {
-                                    data.value2.remove(ppl[index]);
-                                  } else {
-                                    data.value2[ppl[index]] =
-                                        widget.meeting.painPoints[ppl[index]]!;
-                                  }
-                                  context.read<ResponseBuilder>().notify();
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: height * 0.035),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 0.5),
-                            blurRadius: 1.0,
-                          ),
-                        ],
-                      ),
-                      child: TextField(
-                        maxLines: null,
-                        style: UITexts.bigText,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(20.0),
-                          fillColor: Colors.white,
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.lightBlue),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(12.0),
-                            ),
-                          ),
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(12.0),
-                            ),
-                          ),
-                          border: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(12.0),
-                            ),
-                          ),
-                          filled: true,
-                          labelText: LangText.additionalComments.local,
-                        ),
-                        controller: _controller,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12.0),
-                  SizedButton(
-                    height: null,
-                    width: width * 0.17,
-                    radius: BorderRadius.circular(24.0),
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    onPressed: (_) {
-                      submitReview(context);
-                      // TODO: Explicitly go to analytics instead of mere pop
-                      Navigator.of(context).pop();
-                    },
-                    isSelected: true,
-                    child: Text(
-                      LangText.submit.local,
-                      style: UITexts.bigButtonText,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: height * 0.02),
-            ],
-          ),
+          child: mainPageBuilder(context),
         ),
       ],
     );
@@ -489,10 +655,20 @@ class _ReviewState extends State<Review> {
                 width: 48.0,
                 radius: BorderRadius.circular(24.0),
                 onPressed: (_) {
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
-                  } else {
-                    dashboard(context);
+                  switch (_step) {
+                    case ReviewSteps.slider:
+                      if (Navigator.of(context).canPop()) {
+                        Navigator.of(context).pop();
+                      } else {
+                        dashboard(context);
+                      }
+                      break;
+                    case ReviewSteps.selection:
+                      setState(() => _step = ReviewSteps.slider);
+                      break;
+                    case ReviewSteps.feedback:
+                      setState(() => _step = ReviewSteps.selection);
+                      break;
                   }
                 },
                 child: const Icon(Icons.arrow_back, size: 32.0),
