@@ -14,14 +14,14 @@ class Participant {
     this.id,
   });
 
-  // @override
-  // operator ==(Object other) {
-  //   if (other.runtimeType != Participant) {
-  //     return false;
-  //   }
+  @override
+  operator ==(Object other) {
+    if (other.runtimeType != Participant) {
+      return false;
+    }
 
-  //   return (other as Participant).fullName == fullName;
-  // }
+    return (other as Participant).fullName == fullName;
+  }
 
   get fullName => name + " " + surname;
 
@@ -37,4 +37,7 @@ class Participant {
         if (email != null) Fields.email: email,
         Fields.id: id,
       };
+
+  @override
+  int get hashCode => fullName.hashCode;
 }
