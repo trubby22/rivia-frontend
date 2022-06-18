@@ -20,6 +20,7 @@ enum ReviewSteps {
   slider,
   selection,
   feedback,
+  rating,
 }
 
 class Review extends StatefulWidget {
@@ -571,9 +572,7 @@ class _ReviewState extends State<Review> {
                   radius: BorderRadius.circular(24.0),
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   onPressed: (_) {
-                    submitReview(context);
-                    // TODO: Explicitly go to analytics instead of mere pop
-                    Navigator.of(context).pop();
+                    setState(() => _step = ReviewSteps.rating);
                   },
                   isSelected: true,
                   child: Text(
@@ -582,6 +581,146 @@ class _ReviewState extends State<Review> {
                   ),
                 ),
               ],
+            ),
+            SizedBox(height: height * 0.02),
+          ],
+        );
+      case ReviewSteps.rating:
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: height * 0.02),
+            Text(
+              'What is your overall rating for our product?',
+              style: UITexts.sectionHeader,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 100.0,
+                  child: Text(
+                    LangText.bad.local,
+                    textAlign: TextAlign.center,
+                    style: UITexts.sectionHeader.copyWith(
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      inactiveTrackColor: Colors.white,
+                      trackHeight: 32.0,
+                      tickMarkShape: const RoundSliderTickMarkShape(
+                        tickMarkRadius: 0,
+                      ),
+                      trackShape: const BiColourSliderTrackShape(),
+                      thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: 32.0,
+                        elevation: 6.0,
+                        pressedElevation: 2.0,
+                      ),
+                      overlayShape: const RoundSliderOverlayShape(
+                        overlayRadius: 40.0,
+                      ),
+                    ),
+                    child: Slider(
+                      value: 0.5,
+                      activeColor: Colors.grey.shade500,
+                      min: 0,
+                      max: 1,
+                      divisions: 4,
+                      onChanged: (value) {},
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 100.0,
+                  child: Text(
+                    LangText.good.local,
+                    textAlign: TextAlign.center,
+                    style: UITexts.sectionHeader.copyWith(
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: height * 0.03),
+            Text(
+              'How would you rate our product in terms of clarity and easy to use?',
+              style: UITexts.sectionHeader,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 100.0,
+                  child: Text(
+                    LangText.bad.local,
+                    textAlign: TextAlign.center,
+                    style: UITexts.sectionHeader.copyWith(
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      inactiveTrackColor: Colors.white,
+                      trackHeight: 32.0,
+                      tickMarkShape: const RoundSliderTickMarkShape(
+                        tickMarkRadius: 0,
+                      ),
+                      trackShape: const BiColourSliderTrackShape(),
+                      thumbShape: const RoundSliderThumbShape(
+                        enabledThumbRadius: 32.0,
+                        elevation: 6.0,
+                        pressedElevation: 2.0,
+                      ),
+                      overlayShape: const RoundSliderOverlayShape(
+                        overlayRadius: 40.0,
+                      ),
+                    ),
+                    child: Slider(
+                      value: 0.5,
+                      activeColor: Colors.grey.shade500,
+                      min: 0,
+                      max: 1,
+                      divisions: 4,
+                      onChanged: (value) {},
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 100.0,
+                  child: Text(
+                    LangText.good.local,
+                    textAlign: TextAlign.center,
+                    style: UITexts.sectionHeader.copyWith(
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: height * 0.03),
+            SizedButton(
+              height: null,
+              width: width * 0.20,
+              radius: BorderRadius.circular(24.0),
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              onPressed: (_) {
+                submitReview(context);
+                // TODO: Explicitly go to analytics instead of mere pop
+                Navigator.of(context).pop();
+              },
+              isSelected: true,
+              child: Text(
+                LangText.submit.local,
+                style: UITexts.bigButtonText,
+              ),
             ),
             SizedBox(height: height * 0.02),
           ],
@@ -644,36 +783,39 @@ class _ReviewState extends State<Review> {
             foregroundBuilder(context),
             const LogOutButton(),
             LanguageSwitcher(callback: () => setState(() => {})),
-            Positioned(
-              left: 64.0,
-              top: 24.0,
-              child: SizedButton(
-                backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
-                primaryColour: Colors.black,
-                onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
-                height: 48.0,
-                width: 48.0,
-                radius: BorderRadius.circular(24.0),
-                onPressed: (_) {
-                  switch (_step) {
-                    case ReviewSteps.slider:
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      } else {
-                        dashboard(context);
-                      }
-                      break;
-                    case ReviewSteps.selection:
-                      setState(() => _step = ReviewSteps.slider);
-                      break;
-                    case ReviewSteps.feedback:
-                      setState(() => _step = ReviewSteps.selection);
-                      break;
-                  }
-                },
-                child: const Icon(Icons.arrow_back, size: 32.0),
+            if (_step != ReviewSteps.rating)
+              Positioned(
+                left: 64.0,
+                top: 24.0,
+                child: SizedButton(
+                  backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
+                  primaryColour: Colors.black,
+                  onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
+                  height: 48.0,
+                  width: 48.0,
+                  radius: BorderRadius.circular(24.0),
+                  onPressed: (_) {
+                    switch (_step) {
+                      case ReviewSteps.slider:
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        } else {
+                          dashboard(context);
+                        }
+                        break;
+                      case ReviewSteps.selection:
+                        setState(() => _step = ReviewSteps.slider);
+                        break;
+                      case ReviewSteps.feedback:
+                        setState(() => _step = ReviewSteps.selection);
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                  child: const Icon(Icons.arrow_back, size: 32.0),
+                ),
               ),
-            ),
           ],
         ),
       ),
