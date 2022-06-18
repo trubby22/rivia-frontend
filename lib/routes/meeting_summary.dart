@@ -46,6 +46,11 @@ class _MeetingSummaryState extends State<MeetingSummary> {
   Widget barGraphBuilder(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final allParticipants = <Participant>[];
+
+    for (final m in widget.meetings) {
+      allParticipants.addAll(m.participants.map((p) => p.participant));
+    }
 
     return Column(
       children: [
@@ -74,9 +79,16 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                       style: UITexts.sectionSubheader,
                     ),
                     BarGraph(
-                      responseCount: widget.meetings
-                          .map((e) => e.responses)
-                          .fold(0, (x, y) => x! + y),
+                      responseCount: Map.fromEntries(
+                        allParticipants.map((p) => MapEntry(
+                            p,
+                            widget.meetings
+                                .where((m) => m.participants
+                                    .map((p) => p.participant)
+                                    .contains(p))
+                                .map((m) => m.responses)
+                                .fold<int>(0, (x, y) => x + y))),
+                      ),
                       dicts: Map.fromEntries(
                         widget.meetings
                             .map((e) => e.participants)
@@ -111,9 +123,16 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                       style: UITexts.sectionSubheader,
                     ),
                     BarGraph(
-                      responseCount: widget.meetings
-                          .map((e) => e.responses)
-                          .fold(0, (x, y) => x! + y),
+                      responseCount: Map.fromEntries(
+                        allParticipants.map((p) => MapEntry(
+                            p,
+                            widget.meetings
+                                .where((m) => m.participants
+                                    .map((p) => p.participant)
+                                    .contains(p))
+                                .map((m) => m.responses)
+                                .fold<int>(0, (x, y) => x + y))),
+                      ),
                       dicts: Map.fromEntries(
                         widget.meetings
                             .map((e) => e.participants)
@@ -153,9 +172,16 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                       style: UITexts.sectionSubheader,
                     ),
                     BarGraph(
-                      responseCount: widget.meetings
-                          .map((e) => e.responses)
-                          .fold(0, (x, y) => x! + y),
+                      responseCount: Map.fromEntries(
+                        allParticipants.map((p) => MapEntry(
+                            p,
+                            widget.meetings
+                                .where((m) => m.participants
+                                    .map((p) => p.participant)
+                                    .contains(p))
+                                .map((m) => m.responses)
+                                .fold<int>(0, (x, y) => x + y))),
+                      ),
                       dicts: Map.fromEntries(
                         widget.meetings
                             .map((e) => e.participants)
@@ -190,9 +216,16 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                       style: UITexts.sectionSubheader,
                     ),
                     BarGraph(
-                      responseCount: widget.meetings
-                          .map((e) => e.responses)
-                          .fold(0, (x, y) => x! + y),
+                      responseCount: Map.fromEntries(
+                        allParticipants.map((p) => MapEntry(
+                            p,
+                            widget.meetings
+                                .where((m) => m.participants
+                                    .map((p) => p.participant)
+                                    .contains(p))
+                                .map((m) => m.responses)
+                                .fold<int>(0, (x, y) => x + y))),
+                      ),
                       dicts: Map.fromEntries(
                         widget.meetings
                             .map((e) => e.participants)

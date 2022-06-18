@@ -6,6 +6,24 @@ import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/widget_size.dart';
 
+class Tuple implements Comparable<Tuple> {
+  const Tuple(this.value1, this.value2);
+
+  final double value1;
+  final int value2;
+
+  @override
+  int compareTo(Tuple other) {
+    final cmp1 = value1.compareTo(other.value1);
+
+    if (cmp1 != 0) {
+      return cmp1;
+    }
+
+    return value2.compareTo(other.value2);
+  }
+}
+
 /// The bar graph showing friends' speciaties.
 class BarGraph extends StatefulWidget {
   const BarGraph({
@@ -25,7 +43,7 @@ class BarGraph extends StatefulWidget {
   final double numberSectionWidth;
   final double rowHeight;
   final double seperatorHeight;
-  final int? responseCount;
+  final Map<Participant, int>? responseCount;
 
   @override
   _BarGraphState createState() => _BarGraphState();
@@ -41,7 +59,7 @@ class _BarGraphState extends State<BarGraph> {
   double entryHeight = 0.0;
 
   /// Ordered map from nubmer of occurrences.
-  late final SplayTreeMap<int, List<Participant>> _sortedRanks =
+  late final SplayTreeMap<Tuple, List<Participant>> _sortedRanks =
       _process(widget.dicts);
 
   /// Keys of [_sortedRanks].
@@ -66,15 +84,19 @@ class _BarGraphState extends State<BarGraph> {
     ],
   );
 
-  SplayTreeMap<int, List<Participant>> _process(Map<Participant, int> map) {
-    SplayTreeMap<int, List<Participant>> res = SplayTreeMap.of({});
+  SplayTreeMap<Tuple, List<Participant>> _process(
+    Map<Participant, int> map,
+  ) {
+    SplayTreeMap<Tuple, List<Participant>> res = SplayTreeMap.of({});
 
     for (final participant in map.keys) {
       final count = map[participant]!;
-      if (res.containsKey(count)) {
-        res[count]!.add(participant);
+      final percentage = count / (widget.responseCount?[participant] ?? 1);
+      final tuple = Tuple(percentage, count);
+      if (res.containsKey(tuple)) {
+        res[tuple]!.add(participant);
       } else {
-        res[count] = [participant];
+        res[tuple] = [participant];
       }
     }
 
@@ -114,7 +136,7 @@ class _BarGraphState extends State<BarGraph> {
     // TODO: No Friend Scenario
     if (_sortedRanks.isEmpty) return const SizedBox();
 
-    final maxCount = _sortedRanks.lastKey()!;
+    final maxCount = _sortedRanks.lastKey()!.value2;
     final entryCount = showCount != null
         ? min(showCount, _totalSpecialtiesCount)
         : _totalSpecialtiesCount;
@@ -128,7 +150,7 @@ class _BarGraphState extends State<BarGraph> {
             index -= _ranksPerCount[countIndex];
             countIndex--;
           }
-          int count = _rankCounts[countIndex];
+          final count = _rankCounts[countIndex];
           Participant participant = _sortedRanks[count]![index];
 
           // MARK: Bar Entries
@@ -163,12 +185,12 @@ class _BarGraphState extends State<BarGraph> {
   }
 
   Widget _barEntryBuilder(
-    int count,
+    Tuple count,
     int maxCount,
     Participant participant,
     int index,
   ) {
-    double proportion = count / maxCount;
+    double proportion = count.value1;
 
     return Row(
       children: [
@@ -209,8 +231,8 @@ class _BarGraphState extends State<BarGraph> {
           padding: const EdgeInsets.only(left: 12.0),
           alignment: Alignment.centerLeft,
           child: Text(widget.responseCount == null
-              ? count.toString()
-              : '${count * 100 ~/ widget.responseCount!}%'),
+              ? count.value2.toString()
+              : '${(count.value1 * 100).toInt()}%'),
         ),
       ],
     );

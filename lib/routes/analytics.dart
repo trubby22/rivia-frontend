@@ -683,7 +683,6 @@ class _AnalyticsState extends State<Analytics> {
                               width: 150,
                               height: null,
                               onPressed: (_) {
-                                print(_selectedMeetings);
                                 Navigator.of(context).pushNamed(
                                     RouteNames.summary,
                                     arguments: IterableZip([
