@@ -528,7 +528,7 @@ class _AnalyticsState extends State<Analytics> {
                             Radius.circular(20),
                           ),
                           boxShadow: [
-                            BoxShadow(offset: Offset(0, 1), blurRadius: 2.0)
+                            BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
                           ],
                         ),
                         child: DropdownButton<int>(
