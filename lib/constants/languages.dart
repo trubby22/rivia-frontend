@@ -12,9 +12,8 @@ enum LangText {
   aggregateNotNeeded,
   aggregateNotPrepared,
   detailedStats,
-  detailedNotNeeded,
-  detailedNotPrepared,
-  detailedNeeded,
+  detailedNeededRate,
+  detailedPreparedRate,
   detailedPrepared,
   noOneNotNeeded,
   noOneNotPrepared,
@@ -101,21 +100,13 @@ extension LangTextContent on LangText {
       'Количество человек, хотя бы раз проголосовавших за неподготовленность',
     ],
     LangText.detailedStats: ['Detailed Stats', 'Подробная статистика'],
-    LangText.detailedNotNeeded: [
-      'People voted as not needed',
-      'Люди проголосовали за ненадобность'
+    LangText.detailedNeededRate: [
+      'How needed a person was for a meeting',
+      'Насколько нужен был человек для встречи',
     ],
-    LangText.detailedNotPrepared: [
-      'People voted as not prepared',
-      'Люди проголосовали как не готовые'
-    ],
-    LangText.detailedNeeded: [
-      'People voted as needed',
-      'Люди проголосовали как надо'
-    ],
-    LangText.detailedPrepared: [
-      'People voted as prepared',
-      'Люди проголосовали как подготовленные'
+    LangText.detailedPreparedRate: [
+      'How prepared a person was for a meeting',
+      'Насколько человек был подготовлен к встрече',
     ],
     LangText.noOneNotNeeded: [
       'No one voted as not needed',

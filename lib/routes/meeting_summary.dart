@@ -1,6 +1,6 @@
-import 'dart:collection';
 import 'dart:math';
 
+import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/ui_texts.dart';
@@ -53,193 +53,146 @@ class _MeetingSummaryState extends State<MeetingSummary> {
       allParticipants.addAll(m.participants.map((p) => p.participant));
     }
 
-    return Column(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(
-                  left: min(width * 0.02, max(0, width - 700)),
-                  right: min(width * 0.01, max(0, width - 700)),
-                  bottom: max(height * 0.05, 20.0),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(
+              left: min(width * 0.02, max(0, width - 700)),
+              right: min(width * 0.01, max(0, width - 700)),
+              bottom: max(height * 0.05, 20.0),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade100,
+              borderRadius: const BorderRadius.all(Radius.circular(32.0)),
+              boxShadow: const [
+                BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
+              ],
+            ),
+            child: Column(
+              children: [
+                SizedBox(height: height * 0.02),
+                Text(
+                  LangText.detailedNeededRate.local,
+                  style: UITexts.sectionSubheader,
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: const BorderRadius.all(Radius.circular(32.0)),
-                  boxShadow: const [
-                    BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: height * 0.02),
-                    Text(
-                      LangText.detailedNotNeeded.local,
-                      style: UITexts.sectionSubheader,
-                    ),
-                    BarGraph(
-                      responseCount: Map.fromEntries(
-                        allParticipants.map((p) => MapEntry(
-                            p,
+                BarGraph(
+                  responseCount: Map.fromEntries(
+                    allParticipants.map(
+                      (p) => MapEntry(
+                        p,
+                        2 *
                             widget.meetings
                                 .where((m) => m.participants
                                     .map((p) => p.participant)
                                     .contains(p))
-                                .map((m) => m.responses)
-                                .fold<int>(0, (x, y) => x + y))),
+                                .map(
+                                  (m) => m.responses,
+                                )
+                                .fold<int>(0, (x, r) => x + r),
                       ),
-                      dicts: Map.fromEntries(
+                    ),
+                  ),
+                  dicts: Map.fromEntries(
+                    allParticipants.map(
+                      (p) => MapEntry(
+                        p,
                         widget.meetings
-                            .map((e) => e.participants)
-                            .expand((element) => element)
-                            .map((p) => MapEntry(p.participant, p.notNeeded))
-                            .where((p) => p.value != 0),
-                      ).group(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(
-                  left: min(width * 0.01, max(0, width - 400)),
-                  right: min(width * 0.02, max(0, width - 400)),
-                  bottom: max(height * 0.05, 20.0),
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: const BorderRadius.all(Radius.circular(32.0)),
-                  boxShadow: const [
-                    BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: height * 0.02),
-                    Text(
-                      LangText.detailedNotPrepared.local,
-                      style: UITexts.sectionSubheader,
-                    ),
-                    BarGraph(
-                      responseCount: Map.fromEntries(
-                        allParticipants.map((p) => MapEntry(
-                            p,
-                            widget.meetings
-                                .where((m) => m.participants
-                                    .map((p) => p.participant)
-                                    .contains(p))
-                                .map((m) => m.responses)
-                                .fold<int>(0, (x, y) => x + y))),
+                            .where((m) => m.participants
+                                .map((p) => p.participant)
+                                .contains(p))
+                            .map(
+                              (m) => Tuple2(
+                                m.responses,
+                                m.participants
+                                    .firstWhere((pp) => pp.participant == p),
+                              ),
+                            )
+                            .fold<int>(
+                              0,
+                              (x, rp) =>
+                                  x +
+                                  rp.value1 +
+                                  rp.value2.needed -
+                                  rp.value2.notNeeded,
+                            ),
                       ),
-                      dicts: Map.fromEntries(
-                        widget.meetings
-                            .map((e) => e.participants)
-                            .expand((element) => element)
-                            .map((p) => MapEntry(p.participant, p.notPrepared))
-                            .where((p) => p.value != 0),
-                      ).group(),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(
-                  left: min(width * 0.02, max(0, width - 700)),
-                  right: min(width * 0.01, max(0, width - 700)),
-                  bottom: max(height * 0.05, 20.0),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(
+              left: min(width * 0.01, max(0, width - 400)),
+              right: min(width * 0.02, max(0, width - 400)),
+              bottom: max(height * 0.05, 20.0),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade100,
+              borderRadius: const BorderRadius.all(Radius.circular(32.0)),
+              boxShadow: const [
+                BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
+              ],
+            ),
+            child: Column(
+              children: [
+                SizedBox(height: height * 0.02),
+                Text(
+                  LangText.detailedPreparedRate.local,
+                  style: UITexts.sectionSubheader,
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: const BorderRadius.all(Radius.circular(32.0)),
-                  boxShadow: const [
-                    BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: height * 0.02),
-                    Text(
-                      LangText.detailedNeeded.local,
-                      style: UITexts.sectionSubheader,
-                    ),
-                    BarGraph(
-                      responseCount: Map.fromEntries(
-                        allParticipants.map((p) => MapEntry(
-                            p,
+                BarGraph(
+                  responseCount: Map.fromEntries(
+                    allParticipants.map(
+                      (p) => MapEntry(
+                        p,
+                        2 *
                             widget.meetings
                                 .where((m) => m.participants
                                     .map((p) => p.participant)
                                     .contains(p))
-                                .map((m) => m.responses)
-                                .fold<int>(0, (x, y) => x + y))),
+                                .map(
+                                  (m) => m.responses,
+                                )
+                                .fold<int>(0, (x, r) => x + r),
                       ),
-                      dicts: Map.fromEntries(
+                    ),
+                  ),
+                  dicts: Map.fromEntries(
+                    allParticipants.map(
+                      (p) => MapEntry(
+                        p,
                         widget.meetings
-                            .map((e) => e.participants)
-                            .expand((element) => element)
-                            .map((p) => MapEntry(p.participant, p.needed))
-                            .where((p) => p.value != 0),
-                      ).group(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(
-                  left: min(width * 0.01, max(0, width - 400)),
-                  right: min(width * 0.02, max(0, width - 400)),
-                  bottom: max(height * 0.05, 20.0),
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: const BorderRadius.all(Radius.circular(32.0)),
-                  boxShadow: const [
-                    BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: height * 0.02),
-                    Text(
-                      LangText.detailedPrepared.local,
-                      style: UITexts.sectionSubheader,
-                    ),
-                    BarGraph(
-                      responseCount: Map.fromEntries(
-                        allParticipants.map((p) => MapEntry(
-                            p,
-                            widget.meetings
-                                .where((m) => m.participants
-                                    .map((p) => p.participant)
-                                    .contains(p))
-                                .map((m) => m.responses)
-                                .fold<int>(0, (x, y) => x + y))),
+                            .where((m) => m.participants
+                                .map((p) => p.participant)
+                                .contains(p))
+                            .map(
+                              (m) => Tuple2(
+                                m.responses,
+                                m.participants
+                                    .firstWhere((pp) => pp.participant == p),
+                              ),
+                            )
+                            .fold<int>(
+                              0,
+                              (x, rp) =>
+                                  x +
+                                  rp.value1 +
+                                  rp.value2.prepared -
+                                  rp.value2.notPrepared,
+                            ),
                       ),
-                      dicts: Map.fromEntries(
-                        widget.meetings
-                            .map((e) => e.participants)
-                            .expand((element) => element)
-                            .map((p) => MapEntry(p.participant, p.prepared))
-                            .where((p) => p.value != 0),
-                      ).group(),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ],
     );

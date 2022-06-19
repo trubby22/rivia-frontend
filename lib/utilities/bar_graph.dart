@@ -91,7 +91,8 @@ class _BarGraphState extends State<BarGraph> {
 
     for (final participant in map.keys) {
       final count = map[participant]!;
-      final percentage = count / (widget.responseCount?[participant] ?? 1);
+      final denominator = widget.responseCount?[participant] ?? 1;
+      final percentage = denominator == 0 ? 0.5 : count / denominator;
       final tuple = Tuple(percentage, count);
       if (res.containsKey(tuple)) {
         res[tuple]!.add(participant);
