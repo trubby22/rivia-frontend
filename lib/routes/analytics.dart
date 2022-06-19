@@ -222,171 +222,209 @@ class _AnalyticsState extends State<Analytics> {
       child: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Table(
-            border: TableBorder.all(color: Colors.grey),
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            defaultColumnWidth: IntrinsicColumnWidth(),
+          child: Row(
             children: [
-              TableRow(
-                decoration: const BoxDecoration(color: Colors.blue),
+              Column(
                 children: [
-                  if (_selectedColumns.contains(LangText.meetingName))
-                    headerBuilder(
-                      context,
-                      text: LangText.meetingName.local,
-                      column: 0,
+                  const SizedBox(height: 64.0),
+                  ...List.generate(
+                    widget.meetings.length,
+                    (ix) => SizedBox(
+                      height: 72.0,
+                      child: Center(
+                        child: Checkbox(
+                          onChanged: (value) => setState(() {
+                            _selectedMeetings[ix] = value ?? false;
+                          }),
+                          value: _selectedMeetings[ix],
+                        ),
+                      ),
                     ),
-                  if (_selectedColumns.contains(LangText.organiser))
-                    headerBuilder(
-                      context,
-                      text: LangText.organiser.local,
-                      column: 1,
-                    ),
-                  if (_selectedColumns.contains(LangText.date))
-                    headerBuilder(
-                      context,
-                      text: LangText.date.local,
-                      column: 2,
-                    ),
-                  if (_selectedColumns.contains(LangText.startTime))
-                    headerBuilder(
-                      context,
-                      text: LangText.startTime.local,
-                      column: 3,
-                    ),
-                  if (_selectedColumns.contains(LangText.endTime))
-                    headerBuilder(
-                      context,
-                      text: LangText.endTime.local,
-                      column: 4,
-                    ),
-                  if (_selectedColumns.contains(LangText.lvlSat))
-                    headerBuilder(
-                      context,
-                      text: LangText.lvlSat.local,
-                      column: 5,
-                    ),
-                  if (_selectedColumns.contains(LangText.noParticipants))
-                    headerBuilder(
-                      context,
-                      text: LangText.noParticipants.local,
-                      column: 6,
-                    ),
-                  if (_selectedColumns.contains(LangText.neededParticipants))
-                    headerBuilder(
-                      context,
-                      text: LangText.neededParticipants.local,
-                      column: 7,
-                    ),
-                  if (_selectedColumns.contains(LangText.preparedParticipants))
-                    headerBuilder(
-                      context,
-                      text: LangText.preparedParticipants.local,
-                      column: 8,
-                    ),
+                  ),
                 ],
               ),
-              ...List.generate(
-                _filteredMeetings.length,
-                (index) {
-                  final meeting = _filteredMeetings[index];
-                  final name = meeting.title;
-                  final start = meeting.startTime;
-                  final end = meeting.endTime;
-                  final organiser = meeting.organiser;
-                  final organiserName = organiser?.fullName ?? "[NULL]";
-                  final participantNum = meeting.participants.length;
-                  final neededNum =
-                      meeting.participants.where((e) => e.needed != 0).length;
-                  final preparedNum =
-                      meeting.participants.where((e) => e.prepared != 0).length;
-
-                  return TableRow(
-                    decoration: BoxDecoration(
-                      color: _selectedMeetings[index]
-                          ? Colors.green.shade200
-                          : _highlightIndex == index
-                              ? index.isOdd
-                                  ? Colors.blue.shade50
-                                  : Colors.orange.shade50
-                              : index.isOdd
-                                  ? const Color.fromARGB(255, 150, 210, 255)
-                                  : const Color.fromARGB(255, 255, 212, 150),
-                    ),
+              Table(
+                border: TableBorder.all(color: Colors.grey),
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                defaultColumnWidth: const IntrinsicColumnWidth(),
+                children: [
+                  TableRow(
+                    decoration: const BoxDecoration(color: Colors.blue),
                     children: [
                       if (_selectedColumns.contains(LangText.meetingName))
-                        entryBuilder(
+                        headerBuilder(
                           context,
-                          index: index,
-                          text: name,
+                          text: LangText.meetingName.local,
                           column: 0,
                         ),
                       if (_selectedColumns.contains(LangText.organiser))
-                        entryBuilder(
+                        headerBuilder(
                           context,
-                          index: index,
-                          text: organiserName,
+                          text: LangText.organiser.local,
                           column: 1,
                         ),
                       if (_selectedColumns.contains(LangText.date))
-                        entryBuilder(
+                        headerBuilder(
                           context,
-                          index: index,
-                          text: '${start.day}.${start.month}.${start.year}',
+                          text: LangText.date.local,
                           column: 2,
                         ),
                       if (_selectedColumns.contains(LangText.startTime))
-                        entryBuilder(
+                        headerBuilder(
                           context,
-                          index: index,
-                          text: TimeOfDay.fromDateTime(start)
-                              .format(context)
-                              .replaceAll(' ', '\u{00A0}'),
+                          text: LangText.startTime.local,
                           column: 3,
                         ),
                       if (_selectedColumns.contains(LangText.endTime))
-                        entryBuilder(
+                        headerBuilder(
                           context,
-                          index: index,
-                          text: TimeOfDay.fromDateTime(end)
-                              .format(context)
-                              .replaceAll(' ', '\u{00A0}'),
+                          text: LangText.endTime.local,
                           column: 4,
                         ),
                       if (_selectedColumns.contains(LangText.lvlSat))
-                        entryBuilder(
+                        headerBuilder(
                           context,
-                          index: index,
-                          text:
-                              '${meeting.qualities.isEmpty ? 50 : (meeting.qualities.reduce((a, b) => a + b) / meeting.qualities.length * 100).round()}%',
+                          text: LangText.lvlSat.local,
                           column: 5,
                         ),
                       if (_selectedColumns.contains(LangText.noParticipants))
-                        entryBuilder(
+                        headerBuilder(
                           context,
-                          index: index,
-                          text: '$participantNum',
+                          text: LangText.noParticipants.local,
                           column: 6,
                         ),
                       if (_selectedColumns
                           .contains(LangText.neededParticipants))
-                        entryBuilder(
+                        headerBuilder(
                           context,
-                          index: index,
-                          text: '$neededNum',
+                          text: LangText.neededParticipants.local,
                           column: 7,
                         ),
                       if (_selectedColumns
                           .contains(LangText.preparedParticipants))
-                        entryBuilder(
+                        headerBuilder(
                           context,
-                          index: index,
-                          text: '$preparedNum',
+                          text: LangText.preparedParticipants.local,
                           column: 8,
                         ),
                     ],
-                  );
-                },
+                  ),
+                  ...List.generate(
+                    _filteredMeetings.length,
+                    (index) {
+                      final meeting = _filteredMeetings[index];
+                      final name = meeting.title;
+                      final start = meeting.startTime;
+                      final end = meeting.endTime;
+                      final organiser = meeting.organiser;
+                      final organiserName = organiser?.fullName ?? "[NULL]";
+                      final participantNum = meeting.participants.length;
+                      final neededNum = meeting.participants
+                          .where((e) => e.needed != 0)
+                          .length;
+                      final preparedNum = meeting.participants
+                          .where((e) => e.prepared != 0)
+                          .length;
+
+                      return TableRow(
+                        decoration: BoxDecoration(
+                          color: _selectedMeetings[index]
+                              ? Colors.green.shade200
+                              : _highlightIndex == index
+                                  ? index.isOdd
+                                      ? Colors.blue.shade50
+                                      : Colors.orange.shade50
+                                  : index.isOdd
+                                      ? const Color.fromARGB(255, 150, 210, 255)
+                                      : const Color.fromARGB(
+                                          255, 255, 212, 150),
+                        ),
+                        children: [
+                          if (_selectedColumns.contains(LangText.meetingName))
+                            entryBuilder(
+                              context,
+                              index: index,
+                              text: name,
+                              column: 0,
+                            ),
+                          if (_selectedColumns.contains(LangText.organiser))
+                            entryBuilder(
+                              context,
+                              index: index,
+                              text: organiserName,
+                              column: 1,
+                            ),
+                          if (_selectedColumns.contains(LangText.date))
+                            entryBuilder(
+                              context,
+                              index: index,
+                              text: '${start.day}.${start.month}.${start.year}',
+                              column: 2,
+                            ),
+                          if (_selectedColumns.contains(LangText.startTime))
+                            entryBuilder(
+                              context,
+                              index: index,
+                              text: TimeOfDay.fromDateTime(start)
+                                  .format(context)
+                                  .replaceAll(' ', '\u{00A0}'),
+                              column: 3,
+                            ),
+                          if (_selectedColumns.contains(LangText.endTime))
+                            entryBuilder(
+                              context,
+                              index: index,
+                              text: TimeOfDay.fromDateTime(end)
+                                  .format(context)
+                                  .replaceAll(' ', '\u{00A0}'),
+                              column: 4,
+                            ),
+                          if (_selectedColumns.contains(LangText.lvlSat))
+                            entryBuilder(
+                              context,
+                              index: index,
+                              text:
+                                  '${meeting.qualities.isEmpty ? 50 : (meeting.qualities.reduce((a, b) => a + b) / meeting.qualities.length * 100).round()}%',
+                              column: 5,
+                            ),
+                          if (_selectedColumns
+                              .contains(LangText.noParticipants))
+                            entryBuilder(
+                              context,
+                              index: index,
+                              text: '$participantNum',
+                              column: 6,
+                            ),
+                          if (_selectedColumns
+                              .contains(LangText.neededParticipants))
+                            entryBuilder(
+                              context,
+                              index: index,
+                              text: '$neededNum',
+                              column: 7,
+                            ),
+                          if (_selectedColumns
+                              .contains(LangText.preparedParticipants))
+                            entryBuilder(
+                              context,
+                              index: index,
+                              text: '$preparedNum',
+                              column: 8,
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const Visibility(
+                visible: false,
+                child: SizedBox(
+                  height: 72.0,
+                  child: Center(
+                    child: Checkbox(onChanged: null, value: false),
+                  ),
+                ),
               ),
             ],
           ),
@@ -613,7 +651,9 @@ class _AnalyticsState extends State<Analytics> {
                 onPressed: (_) {
                   setState(() {
                     _selectedMeetings = List.generate(
-                        _filteredMeetings.length, (index) => false);
+                      _filteredMeetings.length,
+                      (index) => false,
+                    );
                     _multiselect = !_multiselect;
                   });
                 },
@@ -634,14 +674,18 @@ class _AnalyticsState extends State<Analytics> {
                   useShadow: true,
                   width: 150,
                   height: null,
-                  onPressed: (_) {
-                    Navigator.of(context).pushNamed(RouteNames.summary,
-                        arguments:
-                            IterableZip([_filteredMeetings, _selectedMeetings])
+                  onPressed: _selectedMeetings.fold(false, (x, y) => x || y)
+                      ? null
+                      : (_) {
+                          Navigator.of(context).pushNamed(
+                            RouteNames.summary,
+                            arguments: IterableZip(
+                                    [_filteredMeetings, _selectedMeetings])
                                 .where((element) => element[1] as bool)
                                 .map((e) => e[0] as Meeting)
-                                .toList());
-                  },
+                                .toList(),
+                          );
+                        },
                   child: Text(
                     LangText.showMultiSelectSummary.local,
                     style: UITexts.smallButtonText,
