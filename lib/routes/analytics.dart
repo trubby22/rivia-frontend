@@ -431,283 +431,225 @@ class _AnalyticsState extends State<Analytics> {
                   padding: EdgeInsets.only(
                       top: height * 0.06, bottom: height * 0.06),
                   // width: width * 0.72,
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text('${LangText.organiser.local}:'),
-                              SizedBox(width: 8.0),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade100,
-                                  border: Border.all(
-                                    color: Colors.transparent,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(20),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        offset: Offset(0, 1), blurRadius: 2.0)
-                                  ],
-                                ),
-                                child: DropdownButton<Participant>(
-                                  value: _organiser,
-                                  underline: Container(),
-                                  style: TextStyle(),
-                                  icon: const Icon(Icons.arrow_drop_down),
-                                  borderRadius: BorderRadius.circular(10),
-                                  elevation: 16,
-                                  onChanged: _multiselect
-                                      ? null
-                                      : (Participant? newValue) {
-                                          setState(() {
-                                            _organiser = newValue;
-                                          });
-                                        },
-                                  items: (widget.meetings
-                                          .map((e) => e.organiser)
-                                          .toSet()
-                                          .toList()
-                                        ..insert(0, allParticipants))
-                                      .map<DropdownMenuItem<Participant>>(
-                                          (Participant? p) {
-                                    return DropdownMenuItem<Participant>(
-                                      value: p,
-                                      child: Text(p?.fullName),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                              SizedBox(width: 8.0),
-                            ],
+                      Text('${LangText.organiser.local}:'),
+                      SizedBox(width: 8.0),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade100,
+                          border: Border.all(
+                            color: Colors.transparent,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text('${LangText.from.local}:'),
-                              SizedBox(width: 8.0),
-                              DatePicker(
-                                restorationId: 'analytics',
-                                initialDate: _startDate,
-                                notifyParent: setStartDate,
-                                enabled: !_multiselect,
-                              ),
-                              SizedBox(width: 8.0),
-                              Text('${LangText.to.local}:'),
-                              SizedBox(width: 8.0),
-                              DatePicker(
-                                restorationId: 'analytics',
-                                initialDate: _endDate,
-                                notifyParent: setEndDate,
-                                enabled: !_multiselect,
-                              ),
-                            ],
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 8.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(LangText.meetingSatisfactionBetween.local),
-                              SizedBox(width: 8.0),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade100,
-                                  border: Border.all(
-                                    color: Colors.transparent,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(20),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        offset: Offset(0, 1), blurRadius: 2.0)
-                                  ],
-                                ),
-                                child: DropdownButton<int>(
-                                  value: _lowerSatisfaction,
-                                  underline: Container(),
-                                  icon: const Icon(Icons.arrow_drop_down),
-                                  borderRadius: BorderRadius.circular(10),
-                                  elevation: 16,
-                                  onChanged: _multiselect
-                                      ? null
-                                      : (int? newValue) {
-                                          if (newValue != null &&
-                                              newValue <= _upperSatisfaction) {
-                                            setState(() {
-                                              _lowerSatisfaction = newValue;
-                                            });
-                                          }
-                                        },
-                                  items: _percentages,
-                                ),
-                              ),
-                              SizedBox(width: 8.0),
-                              Text(LangText.and.local),
-                              SizedBox(width: 8.0),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade100,
-                                  border: Border.all(
-                                    color: Colors.transparent,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(20),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        offset: Offset(0, 1), blurRadius: 2.0)
-                                  ],
-                                ),
-                                child: DropdownButton<int>(
-                                  value: _upperSatisfaction,
-                                  underline: Container(),
-                                  icon: const Icon(Icons.arrow_drop_down),
-                                  borderRadius: BorderRadius.circular(10),
-                                  elevation: 16,
-                                  onChanged: _multiselect
-                                      ? null
-                                      : (int? newValue) {
-                                          if (newValue != null &&
-                                              newValue >= _lowerSatisfaction) {
-                                            setState(() {
-                                              _upperSatisfaction = newValue;
-                                            });
-                                          }
-                                        },
-                                  items: _percentages,
-                                ),
-                              ),
-                              SizedBox(width: 8.0),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              MultiSelectDialogField(
-                                items: _allColumns
-                                    .map((e) => MultiSelectItem(e, e.local))
-                                    .toList(),
-                                buttonText: Text(LangText.selectColumns.local),
-                                buttonIcon: Icon(Icons.arrow_drop_down),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade100,
-                                  border: Border.all(
-                                    color: Colors.transparent,
-                                  ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        offset: Offset(0, 1), blurRadius: 2.0)
-                                  ],
-                                ),
-                                initialValue: _allColumns,
-                                listType: MultiSelectListType.CHIP,
-                                chipDisplay: MultiSelectChipDisplay.none(),
-                                onConfirm: (values) {
-                                  setState(() {
-                                    headerCache.clear();
-                                    for (final cache in entryCache) {
-                                      cache.clear();
-                                    }
-                                    _selectedColumns = values
-                                        .map((e) => e as LangText)
-                                        .toList();
-                                  });
+                          boxShadow: const [
+                            BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
+                          ],
+                        ),
+                        child: DropdownButton<Participant>(
+                          alignment: Alignment.center,
+                          value: _organiser,
+                          underline: Container(),
+                          icon: const Icon(Icons.arrow_drop_down),
+                          borderRadius: BorderRadius.circular(10.0),
+                          elevation: 16,
+                          onChanged: _multiselect
+                              ? null
+                              : (Participant? newValue) {
+                                  setState(() => _organiser = newValue);
                                 },
-                              ),
-                              SizedBox(width: 8.0),
-                              // SizedButton(
-                              //   primaryColour: Colors.black,
-                              //   selectedColour: Colors.white,
-                              //   backgroundColour: Colors.blue.shade100,
-                              //   onPressedColour: Colors.blue,
-                              //   useShadow: true,
-                              //   width: 150,
-                              //   height: null,
-                              //   isSelected: _largeMeetings,
-                              //   onPressed: _multiselect
-                              //       ? null
-                              //       : (_) {
-                              //           setState(() {
-                              //             _largeMeetings = !_largeMeetings;
-                              //           });
-                              //         },
-                              //   child: Text(
-                              //     LangText.largeMeetings.local,
-                              //     style: UITexts.smallButtonText,
-                              //   ),
-                              // ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8.0),
-                      Row(
-                        children: [
-                          SizedButton(
-                            primaryColour: Colors.black,
-                            selectedColour: Colors.white,
-                            backgroundColour: Colors.blue.shade100,
-                            onPressedColour: Colors.blue,
-                            useShadow: true,
-                            width: 150,
-                            height: null,
-                            onPressed: (_) {
-                              setState(() {
-                                _selectedMeetings = List.generate(
-                                    _filteredMeetings.length, (index) => false);
-                                _multiselect = !_multiselect;
-                              });
-                            },
-                            child: Text(
-                              _multiselect
-                                  ? LangText.cancelMultiUser.local
-                                  : LangText.multiSelect.local,
-                              style: UITexts.smallButtonText,
-                            ),
-                          ),
-                          SizedBox(width: 8.0),
-                          if (_multiselect)
-                            SizedButton(
-                              primaryColour: Colors.black,
-                              selectedColour: Colors.white,
-                              backgroundColour: Colors.blue.shade100,
-                              onPressedColour: Colors.blue,
-                              useShadow: true,
-                              width: 150,
-                              height: null,
-                              onPressed: (_) {
-                                Navigator.of(context).pushNamed(
-                                    RouteNames.summary,
-                                    arguments: IterableZip([
-                                      _filteredMeetings,
-                                      _selectedMeetings
-                                    ])
-                                        .where((element) => element[1] as bool)
-                                        .map((e) => e[0] as Meeting)
-                                        .toList());
-                              },
+                          items: (widget.meetings
+                                  .map((e) => e.organiser)
+                                  .toSet()
+                                  .toList()
+                                ..insert(0, allParticipants))
+                              .map<DropdownMenuItem<Participant>>(
+                                  (Participant? p) {
+                            return DropdownMenuItem<Participant>(
+                              value: p,
                               child: Text(
-                                LangText.showMultiSelectSummary.local,
-                                style: UITexts.smallButtonText,
+                                p?.fullName,
+                                style: UITexts.mediumText,
+                                textAlign: TextAlign.center,
                               ),
-                            ),
-                        ],
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      SizedBox(width: width * 0.02),
+                      Text(LangText.meetingSatisfactionBetween.local),
+                      SizedBox(width: 8.0),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade100,
+                          border: Border.all(
+                            color: Colors.transparent,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                          boxShadow: [
+                            BoxShadow(offset: Offset(0, 1), blurRadius: 2.0)
+                          ],
+                        ),
+                        child: DropdownButton<int>(
+                          value: _lowerSatisfaction,
+                          alignment: Alignment.center,
+                          underline: Container(),
+                          icon: const Icon(Icons.arrow_drop_down),
+                          borderRadius: BorderRadius.circular(10),
+                          elevation: 16,
+                          onChanged: _multiselect
+                              ? null
+                              : (int? newValue) {
+                                  if (newValue != null &&
+                                      newValue <= _upperSatisfaction) {
+                                    setState(() {
+                                      _lowerSatisfaction = newValue;
+                                    });
+                                  }
+                                },
+                          items: _percentages,
+                        ),
+                      ),
+                      SizedBox(width: 8.0),
+                      Text(LangText.and.local),
+                      SizedBox(width: 8.0),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade100,
+                          border: Border.all(
+                            color: Colors.transparent,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                          boxShadow: [
+                            BoxShadow(offset: Offset(0, 1), blurRadius: 2.0)
+                          ],
+                        ),
+                        child: DropdownButton<int>(
+                          value: _upperSatisfaction,
+                          alignment: Alignment.center,
+                          underline: Container(),
+                          icon: const Icon(Icons.arrow_drop_down),
+                          borderRadius: BorderRadius.circular(10),
+                          elevation: 16,
+                          onChanged: _multiselect
+                              ? null
+                              : (int? newValue) {
+                                  if (newValue != null &&
+                                      newValue >= _lowerSatisfaction) {
+                                    setState(() {
+                                      _upperSatisfaction = newValue;
+                                    });
+                                  }
+                                },
+                          items: _percentages,
+                        ),
+                      ),
+                      SizedBox(width: width * 0.02),
+                      Text('${LangText.from.local}:'),
+                      SizedBox(width: 8.0),
+                      DatePicker(
+                        restorationId: 'analytics',
+                        initialDate: _startDate,
+                        notifyParent: setStartDate,
+                        enabled: !_multiselect,
+                      ),
+                      SizedBox(width: 8.0),
+                      Text('${LangText.to.local}:'),
+                      SizedBox(width: 8.0),
+                      DatePicker(
+                        restorationId: 'analytics',
+                        initialDate: _endDate,
+                        notifyParent: setEndDate,
+                        enabled: !_multiselect,
+                      ),
+                      SizedBox(width: width * 0.02),
+                      MultiSelectDialogField(
+                        items: _allColumns
+                            .map((e) => MultiSelectItem(e, e.local))
+                            .toList(),
+                        buttonText: Text(LangText.selectColumns.local),
+                        buttonIcon: Icon(Icons.arrow_drop_down),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade100,
+                          border: Border.all(
+                            color: Colors.transparent,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(offset: Offset(0, 1), blurRadius: 2.0)
+                          ],
+                        ),
+                        initialValue: _allColumns,
+                        listType: MultiSelectListType.CHIP,
+                        chipDisplay: MultiSelectChipDisplay.none(),
+                        onConfirm: (values) {
+                          setState(() {
+                            headerCache.clear();
+                            for (final cache in entryCache) {
+                              cache.clear();
+                            }
+                            _selectedColumns =
+                                values.map((e) => e as LangText).toList();
+                          });
+                        },
                       ),
                     ],
                   ),
                 ),
               ),
+              SizedButton(
+                primaryColour: Colors.black,
+                selectedColour: Colors.white,
+                backgroundColour: Colors.blue.shade100,
+                onPressedColour: Colors.blue,
+                useShadow: true,
+                width: 150,
+                height: null,
+                onPressed: (_) {
+                  setState(() {
+                    _selectedMeetings = List.generate(
+                        _filteredMeetings.length, (index) => false);
+                    _multiselect = !_multiselect;
+                  });
+                },
+                child: Text(
+                  _multiselect
+                      ? LangText.cancelMultiUser.local
+                      : LangText.multiSelect.local,
+                  style: UITexts.smallButtonText,
+                ),
+              ),
+              SizedBox(width: 8.0),
+              if (_multiselect)
+                SizedButton(
+                  primaryColour: Colors.black,
+                  selectedColour: Colors.white,
+                  backgroundColour: Colors.blue.shade100,
+                  onPressedColour: Colors.blue,
+                  useShadow: true,
+                  width: 150,
+                  height: null,
+                  onPressed: (_) {
+                    Navigator.of(context).pushNamed(RouteNames.summary,
+                        arguments:
+                            IterableZip([_filteredMeetings, _selectedMeetings])
+                                .where((element) => element[1] as bool)
+                                .map((e) => e[0] as Meeting)
+                                .toList());
+                  },
+                  child: Text(
+                    LangText.showMultiSelectSummary.local,
+                    style: UITexts.smallButtonText,
+                  ),
+                ),
+              SizedBox(height: height * 0.02),
               tableBuilder(context),
               SizedBox(height: height * 0.02),
             ],
