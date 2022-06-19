@@ -40,6 +40,8 @@ class Review extends StatefulWidget {
 class _ReviewState extends State<Review> {
   final TextEditingController _controller = TextEditingController();
   ReviewSteps _step = ReviewSteps.slider;
+  double x1 = 0.5;
+  double x2 = 0.5;
 
   /// Build the selection panel.
   Widget selectionPanelBuilder(
@@ -626,12 +628,12 @@ class _ReviewState extends State<Review> {
                       ),
                     ),
                     child: Slider(
-                      value: 0.5,
+                      value: x1,
                       activeColor: Colors.grey.shade500,
                       min: 0,
                       max: 1,
                       divisions: 4,
-                      onChanged: (value) {},
+                      onChanged: (value) => setState(() => x1 = value),
                     ),
                   ),
                 ),
@@ -684,12 +686,12 @@ class _ReviewState extends State<Review> {
                       ),
                     ),
                     child: Slider(
-                      value: 0.5,
+                      value: x2,
                       activeColor: Colors.grey.shade500,
                       min: 0,
                       max: 1,
                       divisions: 4,
-                      onChanged: (value) {},
+                      onChanged: (value) => setState(() => x2 = value),
                     ),
                   ),
                 ),
