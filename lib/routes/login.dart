@@ -1,14 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:rivia/constants/route_names.dart';
-import 'package:rivia/models/login_credentials.dart';
 import 'package:rivia/routes/redirect.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
-import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/microsoft.dart';
-import 'package:rivia/utilities/sized_button.dart';
-import 'package:rivia/utilities/toast.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -228,44 +223,5 @@ class _LoginState extends State<Login> {
         // ),
       ),
     );
-  }
-
-  Future<void> login(BuildContext context) async {
-    String login = _loginController.value.text;
-    String password = _passwordController.value.text;
-    String firstName = _firstNameController.value.text;
-    String surname = _surnameController.value.text;
-    _loginController.clear();
-    _passwordController.clear();
-    _firstNameController.clear();
-    _surnameController.clear();
-
-    LoginCredentials loginCredentials = LoginCredentials(
-      login: login,
-      password: password,
-      firstName: _signup ? firstName : null,
-      surname: _signup ? surname : null,
-    );
-
-    if (_signup) {
-      String errorMsg = await postSignUpCredentialsToBackend(loginCredentials);
-      if (errorMsg.isEmpty) {
-        showToast(
-          context: context,
-          text: "Register Successful",
-        );
-        (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
-          RouteNames.dashboardAssigned,
-        );
-      } else {
-        showToast(context: context, text: errorMsg);
-      }
-    } else {
-      await postLoginCredentialsToBackend(loginCredentials);
-      showToast(context: context, text: "Login...");
-      (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
-        RouteNames.dashboardAssigned,
-      );
-    }
   }
 }

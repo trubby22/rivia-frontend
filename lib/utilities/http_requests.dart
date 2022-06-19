@@ -5,8 +5,6 @@ import 'package:http/browser_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:rivia/constants/api_endpoints.dart';
 import 'package:rivia/constants/fields.dart';
-import 'package:rivia/constants/settings.dart';
-import 'package:rivia/models/login_credentials.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
@@ -96,33 +94,6 @@ Future<bool> postMeeting(Meeting meeting) async {
   } catch (e) {
     debugPrint(e.toString());
     return false;
-  }
-}
-
-/// Sign the user up. Returns non-empty error [String] if there is an error.
-Future<String> postSignUpCredentialsToBackend(
-  LoginCredentials loginCredentials,
-) async {
-  http.Response response = await http.post(
-    Uri.parse(API.postSignUp()),
-    body: json.encode(loginCredentials.toJson()),
-  );
-
-  final String? errMsg =
-      ((json.decode(response.body) as Map<String, dynamic>?) ??
-          {})[Fields.message];
-  return errMsg ?? "";
-}
-
-Future<void> postLoginCredentialsToBackend(
-  LoginCredentials loginCredentials,
-) async {
-  if (!testMode) {
-    http.Response response = await _httpClient.post(
-      Uri.parse(API.postLogin()),
-      headers: _headers,
-      body: json.encode(loginCredentials.toJson()),
-    );
   }
 }
 
