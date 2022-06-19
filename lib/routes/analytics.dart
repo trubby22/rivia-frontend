@@ -47,11 +47,11 @@ class _AnalyticsState extends State<Analytics> {
 
   final List<LangText> _allColumns = [
     LangText.date,
+    LangText.organiser,
     LangText.startTime,
     LangText.endTime,
-    LangText.organiser,
-    LangText.noParticipants,
     LangText.lvlSat,
+    LangText.noParticipants,
     LangText.neededParticipants,
     LangText.preparedParticipants,
     LangText.meetingName,
@@ -236,40 +236,40 @@ class _AnalyticsState extends State<Analytics> {
                       text: LangText.meetingName.local,
                       column: 0,
                     ),
+                  if (_selectedColumns.contains(LangText.organiser))
+                    headerBuilder(
+                      context,
+                      text: LangText.organiser.local,
+                      column: 1,
+                    ),
                   if (_selectedColumns.contains(LangText.date))
                     headerBuilder(
                       context,
                       text: LangText.date.local,
-                      column: 1,
+                      column: 2,
                     ),
                   if (_selectedColumns.contains(LangText.startTime))
                     headerBuilder(
                       context,
                       text: LangText.startTime.local,
-                      column: 2,
+                      column: 3,
                     ),
                   if (_selectedColumns.contains(LangText.endTime))
                     headerBuilder(
                       context,
                       text: LangText.endTime.local,
-                      column: 3,
-                    ),
-                  if (_selectedColumns.contains(LangText.organiser))
-                    headerBuilder(
-                      context,
-                      text: LangText.organiser.local,
                       column: 4,
-                    ),
-                  if (_selectedColumns.contains(LangText.noParticipants))
-                    headerBuilder(
-                      context,
-                      text: LangText.noParticipants.local,
-                      column: 5,
                     ),
                   if (_selectedColumns.contains(LangText.lvlSat))
                     headerBuilder(
                       context,
                       text: LangText.lvlSat.local,
+                      column: 5,
+                    ),
+                  if (_selectedColumns.contains(LangText.noParticipants))
+                    headerBuilder(
+                      context,
+                      text: LangText.noParticipants.local,
                       column: 6,
                     ),
                   if (_selectedColumns.contains(LangText.neededParticipants))
@@ -296,12 +296,10 @@ class _AnalyticsState extends State<Analytics> {
                   final organiser = meeting.organiser;
                   final organiserName = organiser?.fullName ?? "[NULL]";
                   final participantNum = meeting.participants.length;
-                  final notNeededNum = meeting.participants
-                      .where((e) => e.notNeeded != 0)
-                      .length;
-                  final notPreparedNum = meeting.participants
-                      .where((e) => e.notPrepared != 0)
-                      .length;
+                  final neededNum =
+                      meeting.participants.where((e) => e.needed != 0).length;
+                  final preparedNum =
+                      meeting.participants.where((e) => e.prepared != 0).length;
 
                   return TableRow(
                     decoration: BoxDecoration(
@@ -323,12 +321,19 @@ class _AnalyticsState extends State<Analytics> {
                           text: name,
                           column: 0,
                         ),
+                      if (_selectedColumns.contains(LangText.organiser))
+                        entryBuilder(
+                          context,
+                          index: index,
+                          text: organiserName,
+                          column: 1,
+                        ),
                       if (_selectedColumns.contains(LangText.date))
                         entryBuilder(
                           context,
                           index: index,
                           text: '${start.day}.${start.month}.${start.year}',
-                          column: 1,
+                          column: 2,
                         ),
                       if (_selectedColumns.contains(LangText.startTime))
                         entryBuilder(
@@ -337,7 +342,7 @@ class _AnalyticsState extends State<Analytics> {
                           text: TimeOfDay.fromDateTime(start)
                               .format(context)
                               .replaceAll(' ', '\u{00A0}'),
-                          column: 2,
+                          column: 3,
                         ),
                       if (_selectedColumns.contains(LangText.endTime))
                         entryBuilder(
@@ -346,21 +351,7 @@ class _AnalyticsState extends State<Analytics> {
                           text: TimeOfDay.fromDateTime(end)
                               .format(context)
                               .replaceAll(' ', '\u{00A0}'),
-                          column: 3,
-                        ),
-                      if (_selectedColumns.contains(LangText.organiser))
-                        entryBuilder(
-                          context,
-                          index: index,
-                          text: organiserName,
                           column: 4,
-                        ),
-                      if (_selectedColumns.contains(LangText.noParticipants))
-                        entryBuilder(
-                          context,
-                          index: index,
-                          text: '$participantNum',
-                          column: 5,
                         ),
                       if (_selectedColumns.contains(LangText.lvlSat))
                         entryBuilder(
@@ -368,6 +359,13 @@ class _AnalyticsState extends State<Analytics> {
                           index: index,
                           text:
                               '${meeting.qualities.isEmpty ? 50 : (meeting.qualities.reduce((a, b) => a + b) / meeting.qualities.length * 100).round()}%',
+                          column: 5,
+                        ),
+                      if (_selectedColumns.contains(LangText.noParticipants))
+                        entryBuilder(
+                          context,
+                          index: index,
+                          text: '$participantNum',
                           column: 6,
                         ),
                       if (_selectedColumns
@@ -375,7 +373,7 @@ class _AnalyticsState extends State<Analytics> {
                         entryBuilder(
                           context,
                           index: index,
-                          text: '${participantNum - notNeededNum}',
+                          text: '$neededNum',
                           column: 7,
                         ),
                       if (_selectedColumns
@@ -383,7 +381,7 @@ class _AnalyticsState extends State<Analytics> {
                         entryBuilder(
                           context,
                           index: index,
-                          text: '${participantNum - notPreparedNum}',
+                          text: '$preparedNum',
                           column: 8,
                         ),
                     ],
