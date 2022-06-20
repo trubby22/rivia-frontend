@@ -240,7 +240,7 @@ class _AnalyticsState extends State<Analytics> {
                             _selectedMeetings.clear();
                           }
                         }),
-                        value: _selectedMeetings == _filteredMeetings,
+                        value: _selectedMeetings.isNotEmpty,
                       ),
                     ),
                   ),
