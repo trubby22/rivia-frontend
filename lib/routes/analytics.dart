@@ -661,21 +661,16 @@ class _AnalyticsState extends State<Analytics> {
           StreamBuilder(
             stream: _webSocket?.stream,
             builder: (context, snapshot) {
-              print(snapshot.data?.toString());
               if (snapshot.data != null) {
                 Map<String, dynamic> content =
                     json.decode(snapshot.data!.toString());
                 content[Fields.meeting][Fields.meetingId] = content[Fields.id];
                 content = content[Fields.meeting];
                 final newMeeting = Meeting.fromJson(content);
-                print(newMeeting?.meetingId);
-                for (final m in widget.meetings) {
-                  print('id: ${m.meetingId}');
-                }
+
                 widget.meetings.removeWhere(
                   (m) => m.meetingId == newMeeting?.meetingId,
                 );
-                print(widget.meetings.length);
                 if (newMeeting != null) {
                   widget.meetings.add(newMeeting);
                   entryCache[newMeeting.meetingId!] = Map.fromEntries(
