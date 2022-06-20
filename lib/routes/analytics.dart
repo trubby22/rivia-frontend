@@ -173,7 +173,7 @@ class _AnalyticsState extends State<Analytics> {
         onEnter: (_) => setState(() => _highlightIndex = index),
         onExit: (_) => setState(() => _highlightIndex = -1),
         child: Container(
-          height: 100.0,
+          height: 72.0,
           padding: const EdgeInsets.all(8.0),
           child: Center(
             child: Text(
@@ -674,7 +674,7 @@ class _AnalyticsState extends State<Analytics> {
                   useShadow: true,
                   width: 150,
                   height: null,
-                  onPressed: _selectedMeetings.fold(false, (x, y) => x || y)
+                  onPressed: !_selectedMeetings.fold(false, (x, y) => x || y)
                       ? null
                       : (_) {
                           Navigator.of(context).pushNamed(
