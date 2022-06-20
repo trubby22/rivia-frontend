@@ -31,7 +31,7 @@ class _AnalyticsState extends State<Analytics> {
   late Participant? _organiser = allParticipants;
   int _lowerSatisfaction = 0;
   int _upperSatisfaction = 100;
-  bool _multiselect = false;
+  bool get _multiselect => _selectedMeetings.fold(false, (x, y) => x || y);
   late List<Meeting> _filteredMeetings = widget.meetings;
   late List<bool> _selectedMeetings =
       List.generate(_filteredMeetings.length, (index) => false);
@@ -88,7 +88,11 @@ class _AnalyticsState extends State<Analytics> {
       )..layout())
           .size;
 
-  String _render(String text, int column) {
+  String _render(String text, int? column) {
+    if (column == null) {
+      return text;
+    }
+
     final texts = text.split(' ');
 
     final rows = <String>[];
@@ -122,7 +126,7 @@ class _AnalyticsState extends State<Analytics> {
   Widget headerBuilder(
     BuildContext context, {
     required String text,
-    required int column,
+    int? column,
   }) {
     final String renderedText = headerCache[column] ?? _render(text, column);
 
@@ -140,7 +144,7 @@ class _AnalyticsState extends State<Analytics> {
     BuildContext context, {
     required int index,
     required String text,
-    required int column,
+    int? column,
   }) {
     final String renderedText =
         entryCache[index][column] ?? _render(text, column);
@@ -148,16 +152,15 @@ class _AnalyticsState extends State<Analytics> {
     return TableRowInkWell(
       onTap: () async {
         Meeting meeting = _filteredMeetings[index];
-        if (_multiselect) {
-          _selectedMeetings[index] = !_selectedMeetings[index];
-        } else {
-          final isReviewed = await getIsReviewed(meeting.meetingId!);
-          Navigator.of(context)
-              .pushNamed(
-            isReviewed ? RouteNames.summary : RouteNames.review,
-            arguments: isReviewed ? [meeting] : meeting,
-          )
-              .then((_) async {
+
+        final isReviewed = await getIsReviewed(meeting.meetingId!);
+        Navigator.of(context)
+            .pushNamed(
+          isReviewed ? RouteNames.summary : RouteNames.review,
+          arguments: isReviewed ? [meeting] : meeting,
+        )
+            .then(
+          (_) async {
             final meetingIds = await getMeetings().onError(
               (error, stackTrace) => Future.value([]),
             );
@@ -166,8 +169,8 @@ class _AnalyticsState extends State<Analytics> {
                     .cast<Meeting>();
             widget.meetings.clear();
             setState(() => widget.meetings.addAll(meetings));
-          });
-        }
+          },
+        );
       },
       child: MouseRegion(
         onEnter: (_) => setState(() => _highlightIndex = index),
@@ -222,209 +225,184 @@ class _AnalyticsState extends State<Analytics> {
       child: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
+          child: Table(
+            border: TableBorder.all(color: Colors.grey),
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            defaultColumnWidth: const IntrinsicColumnWidth(),
             children: [
-              Column(
+              TableRow(
+                decoration: const BoxDecoration(color: Colors.blue),
                 children: [
-                  const SizedBox(height: 64.0),
-                  ...List.generate(
-                    widget.meetings.length,
-                    (ix) => SizedBox(
-                      height: 72.0,
-                      child: Center(
-                        child: Checkbox(
-                          onChanged: (value) => setState(() {
-                            _selectedMeetings[ix] = value ?? false;
-                          }),
-                          value: _selectedMeetings[ix],
-                        ),
-                      ),
+                  headerBuilder(context, text: ''),
+                  if (_selectedColumns.contains(LangText.meetingName))
+                    headerBuilder(
+                      context,
+                      text: LangText.meetingName.local,
+                      column: 0,
                     ),
-                  ),
+                  if (_selectedColumns.contains(LangText.organiser))
+                    headerBuilder(
+                      context,
+                      text: LangText.organiser.local,
+                      column: 1,
+                    ),
+                  if (_selectedColumns.contains(LangText.date))
+                    headerBuilder(
+                      context,
+                      text: LangText.date.local,
+                      column: 2,
+                    ),
+                  if (_selectedColumns.contains(LangText.startTime))
+                    headerBuilder(
+                      context,
+                      text: LangText.startTime.local,
+                      column: 3,
+                    ),
+                  if (_selectedColumns.contains(LangText.endTime))
+                    headerBuilder(
+                      context,
+                      text: LangText.endTime.local,
+                      column: 4,
+                    ),
+                  if (_selectedColumns.contains(LangText.lvlSat))
+                    headerBuilder(
+                      context,
+                      text: LangText.lvlSat.local,
+                      column: 5,
+                    ),
+                  if (_selectedColumns.contains(LangText.noParticipants))
+                    headerBuilder(
+                      context,
+                      text: LangText.noParticipants.local,
+                      column: 6,
+                    ),
+                  if (_selectedColumns.contains(LangText.neededParticipants))
+                    headerBuilder(
+                      context,
+                      text: LangText.neededParticipants.local,
+                      column: 7,
+                    ),
+                  if (_selectedColumns.contains(LangText.preparedParticipants))
+                    headerBuilder(
+                      context,
+                      text: LangText.preparedParticipants.local,
+                      column: 8,
+                    ),
                 ],
               ),
-              Table(
-                border: TableBorder.all(color: Colors.grey),
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                defaultColumnWidth: const IntrinsicColumnWidth(),
-                children: [
-                  TableRow(
-                    decoration: const BoxDecoration(color: Colors.blue),
+              ...List.generate(
+                _filteredMeetings.length,
+                (index) {
+                  final meeting = _filteredMeetings[index];
+                  final name = meeting.title;
+                  final start = meeting.startTime;
+                  final end = meeting.endTime;
+                  final organiser = meeting.organiser;
+                  final organiserName = organiser?.fullName ?? "[NULL]";
+                  final participantNum = meeting.participants.length;
+                  final neededNum =
+                      meeting.participants.where((e) => e.needed != 0).length;
+                  final preparedNum =
+                      meeting.participants.where((e) => e.prepared != 0).length;
+
+                  return TableRow(
+                    decoration: BoxDecoration(
+                      color: _highlightIndex == index
+                          ? index.isOdd
+                              ? Colors.blue.shade50
+                              : Colors.orange.shade50
+                          : index.isOdd
+                              ? const Color.fromARGB(255, 150, 210, 255)
+                              : const Color.fromARGB(255, 255, 212, 150),
+                    ),
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 72.0,
+                          child: Center(
+                            child: Checkbox(
+                              onChanged: (value) => setState(() {
+                                _selectedMeetings[index] = value ?? false;
+                              }),
+                              value: _selectedMeetings[index],
+                            ),
+                          ),
+                        ),
+                      ),
                       if (_selectedColumns.contains(LangText.meetingName))
-                        headerBuilder(
+                        entryBuilder(
                           context,
-                          text: LangText.meetingName.local,
+                          index: index,
+                          text: name,
                           column: 0,
                         ),
                       if (_selectedColumns.contains(LangText.organiser))
-                        headerBuilder(
+                        entryBuilder(
                           context,
-                          text: LangText.organiser.local,
+                          index: index,
+                          text: organiserName,
                           column: 1,
                         ),
                       if (_selectedColumns.contains(LangText.date))
-                        headerBuilder(
+                        entryBuilder(
                           context,
-                          text: LangText.date.local,
+                          index: index,
+                          text: '${start.day}.${start.month}.${start.year}',
                           column: 2,
                         ),
                       if (_selectedColumns.contains(LangText.startTime))
-                        headerBuilder(
+                        entryBuilder(
                           context,
-                          text: LangText.startTime.local,
+                          index: index,
+                          text: TimeOfDay.fromDateTime(start)
+                              .format(context)
+                              .replaceAll(' ', '\u{00A0}'),
                           column: 3,
                         ),
                       if (_selectedColumns.contains(LangText.endTime))
-                        headerBuilder(
+                        entryBuilder(
                           context,
-                          text: LangText.endTime.local,
+                          index: index,
+                          text: TimeOfDay.fromDateTime(end)
+                              .format(context)
+                              .replaceAll(' ', '\u{00A0}'),
                           column: 4,
                         ),
                       if (_selectedColumns.contains(LangText.lvlSat))
-                        headerBuilder(
+                        entryBuilder(
                           context,
-                          text: LangText.lvlSat.local,
+                          index: index,
+                          text:
+                              '${meeting.qualities.isEmpty ? 50 : (meeting.qualities.reduce((a, b) => a + b) / meeting.qualities.length * 100).round()}%',
                           column: 5,
                         ),
                       if (_selectedColumns.contains(LangText.noParticipants))
-                        headerBuilder(
+                        entryBuilder(
                           context,
-                          text: LangText.noParticipants.local,
+                          index: index,
+                          text: '$participantNum',
                           column: 6,
                         ),
                       if (_selectedColumns
                           .contains(LangText.neededParticipants))
-                        headerBuilder(
+                        entryBuilder(
                           context,
-                          text: LangText.neededParticipants.local,
+                          index: index,
+                          text: '$neededNum',
                           column: 7,
                         ),
                       if (_selectedColumns
                           .contains(LangText.preparedParticipants))
-                        headerBuilder(
+                        entryBuilder(
                           context,
-                          text: LangText.preparedParticipants.local,
+                          index: index,
+                          text: '$preparedNum',
                           column: 8,
                         ),
                     ],
-                  ),
-                  ...List.generate(
-                    _filteredMeetings.length,
-                    (index) {
-                      final meeting = _filteredMeetings[index];
-                      final name = meeting.title;
-                      final start = meeting.startTime;
-                      final end = meeting.endTime;
-                      final organiser = meeting.organiser;
-                      final organiserName = organiser?.fullName ?? "[NULL]";
-                      final participantNum = meeting.participants.length;
-                      final neededNum = meeting.participants
-                          .where((e) => e.needed != 0)
-                          .length;
-                      final preparedNum = meeting.participants
-                          .where((e) => e.prepared != 0)
-                          .length;
-
-                      return TableRow(
-                        decoration: BoxDecoration(
-                          color: _selectedMeetings[index]
-                              ? Colors.green.shade200
-                              : _highlightIndex == index
-                                  ? index.isOdd
-                                      ? Colors.blue.shade50
-                                      : Colors.orange.shade50
-                                  : index.isOdd
-                                      ? const Color.fromARGB(255, 150, 210, 255)
-                                      : const Color.fromARGB(
-                                          255, 255, 212, 150),
-                        ),
-                        children: [
-                          if (_selectedColumns.contains(LangText.meetingName))
-                            entryBuilder(
-                              context,
-                              index: index,
-                              text: name,
-                              column: 0,
-                            ),
-                          if (_selectedColumns.contains(LangText.organiser))
-                            entryBuilder(
-                              context,
-                              index: index,
-                              text: organiserName,
-                              column: 1,
-                            ),
-                          if (_selectedColumns.contains(LangText.date))
-                            entryBuilder(
-                              context,
-                              index: index,
-                              text: '${start.day}.${start.month}.${start.year}',
-                              column: 2,
-                            ),
-                          if (_selectedColumns.contains(LangText.startTime))
-                            entryBuilder(
-                              context,
-                              index: index,
-                              text: TimeOfDay.fromDateTime(start)
-                                  .format(context)
-                                  .replaceAll(' ', '\u{00A0}'),
-                              column: 3,
-                            ),
-                          if (_selectedColumns.contains(LangText.endTime))
-                            entryBuilder(
-                              context,
-                              index: index,
-                              text: TimeOfDay.fromDateTime(end)
-                                  .format(context)
-                                  .replaceAll(' ', '\u{00A0}'),
-                              column: 4,
-                            ),
-                          if (_selectedColumns.contains(LangText.lvlSat))
-                            entryBuilder(
-                              context,
-                              index: index,
-                              text:
-                                  '${meeting.qualities.isEmpty ? 50 : (meeting.qualities.reduce((a, b) => a + b) / meeting.qualities.length * 100).round()}%',
-                              column: 5,
-                            ),
-                          if (_selectedColumns
-                              .contains(LangText.noParticipants))
-                            entryBuilder(
-                              context,
-                              index: index,
-                              text: '$participantNum',
-                              column: 6,
-                            ),
-                          if (_selectedColumns
-                              .contains(LangText.neededParticipants))
-                            entryBuilder(
-                              context,
-                              index: index,
-                              text: '$neededNum',
-                              column: 7,
-                            ),
-                          if (_selectedColumns
-                              .contains(LangText.preparedParticipants))
-                            entryBuilder(
-                              context,
-                              index: index,
-                              text: '$preparedNum',
-                              column: 8,
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
-              const Visibility(
-                visible: false,
-                child: SizedBox(
-                  height: 72.0,
-                  child: Center(
-                    child: Checkbox(onChanged: null, value: false),
-                  ),
-                ),
+                  );
+                },
               ),
             ],
           ),
@@ -640,31 +618,6 @@ class _AnalyticsState extends State<Analytics> {
                   ),
                 ),
               ),
-              SizedButton(
-                primaryColour: Colors.black,
-                selectedColour: Colors.white,
-                backgroundColour: Colors.blue.shade100,
-                onPressedColour: Colors.blue,
-                useShadow: true,
-                width: 150,
-                height: null,
-                onPressed: (_) {
-                  setState(() {
-                    _selectedMeetings = List.generate(
-                      _filteredMeetings.length,
-                      (index) => false,
-                    );
-                    _multiselect = !_multiselect;
-                  });
-                },
-                child: Text(
-                  _multiselect
-                      ? LangText.cancelMultiUser.local
-                      : LangText.multiSelect.local,
-                  style: UITexts.smallButtonText,
-                ),
-              ),
-              SizedBox(width: 8.0),
               if (_multiselect)
                 SizedButton(
                   primaryColour: Colors.black,
@@ -674,18 +627,18 @@ class _AnalyticsState extends State<Analytics> {
                   useShadow: true,
                   width: 150,
                   height: null,
-                  onPressed: !_selectedMeetings.fold(false, (x, y) => x || y)
-                      ? null
-                      : (_) {
-                          Navigator.of(context).pushNamed(
-                            RouteNames.summary,
-                            arguments: IterableZip(
-                                    [_filteredMeetings, _selectedMeetings])
+                  onPressed: (_) {
+                    setState(() {
+                      Navigator.of(context).pushNamed(
+                        RouteNames.summary,
+                        arguments:
+                            IterableZip([_filteredMeetings, _selectedMeetings])
                                 .where((element) => element[1] as bool)
                                 .map((e) => e[0] as Meeting)
                                 .toList(),
-                          );
-                        },
+                      );
+                    });
+                  },
                   child: Text(
                     LangText.showMultiSelectSummary.local,
                     style: UITexts.smallButtonText,
