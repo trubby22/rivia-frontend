@@ -677,6 +677,7 @@ class _AnalyticsState extends State<Analytics> {
                     columnWidths.mapIndexed((i, _) => MapEntry(i, null)),
                   );
                 }
+                widget.meetings.sortBy((m) => m.startTime);
               }
               return foregroundBuilder(context);
             },
