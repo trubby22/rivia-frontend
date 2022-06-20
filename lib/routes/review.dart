@@ -42,6 +42,7 @@ class _ReviewState extends State<Review> {
   ReviewSteps _step = ReviewSteps.slider;
   double x1 = 0.5;
   double x2 = 0.5;
+  bool submitted = false;
 
   /// Build the selection panel.
   Widget selectionPanelBuilder(
@@ -713,10 +714,13 @@ class _ReviewState extends State<Review> {
               width: width * 0.20,
               radius: BorderRadius.circular(24.0),
               padding: const EdgeInsets.symmetric(vertical: 20.0),
-              onPressed: (_) {
-                submitReview(context);
-                // TODO: Explicitly go to analytics instead of mere pop
-                Navigator.of(context).pop();
+              onPressed: (_) async {
+                if (!submitted) {
+                  submitted = true;
+                  await submitReview(context);
+                  // TODO: Explicitly go to analytics instead of mere pop
+                  Navigator.of(context).pop();
+                }
               },
               isSelected: true,
               child: Text(
@@ -824,7 +828,7 @@ class _ReviewState extends State<Review> {
     );
   }
 
-  void submitReview(BuildContext context) {
+  Future<void> submitReview(BuildContext context) async {
     // context.read<ResponseBuilder>().participant = widget.participant;
     context.read<ResponseBuilder>().feedback = _controller.text;
 

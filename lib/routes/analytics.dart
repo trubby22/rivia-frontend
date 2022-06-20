@@ -229,7 +229,21 @@ class _AnalyticsState extends State<Analytics> {
               TableRow(
                 decoration: const BoxDecoration(color: Colors.blue),
                 children: [
-                  headerBuilder(context, text: ''),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Checkbox(
+                        onChanged: (value) => setState(() {
+                          if (value ?? false) {
+                            _selectedMeetings.addAll(_filteredMeetings);
+                          } else {
+                            _selectedMeetings.clear();
+                          }
+                        }),
+                        value: _selectedMeetings == _filteredMeetings,
+                      ),
+                    ),
+                  ),
                   if (_selectedColumns.contains(LangText.meetingName))
                     headerBuilder(
                       context,
