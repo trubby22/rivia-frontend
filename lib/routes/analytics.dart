@@ -729,6 +729,7 @@ class _AnalyticsState extends State<Analytics> {
   @override
   void initState() {
     super.initState();
+    widget.meetings.sortBy((m) => m.startTime);
     _webSocket = getWebSocket();
   }
 

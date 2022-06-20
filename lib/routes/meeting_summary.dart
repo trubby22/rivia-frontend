@@ -87,17 +87,16 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                   responseCount: Map.fromEntries(
                     allParticipants.map(
                       (p) => MapEntry(
-                        p,
-                        2 *
-                            widget.meetings
-                                .where((m) => m.participants
-                                    .map((p) => p.participant)
-                                    .contains(p))
-                                .map(
-                                  (m) => m.responses,
-                                )
-                                .fold<int>(0, (x, r) => x + r),
-                      ),
+                          p,
+                          2 *
+                              widget.meetings
+                                  .where((m) => m.participants
+                                      .map((p) => p.participant)
+                                      .contains(p))
+                                  .map(
+                                    (m) => m.responses,
+                                  )
+                                  .fold<int>(0, (x, r) => x + r)),
                     ),
                   ),
                   dicts: Map.fromEntries(
