@@ -1,17 +1,21 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
+import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/utilities/bar_graph.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
+import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/language_switcher.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:rivia/utilities/log_out_button.dart';
 import 'package:rivia/utilities/sized_button.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class MeetingSummary extends StatefulWidget {
   const MeetingSummary({Key? key, required this.meetings}) : super(key: key);
@@ -24,6 +28,8 @@ class MeetingSummary extends StatefulWidget {
 
 class _MeetingSummaryState extends State<MeetingSummary> {
   int _selectedIndex = 0;
+
+  WebSocketChannel? _webSocket;
 
   Widget pieChartBuilder(BuildContext context) {
     return PieChart(
@@ -517,14 +523,34 @@ class _MeetingSummaryState extends State<MeetingSummary> {
               const Divider(height: 0.0, thickness: 5.0, color: Colors.blue),
               Padding(
                 padding: EdgeInsets.only(top: height * 0.04),
-                child: IndexedStack(
-                  index: _selectedIndex,
-                  children: [
-                    pieChartBuilder(context),
-                    barGraphBuilder(context),
-                    presetBuilder(context),
-                    feedbackBuilder(context),
-                  ],
+                child: StreamBuilder(
+                  stream: _webSocket?.stream,
+                  builder: (context, snapshot) {
+                    if (snapshot.data != null) {
+                      Map<String, dynamic> content =
+                          json.decode(snapshot.data!.toString());
+                      content[Fields.meeting][Fields.meetingId] =
+                          content[Fields.id];
+                      content = content[Fields.meeting];
+                      final newMeeting = Meeting.fromJson(content);
+
+                      widget.meetings.removeWhere(
+                        (m) => m.meetingId == newMeeting?.meetingId,
+                      );
+                      if (newMeeting != null) {
+                        widget.meetings.add(newMeeting);
+                      }
+                    }
+                    return IndexedStack(
+                      index: _selectedIndex,
+                      children: [
+                        pieChartBuilder(context),
+                        barGraphBuilder(context),
+                        presetBuilder(context),
+                        feedbackBuilder(context),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],
@@ -565,6 +591,18 @@ class _MeetingSummaryState extends State<MeetingSummary> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _webSocket = getWebSocket();
+  }
+
+  @override
+  void dispose() {
+    disposeWebSocket();
+    super.dispose();
   }
 }
 
