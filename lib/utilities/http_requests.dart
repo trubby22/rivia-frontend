@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:rivia/utilities/change_notifiers.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/browser_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:rivia/constants/api_endpoints.dart';
@@ -12,11 +14,43 @@ import 'package:rivia/models/response.dart';
 /// The global [http.Client].
 final _httpClient = BrowserClient();
 
+/// The global WebSocket.
+WebSocketChannel? _webSocket;
+
+int _count = 0;
+
 /// The headers for API requests.
 final _headers = {
   'accept': 'application/json',
   'content-type': 'application/json',
 };
+
+/// Get the [WebSocketChannel], initialise it if necessary.
+WebSocketChannel getWebSocket() {
+  _count++;
+
+  if (_webSocket != null) {
+    return _webSocket!;
+  }
+
+  _webSocket = WebSocketChannel.connect(
+    Uri.parse('wss://websocket.api.rivia.me'),
+  );
+
+  _webSocket!.sink.add(
+    '{"user": "${authToken.userId}", "tenant": "${authToken.tenantDomain}"}',
+  );
+
+  return _webSocket!;
+}
+
+void disposeWebSocket() {
+  _count--;
+
+  if (_count == 0) {
+    _webSocket?.sink.close();
+  }
+}
 
 // GET
 

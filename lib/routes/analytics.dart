@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:collection/collection.dart';
 
 import 'package:flutter/material.dart';
+import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/ui_texts.dart';
@@ -14,6 +16,7 @@ import 'package:rivia/utilities/language_switcher.dart';
 import 'package:rivia/utilities/log_out_button.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 const bigMeetingSize = 5;
 
@@ -27,23 +30,30 @@ class Analytics extends StatefulWidget {
 }
 
 class _AnalyticsState extends State<Analytics> {
-  int _highlightIndex = -1;
+  String? _highlightId;
   late Participant? _organiser = allParticipants;
   int _lowerSatisfaction = 0;
   int _upperSatisfaction = 100;
-  bool get _multiselect => _selectedMeetings.fold(false, (x, y) => x || y);
-  late List<Meeting> _filteredMeetings = widget.meetings;
-  late List<bool> _selectedMeetings =
-      List.generate(_filteredMeetings.length, (index) => false);
+  bool get _multiselect => _selectedMeetings.isNotEmpty;
+  late Map<String, Meeting> _filteredMeetings = Map.fromEntries(
+    widget.meetings.map((m) => MapEntry(m.meetingId!, m)),
+  );
+  final Map<String, Meeting> _selectedMeetings = {};
   final allParticipants = Participant(name: LangText.all.local, surname: '');
   final columnWidths = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
   late final Map<int, String?> headerCache = Map.fromEntries(
     columnWidths.mapIndexed((i, _) => MapEntry(i, null)),
   );
-  late final List<Map<int, String?>> entryCache = List.filled(
-    widget.meetings.length,
-    Map.fromEntries(columnWidths.mapIndexed((i, _) => MapEntry(i, null))),
+  late final Map<String, Map<int, String?>> entryCache = Map.fromEntries(
+    widget.meetings.map(
+      (m) => MapEntry(
+        m.meetingId!,
+        Map.fromEntries(columnWidths.mapIndexed((i, _) => MapEntry(i, null))),
+      ),
+    ),
   );
+
+  WebSocketChannel? _webSocket;
 
   final List<LangText> _allColumns = [
     LangText.date,
@@ -142,39 +152,26 @@ class _AnalyticsState extends State<Analytics> {
 
   Widget entryBuilder(
     BuildContext context, {
-    required int index,
+    required String id,
     required String text,
     int? column,
   }) {
     final String renderedText =
-        entryCache[index][column] ?? _render(text, column);
+        entryCache[id]![column] ?? _render(text, column);
 
     return TableRowInkWell(
       onTap: () async {
-        Meeting meeting = _filteredMeetings[index];
+        Meeting meeting = _filteredMeetings[id]!;
 
         final isReviewed = await getIsReviewed(meeting.meetingId!);
-        Navigator.of(context)
-            .pushNamed(
+        Navigator.of(context).pushNamed(
           isReviewed ? RouteNames.summary : RouteNames.review,
           arguments: isReviewed ? [meeting] : meeting,
-        )
-            .then(
-          (_) async {
-            final meetingIds = await getMeetings().onError(
-              (error, stackTrace) => Future.value([]),
-            );
-            final meetings =
-                (await Future.wait(meetingIds.map((f) => getMeetingContent(f))))
-                    .cast<Meeting>();
-            widget.meetings.clear();
-            setState(() => widget.meetings.addAll(meetings));
-          },
         );
       },
       child: MouseRegion(
-        onEnter: (_) => setState(() => _highlightIndex = index),
-        onExit: (_) => setState(() => _highlightIndex = -1),
+        onEnter: (_) => setState(() => _highlightId = id),
+        onExit: (_) => setState(() => _highlightId = null),
         child: Container(
           height: 72.0,
           padding: const EdgeInsets.all(8.0),
@@ -193,7 +190,7 @@ class _AnalyticsState extends State<Analytics> {
   Widget tableBuilder(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     List<Meeting> meetings = widget.meetings;
-    _filteredMeetings = meetings
+    _filteredMeetings = Map.fromEntries(meetings
         .where((element) =>
             _organiser == allParticipants || element.organiser == _organiser)
         .where((element) {
@@ -218,8 +215,7 @@ class _AnalyticsState extends State<Analytics> {
                   element.endTime.isAtSameMomentAs(_endDate.add(
                       const Duration(hours: 23, minutes: 59, seconds: 59)))),
         )
-        .toList();
-
+        .map((m) => MapEntry(m.meetingId!, m)));
     return SizedBox(
       width: width * 0.8,
       child: Center(
@@ -290,120 +286,120 @@ class _AnalyticsState extends State<Analytics> {
                     ),
                 ],
               ),
-              ...List.generate(
-                _filteredMeetings.length,
-                (index) {
-                  final meeting = _filteredMeetings[index];
-                  final name = meeting.title;
-                  final start = meeting.startTime;
-                  final end = meeting.endTime;
-                  final organiser = meeting.organiser;
-                  final organiserName = organiser?.fullName ?? "[NULL]";
-                  final participantNum = meeting.participants.length;
-                  final neededNum =
-                      meeting.participants.where((e) => e.needed != 0).length;
-                  final preparedNum =
-                      meeting.participants.where((e) => e.prepared != 0).length;
+              ..._filteredMeetings.entries.mapIndexed((index, entry) {
+                final meeting = entry.value;
+                final name = meeting.title;
+                final start = meeting.startTime;
+                final end = meeting.endTime;
+                final organiser = meeting.organiser;
+                final organiserName = organiser?.fullName ?? "[NULL]";
+                final participantNum = meeting.participants.length;
+                final neededNum =
+                    meeting.participants.where((e) => e.needed != 0).length;
+                final preparedNum =
+                    meeting.participants.where((e) => e.prepared != 0).length;
 
-                  return TableRow(
-                    decoration: BoxDecoration(
-                      color: _highlightIndex == index
-                          ? index.isOdd
-                              ? Colors.blue.shade50
-                              : Colors.orange.shade50
-                          : index.isOdd
-                              ? const Color.fromARGB(255, 150, 210, 255)
-                              : const Color.fromARGB(255, 255, 212, 150),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: 72.0,
-                          child: Center(
-                            child: Checkbox(
-                              onChanged: (value) => setState(() {
-                                _selectedMeetings[index] = value ?? false;
-                              }),
-                              value: _selectedMeetings[index],
-                            ),
+                return TableRow(
+                  decoration: BoxDecoration(
+                    color: _highlightId == entry.key
+                        ? index.isOdd
+                            ? Colors.blue.shade50
+                            : Colors.orange.shade50
+                        : index.isOdd
+                            ? const Color.fromARGB(255, 150, 210, 255)
+                            : const Color.fromARGB(255, 255, 212, 150),
+                  ),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        height: 72.0,
+                        child: Center(
+                          child: Checkbox(
+                            onChanged: (value) => setState(() {
+                              if (value ?? false) {
+                                _selectedMeetings[entry.key] = meeting;
+                              } else {
+                                _selectedMeetings.remove(entry.key);
+                              }
+                            }),
+                            value: _selectedMeetings.containsKey(entry.key),
                           ),
                         ),
                       ),
-                      if (_selectedColumns.contains(LangText.meetingName))
-                        entryBuilder(
-                          context,
-                          index: index,
-                          text: name,
-                          column: 0,
-                        ),
-                      if (_selectedColumns.contains(LangText.organiser))
-                        entryBuilder(
-                          context,
-                          index: index,
-                          text: organiserName,
-                          column: 1,
-                        ),
-                      if (_selectedColumns.contains(LangText.date))
-                        entryBuilder(
-                          context,
-                          index: index,
-                          text: '${start.day}.${start.month}.${start.year}',
-                          column: 2,
-                        ),
-                      if (_selectedColumns.contains(LangText.startTime))
-                        entryBuilder(
-                          context,
-                          index: index,
-                          text: TimeOfDay.fromDateTime(start)
-                              .format(context)
-                              .replaceAll(' ', '\u{00A0}'),
-                          column: 3,
-                        ),
-                      if (_selectedColumns.contains(LangText.endTime))
-                        entryBuilder(
-                          context,
-                          index: index,
-                          text: TimeOfDay.fromDateTime(end)
-                              .format(context)
-                              .replaceAll(' ', '\u{00A0}'),
-                          column: 4,
-                        ),
-                      if (_selectedColumns.contains(LangText.lvlSat))
-                        entryBuilder(
-                          context,
-                          index: index,
-                          text:
-                              '${meeting.qualities.isEmpty ? 50 : (meeting.qualities.reduce((a, b) => a + b) / meeting.qualities.length * 100).round()}%',
-                          column: 5,
-                        ),
-                      if (_selectedColumns.contains(LangText.noParticipants))
-                        entryBuilder(
-                          context,
-                          index: index,
-                          text: '$participantNum',
-                          column: 6,
-                        ),
-                      if (_selectedColumns
-                          .contains(LangText.neededParticipants))
-                        entryBuilder(
-                          context,
-                          index: index,
-                          text: '$neededNum',
-                          column: 7,
-                        ),
-                      if (_selectedColumns
-                          .contains(LangText.preparedParticipants))
-                        entryBuilder(
-                          context,
-                          index: index,
-                          text: '$preparedNum',
-                          column: 8,
-                        ),
-                    ],
-                  );
-                },
-              ),
+                    ),
+                    if (_selectedColumns.contains(LangText.meetingName))
+                      entryBuilder(
+                        context,
+                        id: entry.key,
+                        text: name,
+                        column: 0,
+                      ),
+                    if (_selectedColumns.contains(LangText.organiser))
+                      entryBuilder(
+                        context,
+                        id: entry.key,
+                        text: organiserName,
+                        column: 1,
+                      ),
+                    if (_selectedColumns.contains(LangText.date))
+                      entryBuilder(
+                        context,
+                        id: entry.key,
+                        text: '${start.day}.${start.month}.${start.year}',
+                        column: 2,
+                      ),
+                    if (_selectedColumns.contains(LangText.startTime))
+                      entryBuilder(
+                        context,
+                        id: entry.key,
+                        text: TimeOfDay.fromDateTime(start)
+                            .format(context)
+                            .replaceAll(' ', '\u{00A0}'),
+                        column: 3,
+                      ),
+                    if (_selectedColumns.contains(LangText.endTime))
+                      entryBuilder(
+                        context,
+                        id: entry.key,
+                        text: TimeOfDay.fromDateTime(end)
+                            .format(context)
+                            .replaceAll(' ', '\u{00A0}'),
+                        column: 4,
+                      ),
+                    if (_selectedColumns.contains(LangText.lvlSat))
+                      entryBuilder(
+                        context,
+                        id: entry.key,
+                        text:
+                            '${meeting.qualities.isEmpty ? 50 : (meeting.qualities.reduce((a, b) => a + b) / meeting.qualities.length * 100).round()}%',
+                        column: 5,
+                      ),
+                    if (_selectedColumns.contains(LangText.noParticipants))
+                      entryBuilder(
+                        context,
+                        id: entry.key,
+                        text: '$participantNum',
+                        column: 6,
+                      ),
+                    if (_selectedColumns.contains(LangText.neededParticipants))
+                      entryBuilder(
+                        context,
+                        id: entry.key,
+                        text: '$neededNum',
+                        column: 7,
+                      ),
+                    if (_selectedColumns
+                        .contains(LangText.preparedParticipants))
+                      entryBuilder(
+                        context,
+                        id: entry.key,
+                        text: '$preparedNum',
+                        column: 8,
+                      ),
+                  ],
+                );
+              }).toList(),
             ],
           ),
         ),
@@ -606,9 +602,10 @@ class _AnalyticsState extends State<Analytics> {
                         onConfirm: (values) {
                           setState(() {
                             headerCache.clear();
-                            for (final cache in entryCache) {
-                              cache.clear();
+                            for (final value in entryCache.values) {
+                              value.clear();
                             }
+
                             _selectedColumns =
                                 values.map((e) => e as LangText).toList();
                           });
@@ -631,11 +628,7 @@ class _AnalyticsState extends State<Analytics> {
                     setState(() {
                       Navigator.of(context).pushNamed(
                         RouteNames.summary,
-                        arguments:
-                            IterableZip([_filteredMeetings, _selectedMeetings])
-                                .where((element) => element[1] as bool)
-                                .map((e) => e[0] as Meeting)
-                                .toList(),
+                        arguments: _selectedMeetings.values.toList(),
                       );
                     });
                   },
@@ -665,14 +658,41 @@ class _AnalyticsState extends State<Analytics> {
             height: MediaQuery.of(context).size.height,
             fit: BoxFit.fill,
           ),
-          foregroundBuilder(context),
+          StreamBuilder(
+            stream: _webSocket?.stream,
+            builder: (context, snapshot) {
+              print(snapshot.data?.toString());
+              if (snapshot.data != null) {
+                Map<String, dynamic> content =
+                    json.decode(snapshot.data!.toString());
+                content[Fields.meeting][Fields.meetingId] = content[Fields.id];
+                content = content[Fields.meeting];
+                final newMeeting = Meeting.fromJson(content);
+                print(newMeeting?.meetingId);
+                for (final m in widget.meetings) {
+                  print('id: ${m.meetingId}');
+                }
+                widget.meetings.removeWhere(
+                  (m) => m.meetingId == newMeeting?.meetingId,
+                );
+                print(widget.meetings.length);
+                if (newMeeting != null) {
+                  widget.meetings.add(newMeeting);
+                  entryCache[newMeeting.meetingId!] = Map.fromEntries(
+                    columnWidths.mapIndexed((i, _) => MapEntry(i, null)),
+                  );
+                }
+              }
+              return foregroundBuilder(context);
+            },
+          ),
           const LogOutButton(),
           LanguageSwitcher(
             callback: () => setState(
               () {
                 headerCache.clear();
-                for (final cache in entryCache) {
-                  cache.clear();
+                for (final value in entryCache.values) {
+                  value.clear();
                 }
               },
             ),
@@ -700,5 +720,17 @@ class _AnalyticsState extends State<Analytics> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _webSocket = getWebSocket();
+  }
+
+  @override
+  void dispose() {
+    disposeWebSocket();
+    super.dispose();
   }
 }
