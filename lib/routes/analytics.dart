@@ -734,7 +734,7 @@ class _AnalyticsState extends State<Analytics> {
 
   @override
   void dispose() {
-    disposeWebSocket();
+    disposeWebSocket(_webSocket);
     super.dispose();
   }
 }

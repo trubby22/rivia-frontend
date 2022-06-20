@@ -601,7 +601,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
 
   @override
   void dispose() {
-    disposeWebSocket();
+    disposeWebSocket(_webSocket);
     super.dispose();
   }
 }

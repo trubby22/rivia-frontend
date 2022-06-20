@@ -14,11 +14,6 @@ import 'package:rivia/models/response.dart';
 /// The global [http.Client].
 final _httpClient = BrowserClient();
 
-/// The global WebSocket.
-WebSocketChannel? _webSocket;
-
-int _count = 0;
-
 /// The headers for API requests.
 final _headers = {
   'accept': 'application/json',
@@ -27,29 +22,21 @@ final _headers = {
 
 /// Get the [WebSocketChannel], initialise it if necessary.
 WebSocketChannel getWebSocket() {
-  _count++;
-
-  if (_webSocket != null) {
-    return _webSocket!;
-  }
+  WebSocketChannel _webSocket;
 
   _webSocket = WebSocketChannel.connect(
     Uri.parse('wss://websocket.api.rivia.me'),
   );
 
-  _webSocket!.sink.add(
+  _webSocket.sink.add(
     '{"user": "${authToken.userId}", "tenant": "${authToken.tenantDomain}"}',
   );
 
-  return _webSocket!;
+  return _webSocket;
 }
 
-void disposeWebSocket() {
-  _count--;
-
-  if (_count == 0) {
-    _webSocket?.sink.close();
-  }
+void disposeWebSocket(WebSocketChannel? _webSocket) {
+  _webSocket?.sink.close();
 }
 
 // GET
