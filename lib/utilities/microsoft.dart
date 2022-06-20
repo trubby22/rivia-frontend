@@ -47,9 +47,9 @@ Future<bool> microsoftGetTokens(String code) async {
 /// Attempt to fetch the user id and tenant domain from Microsoft Graph. Set the
 /// userId in [authToken] to null if failed (not logged in).
 Future<void> microsoftGetUserId() async {
-  if (authToken.userId != null && authToken.tenantDomain != null) {
-    return;
-  }
+  // if (authToken.userId != null && authToken.tenantDomain != null) {
+  //   return;
+  // }
 
   if (authToken.token == null) {
     // No token; not logged in
