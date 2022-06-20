@@ -634,7 +634,11 @@ class _AnalyticsState extends State<Analytics> {
                     setState(() {
                       Navigator.of(context).pushNamed(
                         RouteNames.summary,
-                        arguments: _selectedMeetings.values.toList(),
+                        arguments: (_selectedMeetings
+                              ..removeWhere((key, _) =>
+                                  !_filteredMeetings.containsKey(key)))
+                            .values
+                            .toList(),
                       );
                     });
                   },
