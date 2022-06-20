@@ -480,11 +480,9 @@ class _AnalyticsState extends State<Analytics> {
                           icon: const Icon(Icons.arrow_drop_down),
                           borderRadius: BorderRadius.circular(10.0),
                           elevation: 16,
-                          onChanged: _multiselect
-                              ? null
-                              : (Participant? newValue) {
-                                  setState(() => _organiser = newValue);
-                                },
+                          onChanged: (Participant? newValue) {
+                            setState(() => _organiser = newValue);
+                          },
                           items: (widget.meetings
                                   .map((e) => e.organiser)
                                   .toSet()
@@ -526,16 +524,14 @@ class _AnalyticsState extends State<Analytics> {
                           icon: const Icon(Icons.arrow_drop_down),
                           borderRadius: BorderRadius.circular(10),
                           elevation: 16,
-                          onChanged: _multiselect
-                              ? null
-                              : (int? newValue) {
-                                  if (newValue != null &&
-                                      newValue <= _upperSatisfaction) {
-                                    setState(() {
-                                      _lowerSatisfaction = newValue;
-                                    });
-                                  }
-                                },
+                          onChanged: (int? newValue) {
+                            if (newValue != null &&
+                                newValue <= _upperSatisfaction) {
+                              setState(() {
+                                _lowerSatisfaction = newValue;
+                              });
+                            }
+                          },
                           items: _percentages,
                         ),
                       ),
@@ -562,16 +558,14 @@ class _AnalyticsState extends State<Analytics> {
                           icon: const Icon(Icons.arrow_drop_down),
                           borderRadius: BorderRadius.circular(10),
                           elevation: 16,
-                          onChanged: _multiselect
-                              ? null
-                              : (int? newValue) {
-                                  if (newValue != null &&
-                                      newValue >= _lowerSatisfaction) {
-                                    setState(() {
-                                      _upperSatisfaction = newValue;
-                                    });
-                                  }
-                                },
+                          onChanged: (int? newValue) {
+                            if (newValue != null &&
+                                newValue >= _lowerSatisfaction) {
+                              setState(() {
+                                _upperSatisfaction = newValue;
+                              });
+                            }
+                          },
                           items: _percentages,
                         ),
                       ),
@@ -582,7 +576,6 @@ class _AnalyticsState extends State<Analytics> {
                         restorationId: 'analytics',
                         initialDate: _startDate,
                         notifyParent: setStartDate,
-                        enabled: !_multiselect,
                       ),
                       SizedBox(width: 8.0),
                       Text('${LangText.to.local}:'),
@@ -591,7 +584,6 @@ class _AnalyticsState extends State<Analytics> {
                         restorationId: 'analytics',
                         initialDate: _endDate,
                         notifyParent: setEndDate,
-                        enabled: !_multiselect,
                       ),
                       SizedBox(width: width * 0.02),
                       MultiSelectDialogField(
@@ -719,12 +711,10 @@ class _AnalyticsState extends State<Analytics> {
               padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
               child: Text(LangText.createNewMeeting.local,
                   style: UITexts.bigButtonText),
-              onPressed: _multiselect
-                  ? null
-                  : (_) => Navigator.of(context).pushNamed(
-                        RouteNames.createMeeting,
-                        arguments: [],
-                      ),
+              onPressed: (_) => Navigator.of(context).pushNamed(
+                RouteNames.createMeeting,
+                arguments: [],
+              ),
             ),
           ),
         ],
