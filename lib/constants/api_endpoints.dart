@@ -1,7 +1,7 @@
 import 'package:rivia/utilities/change_notifiers.dart';
 
 class API {
-  static String apiGateway = 'https://api.rivia.me/production ';
+  static String apiGateway = 'https://api.rivia.me';
 
   static String summary() => '$apiGateway/summary';
 
