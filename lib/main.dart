@@ -84,11 +84,15 @@ class _MyAppState extends State<MyApp> {
             }
             final locSplit = window.location.href.split('/');
             if (dict["code"] == null &&
+                dict['admin_consent'] == null &&
                 (locSplit.isEmpty || locSplit.last.isEmpty)) {
               return MaterialPageRoute(builder: (_) => Login());
             }
             return MaterialPageRoute(
-              builder: (_) => Redirect(code: dict["code"]),
+              builder: (_) => Redirect(
+                code: dict["code"],
+                adminConsent: dict['admin_consent'] == 'True',
+              ),
             );
           case RouteNames.createMeeting:
             try {

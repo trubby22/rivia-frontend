@@ -63,7 +63,13 @@ class _LoginState extends State<Login> {
                       width:
                           max(350, MediaQuery.of(context).size.width * 0.25) *
                               0.7,
-                      onPressed: (_) async {},
+                      onPressed: (_) async {
+                        if (authToken.userId == null) {
+                          microsoftLoginAdmin();
+                        } else {
+                          print(1);
+                        }
+                      },
                       child: Text(
                         LangText.loginAsAdmin.local,
                         style: UITexts.mediumButtonText,

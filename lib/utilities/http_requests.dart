@@ -52,7 +52,7 @@ Future<List<String>> getMeetings() async {
       "Get Meetings Failed!\nError Code: ${jason[Fields.errorCode]}",
     );
   }
-
+  print(jason);
   var jsonList = (jason[Fields.jsonData] as List<dynamic>).cast<String>();
   return jsonList;
 }

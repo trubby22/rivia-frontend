@@ -9,8 +9,9 @@ import 'package:rivia/utilities/toast.dart';
 import 'dart:html';
 
 class Redirect extends StatefulWidget {
-  const Redirect({Key? key, this.code}) : super(key: key);
+  const Redirect({Key? key, this.code, this.adminConsent}) : super(key: key);
   final String? code;
+  final bool? adminConsent;
 
   @override
   State<Redirect> createState() => _RedirectState();
@@ -42,7 +43,10 @@ class _RedirectState extends State<Redirect> {
 
   Future<void> redirectLogic() async {
     if (widget.code == null) {
-      return;
+      if (widget.adminConsent != true) {
+        return;
+      }
+      microsoftLogin();
     }
     await getSharedPref(null);
     final result = authToken.userId == null

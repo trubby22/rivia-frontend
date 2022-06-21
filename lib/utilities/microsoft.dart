@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'change_notifiers.dart';
 
 const String _microsoftLoginBaseUrl =
-    'https://login.microsoftonline.com/common/oauth2/v2.0';
+    'https://login.microsoftonline.com/common';
 const String _microsoftGraphBaseUrl = 'https://graph.microsoft.com/v1.0';
 const String _clientId = '491d67e2-00cf-46ce-87cc-7e315c09b59f';
 const String _redirectUri = 'https%3A%2F%2Fapp.rivia.me/';
@@ -15,10 +15,18 @@ const String _pxceVerifier = '114514';
 
 /// Microsoft Teams & Azure related APIs.
 
-/// Log the user in via their Microsoft account, opening a new tab.
+/// Log the user in via their Microsoft account.
 void microsoftLogin() {
   window.open(
-    '$_microsoftLoginBaseUrl/authorize?client_id=$_clientId&response_type=code&redirect_uri=$_redirectUri&response_mode=query&scope=User.Read&code_challenge=$_pxceChallenge&code_challenge_method=S256',
+    '$_microsoftLoginBaseUrl/oauth2/v2.0/authorize?client_id=$_clientId&response_type=code&redirect_uri=$_redirectUri&response_mode=query&scope=User.Read&code_challenge=$_pxceChallenge&code_challenge_method=S256',
+    '_self',
+  );
+}
+
+/// Log the admin in via their Microsoft account.
+void microsoftLoginAdmin() {
+  window.open(
+    '$_microsoftLoginBaseUrl/adminconsent?client_id=$_clientId&redirect_uri=$_redirectUri&response_mode=query',
     '_self',
   );
 }
@@ -26,7 +34,7 @@ void microsoftLogin() {
 /// Get the tokens based on the code and save them.
 Future<bool> microsoftGetTokens(String code) async {
   final response = await http.post(
-    Uri.parse('$_microsoftLoginBaseUrl/token'),
+    Uri.parse('$_microsoftLoginBaseUrl/oauth2/v2.0/token'),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
@@ -86,7 +94,7 @@ Future<bool> microsoftRefresh() async {
   }
 
   final response = await http.post(
-    Uri.parse('$_microsoftLoginBaseUrl/token'),
+    Uri.parse('$_microsoftLoginBaseUrl/oauth2/v2.0/token'),
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     body:
         'client_id=$_clientId&scope=User.Read&refresh_token=${authToken.refreshToken}&redirect_uri=$_redirectUri&grant_type=refresh_token&code_verifier=$_pxceVerifier',
