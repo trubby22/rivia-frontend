@@ -599,7 +599,7 @@ class _ReviewState extends State<Review> {
           children: [
             SizedBox(height: height * 0.02),
             Text(
-              'What is your overall rating for our product?',
+              'To what extent do you think our product is sueful?',
               style: UITexts.sectionHeader,
             ),
             Row(
@@ -729,7 +729,8 @@ class _ReviewState extends State<Review> {
                     p2.toDouble(),
                     p3.toDouble(),
                   ]);
-                  await Future.wait([review, timing]);
+                  final rating = postRating(x1, x2);
+                  await Future.wait([review, timing, rating]);
                   // TODO: Explicitly go to analytics instead of mere pop
                   Navigator.of(context).pop();
                 }

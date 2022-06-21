@@ -51,4 +51,7 @@ class API {
 
   static String timing() =>
       '$apiGateway/timing?tenant=${authToken.tenantDomain}&user=${authToken.userId}';
+
+  static String rating() =>
+      '$apiGateway/rating?tenant=${authToken.tenantDomain}&user=${authToken.userId}';
 }
