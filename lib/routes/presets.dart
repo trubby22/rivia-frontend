@@ -67,69 +67,55 @@ class _PresetsState extends State<Presets> {
                     ...List.generate(
                       widget.presets.length,
                       (index) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedButton(
-                              backgroundColour: Colors.red,
-                              primaryColour: Colors.white,
-                              onPressedColour: Colors.red,
-                              height: 48.0,
-                              width: 64.0,
-                              onPressed: (_) async {
-                                setState(
-                                  () => widget.presets.remove(list[index]),
-                                );
-                              },
-                              child: const Icon(
-                                Icons.delete,
-                                size: FontSizes.bigTextSize,
-                                color: Colors.black,
-                              ),
+                        return Container(
+                          margin: const EdgeInsets.all(12.0),
+                          width: width * 0.3,
+                          height: 52.0,
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade100,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(8.0),
                             ),
-                            SizedBox(width: width * 0.04),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 12.0,
-                              ),
-                              child: Container(
-                                width: width * 0.3,
-                                height: 52.0,
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade100,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        offset: Offset(0, 1), blurRadius: 2.0),
-                                  ],
+                            boxShadow: const [
+                              BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
+                            ],
+                          ),
+                          child: Center(
+                            child: ListTile(
+                              trailing: IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                  size: FontSizes.bigTextSize,
+                                  color: Colors.black,
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    list[index],
-                                    textAlign: TextAlign.center,
-                                    style: UITexts.mediumButtonText.copyWith(
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                  ),
+                                onPressed: () async {
+                                  setState(
+                                    () => widget.presets.remove(list[index]),
+                                  );
+                                },
+                              ),
+                              title: Text(
+                                list[index],
+                                textAlign: TextAlign.center,
+                                style: UITexts.mediumButtonText.copyWith(
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
                                 ),
                               ),
                             ),
-                          ],
+                          ),
                         );
                       },
                     ),
                     SizedBox(height: height * 0.02),
                     SizedBox(
-                      width: width * 0.4,
+                      width: width * 0.3,
                       child: _isAddingPreset
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SizedBox(
-                                  width: width * 0.28,
+                                  width: width * 0.24,
                                   child: TextField(
                                     decoration: InputDecoration(
                                       labelText: LangText.newPreset.local,
@@ -159,7 +145,8 @@ class _PresetsState extends State<Presets> {
                                   width: 36.0,
                                   radius: BorderRadius.circular(18.0),
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 20.0),
+                                    vertical: 20.0,
+                                  ),
                                   onPressed: (_) {
                                     widget.presets.add(_controller.text);
                                     _controller.text = '';
