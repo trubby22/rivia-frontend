@@ -67,8 +67,6 @@ class _RedirectState extends State<Redirect> {
       } else {
         dashboard(context);
       }
-    } else {
-      showToast(context: context, text: 'Failed to login!');
     }
   }
 

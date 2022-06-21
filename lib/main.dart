@@ -17,6 +17,13 @@ import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class NoAnimationPageRoute extends MaterialPageRoute {
+  NoAnimationPageRoute({builder}) : super(builder: builder);
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 0);
+}
+
 void main() {
   setUrlStrategy(PathUrlStrategy());
   runApp(const MyApp());
@@ -69,7 +76,7 @@ class _MyAppState extends State<MyApp> {
         switch (name) {
           case RouteNames.presets:
             try {
-              return MaterialPageRoute(
+              return NoAnimationPageRoute(
                 builder: (_) => Presets(
                   presets: routeSettings.arguments as Set<String>,
                 ),
@@ -81,7 +88,7 @@ class _MyAppState extends State<MyApp> {
             }
           case RouteNames.analytics:
             try {
-              return MaterialPageRoute(
+              return NoAnimationPageRoute(
                 builder: (_) => Analytics(
                   meetings: routeSettings.arguments as List<Meeting>,
                 ),
@@ -93,15 +100,15 @@ class _MyAppState extends State<MyApp> {
             }
           case RouteNames.login:
             if (routeSettings.arguments == true) {
-              return MaterialPageRoute(builder: (_) => Login());
+              return NoAnimationPageRoute(builder: (_) => Login());
             }
             final locSplit = window.location.href.split('/');
             if (dict["code"] == null &&
                 dict['admin_consent'] == null &&
                 (locSplit.isEmpty || locSplit.last.isEmpty)) {
-              return MaterialPageRoute(builder: (_) => Login());
+              return NoAnimationPageRoute(builder: (_) => Login());
             }
-            return MaterialPageRoute(
+            return NoAnimationPageRoute(
               builder: (_) => Redirect(
                 code: dict["code"],
                 adminConsent: dict['admin_consent'] == 'True',
@@ -109,7 +116,7 @@ class _MyAppState extends State<MyApp> {
             );
           case RouteNames.createMeeting:
             try {
-              return MaterialPageRoute(
+              return NoAnimationPageRoute(
                 builder: (_) => CreateMeeting(allParticipants: []),
               );
             } catch (_) {
@@ -123,7 +130,7 @@ class _MyAppState extends State<MyApp> {
                 "ERROR: Did not pass a valid Meeting for Review page!",
               );
             }
-            return MaterialPageRoute(
+            return NoAnimationPageRoute(
               builder: (_) => Review(
                 meeting: routeSettings.arguments as Meeting,
                 participant: null,
@@ -131,7 +138,7 @@ class _MyAppState extends State<MyApp> {
             );
           case RouteNames.summary:
             try {
-              return MaterialPageRoute(
+              return NoAnimationPageRoute(
                 builder: (_) => MeetingSummary(
                   meetings: routeSettings.arguments as List<Meeting>,
                 ),

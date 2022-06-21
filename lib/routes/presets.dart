@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
+import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
@@ -212,6 +213,25 @@ class _PresetsState extends State<Presets> {
           ),
           const LogOutButton(),
           LanguageSwitcher(callback: () => setState(() => {})),
+          Positioned(
+            left: 64.0,
+            top: 24.0,
+            child: SizedButton(
+              backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
+              primaryColour: Colors.black,
+              onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
+              height: 48.0,
+              width: 48.0,
+              radius: BorderRadius.circular(24.0),
+              onPressed: (_) => (Navigator.of(context)
+                    ..popUntil((route) => route.isFirst))
+                  .pushNamed(
+                RouteNames.login,
+                arguments: true,
+              ),
+              child: const Icon(Icons.arrow_back, size: 32.0),
+            ),
+          ),
         ],
       ),
     );

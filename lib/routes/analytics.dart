@@ -704,6 +704,25 @@ class _AnalyticsState extends State<Analytics> {
             ),
           ),
           Positioned(
+            left: 64.0,
+            top: 24.0,
+            child: SizedButton(
+              backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
+              primaryColour: Colors.black,
+              onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
+              height: 48.0,
+              width: 48.0,
+              radius: BorderRadius.circular(24.0),
+              onPressed: (_) => (Navigator.of(context)
+                    ..popUntil((route) => route.isFirst))
+                  .pushNamed(
+                RouteNames.login,
+                arguments: true,
+              ),
+              child: const Icon(Icons.arrow_back, size: 32.0),
+            ),
+          ),
+          Positioned(
             bottom: 32.0,
             right: 64.0,
             child: SizedButton(
