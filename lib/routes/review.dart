@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:dartz/dartz.dart' hide State;
@@ -43,6 +44,10 @@ class _ReviewState extends State<Review> {
   double x1 = 0.5;
   double x2 = 0.5;
   bool submitted = false;
+  int p1 = 0;
+  int p2 = 0;
+  int p3 = 0;
+  Timer? periodicTimer;
 
   /// Build the selection panel.
   Widget selectionPanelBuilder(
@@ -717,7 +722,14 @@ class _ReviewState extends State<Review> {
               onPressed: (_) async {
                 if (!submitted) {
                   submitted = true;
-                  await submitReview(context);
+                  print('$p1, $p2, $p3');
+                  final review = submitReview(context);
+                  final timing = postTiming([
+                    p1.toDouble(),
+                    p2.toDouble(),
+                    p3.toDouble(),
+                  ]);
+                  await Future.wait([review, timing]);
                   // TODO: Explicitly go to analytics instead of mere pop
                   Navigator.of(context).pop();
                 }
@@ -771,6 +783,24 @@ class _ReviewState extends State<Review> {
   void initState() {
     super.initState();
     getSharedPref(() => setState(() {}));
+    periodicTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        switch (_step) {
+          case ReviewSteps.slider:
+            p1++;
+            break;
+          case ReviewSteps.selection:
+            p2++;
+            break;
+          case ReviewSteps.feedback:
+            p3++;
+            break;
+          default:
+            break;
+        }
+      },
+    );
   }
 
   @override

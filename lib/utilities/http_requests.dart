@@ -179,3 +179,11 @@ void postReview(String meetingId, Response review) async {
     body: jsonEncode(json),
   );
 }
+
+Future<void> postTiming(List<double> times) async {
+  http.Response response = await _httpClient.post(
+    Uri.parse(API.timing()),
+    body: json.encode({Fields.painPoints: times}),
+  );
+  print(json.decode(response.body));
+}

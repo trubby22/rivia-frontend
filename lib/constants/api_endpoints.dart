@@ -48,4 +48,7 @@ class API {
 
   /// Sign Up.
   static String postSignUp() => '$apiGateway/create-account';
+
+  static String timing() =>
+      '$apiGateway/timing?tenant=${authToken.tenantDomain}&user=${authToken.userId}';
 }
