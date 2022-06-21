@@ -6,6 +6,8 @@ enum Lang {
 enum LangText {
   langCode,
   langSwitchMsg,
+  loginAsAdmin,
+  loginAsUser,
   rivia,
   aggregateStats,
   aggregateParticipants,
@@ -82,10 +84,9 @@ extension LangTextContent on LangText {
       'Language switched, please refresh the page',
       'Язык изменен, обновите страницу',
     ],
-    LangText.rivia: [
-      'RIVIA',
-      'РИВИЯ',
-    ],
+    LangText.rivia: ['RIVIA', 'РИВИЯ'],
+    LangText.loginAsAdmin: ['Login as admin', 'Войти как администратор'],
+    LangText.loginAsUser: ['Login as user', 'Войти как пользователь'],
     LangText.aggregateStats: ['Aggregate Stats', 'Совокупная статистика'],
     LangText.aggregateParticipants: [
       'Number of participants',
