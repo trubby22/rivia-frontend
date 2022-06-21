@@ -29,14 +29,6 @@ class _LoginState extends State<Login> {
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: const Color.fromRGBO(244, 242, 234, 1),
-        // body: Builder(
-        //   builder: (context) {
-        //     if (_signup) {
-        //       dashboard(context);
-        //     }
-        //     return Container();
-        //   },
-        // ),
         body: Stack(
           children: [
             Center(
@@ -64,10 +56,10 @@ class _LoginState extends State<Login> {
                           max(350, MediaQuery.of(context).size.width * 0.25) *
                               0.7,
                       onPressed: (_) async {
-                        if (authToken.userId == null) {
+                        if (authToken.isAdmin == false) {
                           microsoftLoginAdmin();
                         } else {
-                          print(1);
+                          presets(context);
                         }
                       },
                       child: Text(

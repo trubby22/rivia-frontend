@@ -17,6 +17,18 @@ class Redirect extends StatefulWidget {
   State<Redirect> createState() => _RedirectState();
 }
 
+Future<void> presets(context) async {
+  await microsoftGetUserId();
+  if (!testMode) {
+    window.history.pushState(null, 'home', 'https://app.rivia.me');
+  }
+  final presets = await getPresets();
+  Navigator.of(context).popAndPushNamed(
+    RouteNames.presets,
+    arguments: {"Preset 1", "Preset 2", "Preset 3"},
+  );
+}
+
 Future<void> dashboard(context) async {
   await microsoftGetUserId();
   final meetingIds = await getMeetings().onError(
@@ -35,25 +47,26 @@ Future<void> dashboard(context) async {
 }
 
 class _RedirectState extends State<Redirect> {
-  @override
-  void initState() {
-    super.initState();
-    redirectLogic();
-  }
-
   Future<void> redirectLogic() async {
     if (widget.code == null) {
       if (widget.adminConsent != true) {
         return;
       }
+      authToken.isAdmin = true;
+      await setSharedPref();
       microsoftLogin();
+      return;
     }
     await getSharedPref(null);
     final result = authToken.userId == null
         ? await microsoftGetTokens(widget.code!)
         : true;
     if (result) {
-      dashboard(context);
+      if (authToken.isAdmin) {
+        presets(context);
+      } else {
+        dashboard(context);
+      }
     } else {
       showToast(context: context, text: 'Failed to login!');
     }
@@ -62,6 +75,11 @@ class _RedirectState extends State<Redirect> {
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: const Color.fromRGBO(244, 242, 234, 1),
-        body: Container(),
+        body: FutureBuilder(
+          future: redirectLogic(),
+          builder: (context, snapshot) {
+            return Container();
+          },
+        ),
       );
 }

@@ -5,6 +5,10 @@ class API {
 
   static String summary() => '$apiGateway/summary';
 
+  /// Get Preset Questions.
+  static String getPresets() =>
+      '$apiGateway/?tenant=${authToken.tenantDomain}&user=${authToken.userId}';
+
   /// Get the content of the [Meeting] corresponding to [meetingId].
   static String meeting(String meetingId) =>
       '$apiGateway/meeting/$meetingId/review';
@@ -34,6 +38,10 @@ class API {
   /// Create a new [Meeting].
   static String postMeeting() =>
       '$apiGateway/meetings?tenant=${authToken.tenantDomain}&user=${authToken.userId}';
+
+  /// Get Preset Questions.
+  static String postPresets() =>
+      '$apiGateway/?tenant=${authToken.tenantDomain}';
 
   /// Login.
   static String postLogin() => '$apiGateway/login';

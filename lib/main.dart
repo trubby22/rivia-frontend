@@ -7,6 +7,7 @@ import 'package:rivia/routes/analytics.dart';
 import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
 import 'package:rivia/routes/login.dart';
+import 'package:rivia/routes/presets.dart';
 import 'package:rivia/routes/redirect.dart';
 import 'package:rivia/routes/review.dart';
 import 'package:rivia/routes/create_meeting.dart';
@@ -66,6 +67,18 @@ class _MyAppState extends State<MyApp> {
                 return MapEntry(kv[0], kv[1]);
               }));
         switch (name) {
+          case RouteNames.presets:
+            try {
+              return MaterialPageRoute(
+                builder: (_) => Presets(
+                  presets: routeSettings.arguments as Set<String>,
+                ),
+              );
+            } catch (_) {
+              throw Exception(
+                "ERROR: Did not pass a valid set of questions for Presets page! Type: ${routeSettings.arguments.runtimeType}",
+              );
+            }
           case RouteNames.analytics:
             try {
               return MaterialPageRoute(

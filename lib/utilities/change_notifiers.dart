@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/settings.dart';
@@ -20,6 +19,7 @@ Future<void> getSharedPref(Function()? callback) async {
     authToken.refreshToken = instance.getString(Fields.refreshToken);
     authToken.userId = instance.getString(Fields.id);
     authToken.tenantDomain = instance.getString(Fields.organiserId);
+    authToken.isAdmin = instance.getBool('isAdmin') ?? false;
   }
   callback?.call();
 }
@@ -47,6 +47,7 @@ Future<void> setSharedPref() async {
   } else {
     instance.setString(Fields.organiserId, authToken.tenantDomain!);
   }
+  instance.setBool('isAdmin', authToken.isAdmin);
 }
 
 class AuthToken {
@@ -55,12 +56,14 @@ class AuthToken {
   String? refreshToken;
   String? userId;
   String? tenantDomain;
+  bool isAdmin = false;
 
   Future<void> reset() async {
     token = null;
     refreshToken = null;
     userId = null;
     tenantDomain = null;
+    isAdmin = false;
     await setSharedPref();
   }
 }

@@ -41,6 +41,24 @@ void disposeWebSocket(WebSocketChannel? _webSocket) {
 
 // GET
 
+// Get the list of Preset Questions.
+Future<Set<String>> getPresets() async {
+  http.Response response = await _httpClient.get(Uri.parse(API.getPresets()));
+  print(json.decode(response.body));
+  return (json.decode(response.body) as Map<String, dynamic>)
+      .values
+      .toSet()
+      .cast<String>();
+}
+
+Future<void> postPresets(List<String> presets) async {
+  http.Response response = await _httpClient.post(
+    Uri.parse(API.postPresets()),
+    body: json.encode({Fields.painPoints: presets}),
+  );
+  print(json.decode(response.body));
+}
+
 /// Get the list of [Meeting]s.
 Future<List<String>> getMeetings() async {
   http.Response response = await _httpClient.get(Uri.parse(API.getMeetings()));

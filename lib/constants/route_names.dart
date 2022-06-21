@@ -8,4 +8,5 @@ class RouteNames {
   static const String login = '/';
   static const String summary = '/summary';
   static const String redirect = '/redirect';
+  static const String presets = '/presets';
 }

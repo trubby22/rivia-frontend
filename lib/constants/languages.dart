@@ -21,6 +21,8 @@ enum LangText {
   noOneNotPrepared,
   voters,
   confidentialSurvey,
+  presets,
+  newPreset,
   bad,
   good,
   needed,
@@ -196,5 +198,10 @@ extension LangTextContent on LangText {
       'Number of peoples who selected the presets',
       'Количество людей, выбравших пресеты',
     ],
+    LangText.presets: [
+      'Preset question manager',
+      'Предустановленный менеджер вопросов',
+    ],
+    LangText.newPreset: ['New Preset', 'Новый пресет'],
   };
 }
