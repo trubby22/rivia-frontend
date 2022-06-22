@@ -850,7 +850,7 @@ class _ReviewState extends State<Review> {
                         if (Navigator.of(context).canPop()) {
                           Navigator.of(context).pop();
                         } else {
-                          dashboard(context);
+                          dashboard(context, null);
                         }
                         break;
                       case ReviewSteps.selection:

@@ -2,6 +2,7 @@ import 'dart:convert';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 import 'package:http/http.dart' as http;
+import 'package:rivia/utilities/http_requests.dart';
 
 import 'change_notifiers.dart';
 
@@ -18,7 +19,7 @@ const String _pxceVerifier = '114514';
 /// Log the user in via their Microsoft account.
 void microsoftLogin() {
   window.open(
-    '$_microsoftLoginBaseUrl/oauth2/v2.0/authorize?client_id=$_clientId&response_type=code&redirect_uri=$_redirectUri&response_mode=query&scope=User.Read&code_challenge=$_pxceChallenge&code_challenge_method=S256',
+    '$_microsoftLoginBaseUrl/oauth2/v2.0/authorize?client_id=$_clientId&response_type=code&redirect_uri=$_redirectUri&response_mode=query&scope=User.Read',
     '_self',
   );
 }
@@ -39,7 +40,7 @@ Future<bool> microsoftGetTokens(String code) async {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body:
-        "client_id=$_clientId&scope=User.Read&code=$code&redirect_uri=$_redirectUri&grant_type=authorization_code&code_verifier=$_pxceVerifier",
+        "client_id=$_clientId&scope=ChannelMessage.Send&code=$code&redirect_uri=$_redirectUri&grant_type=authorization_code&code_verifier=$_pxceVerifier",
   );
 
   if (response.statusCode == 200) {
@@ -54,45 +55,46 @@ Future<bool> microsoftGetTokens(String code) async {
 
 /// Attempt to fetch the user id and tenant domain from Microsoft Graph. Set the
 /// userId in [authToken] to null if failed (not logged in).
-Future<void> microsoftGetUserId() async {
+Future<void> microsoftGetUserId(String? code) async {
   if (authToken.userId != null && authToken.tenantId != null) {
     return;
   }
 
-  if (authToken.token == null) {
-    // No token; not logged in
+  if (code == null) {
+    // No code; not logged in
     authToken.reset();
   } else {
-    final response = await http.get(
-      Uri.parse('$_microsoftGraphBaseUrl/me'),
-      headers: {'Authorization': 'Bearer ${authToken.token}'},
-    );
+    await foo(code);
+    // final response = await http.get(
+    //   Uri.parse('$_microsoftGraphBaseUrl/me'),
+    //   headers: {'Authorization': 'Bearer ${authToken.token}'},
+    // );
 
-    if (response.statusCode == 200) {
-      // User id fetched from microsoft
-      final body = json.decode(response.body);
-      authToken.userId = body['id'];
-      final domain = (body['mail'] as String).split('@')[1];
-      authToken.tenantId = (body['mail'] as String).split('@')[1];
-      authToken.tenantId = (json.decode((await http.get(
-        Uri.parse(
-          'https://login.microsoftonline.com/$domain/.well-known/openid-configuration',
-        ),
-      ))
-              .body)['token_endpoint'] as String)
-          .split('/')[3];
-      setSharedPref();
-    } else if (authToken.refreshToken == null) {
-      // Refresh token is null. Should not happen
-      print("Refresh token is null. Should not happen!");
-      await authToken.reset();
-    } else if (await microsoftRefresh() == true) {
-      // Refresh successful
-      await microsoftGetUserId();
-    } else {
-      // Refresh token expired, need to login again
-      await authToken.reset();
-    }
+    // if (response.statusCode == 200) {
+    //   // User id fetched from microsoft
+    //   final body = json.decode(response.body);
+    //   authToken.userId = body['id'];
+    //   final domain = (body['mail'] as String).split('@')[1];
+    //   authToken.tenantId = (body['mail'] as String).split('@')[1];
+    //   authToken.tenantId = (json.decode((await http.get(
+    //     Uri.parse(
+    //       'https://login.microsoftonline.com/$domain/.well-known/openid-configuration',
+    //     ),
+    //   ))
+    //           .body)['token_endpoint'] as String)
+    //       .split('/')[3];
+    //   setSharedPref();
+    // } else if (authToken.refreshToken == null) {
+    //   // Refresh token is null. Should not happen
+    //   print("Refresh token is null. Should not happen!");
+    //   await authToken.reset();
+    // } else if (await microsoftRefresh() == true) {
+    //   // Refresh successful
+    //   await microsoftGetUserId();
+    // } else {
+    //   // Refresh token expired, need to login again
+    //   await authToken.reset();
+    // }
   }
 }
 

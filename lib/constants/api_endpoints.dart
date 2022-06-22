@@ -53,4 +53,6 @@ class API {
 
   static String rating() =>
       '$apiGateway/rating?tenant=${authToken.tenantId}&user=${authToken.userId}';
+
+  static String foo() => '$apiGateway/login';
 }

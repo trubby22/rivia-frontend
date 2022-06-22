@@ -17,11 +17,12 @@ class Redirect extends StatefulWidget {
   State<Redirect> createState() => _RedirectState();
 }
 
-Future<void> presets(context) async {
-  await microsoftGetUserId();
+Future<void> presets(context, String? code) async {
+  await microsoftGetUserId(code);
   if (!testMode) {
     window.history.pushState(null, 'home', 'https://app.rivia.me');
   }
+  await postPresets(null);
   final presets = await getPresets();
   Navigator.of(context).popAndPushNamed(
     RouteNames.presets,
@@ -29,8 +30,8 @@ Future<void> presets(context) async {
   );
 }
 
-Future<void> dashboard(context) async {
-  await microsoftGetUserId();
+Future<void> dashboard(context, String? code) async {
+  await microsoftGetUserId(code);
   final meetingIds = await getMeetings().onError(
     (error, stackTrace) => Future.value([]),
   );
@@ -58,15 +59,14 @@ class _RedirectState extends State<Redirect> {
       return;
     }
     await getSharedPref(null);
-    final result = authToken.userId == null
-        ? await microsoftGetTokens(widget.code!)
-        : true;
-    if (result) {
-      if (authToken.isAdmin) {
-        presets(context);
-      } else {
-        dashboard(context);
-      }
+    // final result = authToken.userId == null
+    //     ? await microsoftGetTokens(widget.code!)
+    //     : true;
+
+    if (authToken.isAdmin) {
+      presets(context, widget.code);
+    } else {
+      dashboard(context, widget.code);
     }
   }
 

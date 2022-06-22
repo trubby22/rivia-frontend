@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:rivia/constants/languages.dart';
+import 'package:rivia/constants/settings.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/routes/redirect.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
@@ -56,10 +57,12 @@ class _LoginState extends State<Login> {
                           max(350, MediaQuery.of(context).size.width * 0.25) *
                               0.7,
                       onPressed: (_) async {
-                        if (authToken.isAdmin == false) {
+                        if ((authToken.isAdmin == false ||
+                                authToken.userId == null) &&
+                            !testMode) {
                           microsoftLoginAdmin();
                         } else {
-                          presets(context);
+                          presets(context, null);
                         }
                       },
                       child: Text(
@@ -80,7 +83,7 @@ class _LoginState extends State<Login> {
                         if (authToken.userId == null) {
                           microsoftLogin();
                         } else {
-                          dashboard(context);
+                          dashboard(context, null);
                         }
                       },
                       child: Text(

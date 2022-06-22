@@ -20,6 +20,19 @@ final _headers = {
   'content-type': 'application/json',
 };
 
+Future<void> foo(String code) async {
+  http.Response response = await _httpClient.post(
+    Uri.parse(API.foo()),
+    headers: _headers,
+    body: json.encode({'authorizationCode': code}),
+  );
+  final Map<String, dynamic> r = json.decode(response.body);
+  print(r);
+  authToken.tenantId = r['tenantId'];
+  authToken.userId = r['userId'];
+  await setSharedPref();
+}
+
 /// Get the [WebSocketChannel], initialise it if necessary.
 WebSocketChannel getWebSocket() {
   WebSocketChannel _webSocket;
@@ -51,10 +64,13 @@ Future<Set<String>> getPresets() async {
       .cast<String>();
 }
 
-Future<void> postPresets(List<String> presets) async {
+Future<void> postPresets(List<String>? presets) async {
   http.Response response = await _httpClient.post(
     Uri.parse(API.postPresets()),
-    body: json.encode({Fields.painPoints: presets}),
+    headers: _headers,
+    body: json.encode({
+      if (presets != null) Fields.painPoints: presets,
+    }),
   );
   print(json.decode(response.body));
 }
