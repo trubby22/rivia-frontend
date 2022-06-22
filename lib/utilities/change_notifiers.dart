@@ -11,14 +11,14 @@ Future<void> getSharedPref(Function()? callback) async {
     authToken.token = 'test-token';
     authToken.refreshToken = 'test-token';
     authToken.userId = testUser;
-    authToken.tenantDomain = testTenant;
+    authToken.tenantId = testTenant;
   } else {
     authToken.language =
         Lang.values[instance.getInt(Fields.lang) ?? authToken.language.index];
     authToken.token = instance.getString(Fields.token);
     authToken.refreshToken = instance.getString(Fields.refreshToken);
     authToken.userId = instance.getString(Fields.id);
-    authToken.tenantDomain = instance.getString(Fields.organiserId);
+    authToken.tenantId = instance.getString(Fields.organiserId);
     authToken.isAdmin = instance.getBool('isAdmin') ?? false;
   }
   callback?.call();
@@ -42,10 +42,10 @@ Future<void> setSharedPref() async {
   } else {
     instance.setString(Fields.id, authToken.userId!);
   }
-  if (authToken.tenantDomain == null) {
+  if (authToken.tenantId == null) {
     instance.remove(Fields.organiserId);
   } else {
-    instance.setString(Fields.organiserId, authToken.tenantDomain!);
+    instance.setString(Fields.organiserId, authToken.tenantId!);
   }
   instance.setBool('isAdmin', authToken.isAdmin);
 }
@@ -55,14 +55,14 @@ class AuthToken {
   String? token;
   String? refreshToken;
   String? userId;
-  String? tenantDomain;
+  String? tenantId;
   bool isAdmin = false;
 
   Future<void> reset() async {
     token = null;
     refreshToken = null;
     userId = null;
-    tenantDomain = null;
+    tenantId = null;
     isAdmin = false;
     await setSharedPref();
   }

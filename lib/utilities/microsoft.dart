@@ -55,7 +55,7 @@ Future<bool> microsoftGetTokens(String code) async {
 /// Attempt to fetch the user id and tenant domain from Microsoft Graph. Set the
 /// userId in [authToken] to null if failed (not logged in).
 Future<void> microsoftGetUserId() async {
-  if (authToken.userId != null && authToken.tenantDomain != null) {
+  if (authToken.userId != null && authToken.tenantId != null) {
     return;
   }
 
@@ -72,7 +72,15 @@ Future<void> microsoftGetUserId() async {
       // User id fetched from microsoft
       final body = json.decode(response.body);
       authToken.userId = body['id'];
-      authToken.tenantDomain = (body['mail'] as String).split('@')[1];
+      final domain = (body['mail'] as String).split('@')[1];
+      authToken.tenantId = (body['mail'] as String).split('@')[1];
+      authToken.tenantId = (json.decode((await http.get(
+        Uri.parse(
+          'https://login.microsoftonline.com/$domain/.well-known/openid-configuration',
+        ),
+      ))
+              .body)['token_endpoint'] as String)
+          .split('/')[3];
       setSharedPref();
     } else if (authToken.refreshToken == null) {
       // Refresh token is null. Should not happen

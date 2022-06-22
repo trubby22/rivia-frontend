@@ -29,7 +29,7 @@ WebSocketChannel getWebSocket() {
   );
 
   _webSocket.sink.add(
-    '{"user": "${authToken.userId}", "tenant": "${authToken.tenantDomain}"}',
+    '{"user": "${authToken.userId}", "tenant": "${authToken.tenantId}"}',
   );
 
   return _webSocket;
