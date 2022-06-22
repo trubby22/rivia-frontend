@@ -126,8 +126,11 @@ extension LangTextContent on LangText {
     ],
     LangText.bad: ['BAD', 'ПЛОХО'],
     LangText.good: ['GOOD', 'ХОРОШИЙ'],
-    LangText.needed: ['Needed', 'Нужно'],
-    LangText.prepared: ['Prepared', 'Готово'],
+    LangText.needed: ['Is this participant needed?', 'Нужен ли этот участник?'],
+    LangText.prepared: [
+      'Is this participant prepared?',
+      'Готов ли этот участник?',
+    ],
     LangText.all: ['ALL', 'все'],
     LangText.yes: ['YES', 'Да'],
     LangText.no: ['NO', 'Нет'],

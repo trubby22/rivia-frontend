@@ -244,6 +244,11 @@ class _ReviewState extends State<Review> {
                     '${widget.meeting.startTime.day}/${widget.meeting.startTime.month}/${widget.meeting.startTime.year}',
                     style: UITexts.sectionHeader,
                   ),
+                  SizedBox(height: height * 0.02),
+                  Text(
+                    'How do you feel about the general quality of this meeting?',
+                    style: UITexts.sectionSubheader,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -314,50 +319,57 @@ class _ReviewState extends State<Review> {
               ),
               width: width * 0.7,
               child: Column(
-                children: List.generate(
-                  widget.meeting.painPoints.length,
-                  (index) {
-                    return Selector<ResponseBuilder,
-                        Tuple2<int, Map<String, String>>>(
-                      selector: (_, data) => Tuple2(
-                        data.painPoints.length,
-                        data.painPoints,
-                      ),
-                      builder: (context, data, _) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12.0,
+                children: [
+                  Text(
+                    'Please select those that applies to this meeting',
+                    style: UITexts.sectionSubheader,
+                  ),
+                  SizedBox(height: height * 0.02),
+                  ...List.generate(
+                    widget.meeting.painPoints.length,
+                    (index) {
+                      return Selector<ResponseBuilder,
+                          Tuple2<int, Map<String, String>>>(
+                        selector: (_, data) => Tuple2(
+                          data.painPoints.length,
+                          data.painPoints,
                         ),
-                        child: SizedButton(
-                          primaryColour: Colors.black,
-                          selectedColour: Colors.white,
-                          onPressedColour: Colors.blue,
-                          backgroundColour: Colors.blue.shade100,
-                          width: width * 0.3,
-                          height: 52.0,
-                          radius: BorderRadius.circular(20.0),
-                          child: Text(
-                            widget.meeting.painPoints[ppl[index]]!,
-                            textAlign: TextAlign.center,
-                            style: UITexts.mediumButtonText.copyWith(
-                              fontWeight: FontWeight.normal,
-                            ),
+                        builder: (context, data, _) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12.0,
                           ),
-                          useShadow: !data.value2.containsKey(ppl[index]),
-                          isSelected: data.value2.containsKey(ppl[index]),
-                          onPressed: (isSelected) {
-                            if (isSelected) {
-                              data.value2.remove(ppl[index]);
-                            } else {
-                              data.value2[ppl[index]] =
-                                  widget.meeting.painPoints[ppl[index]]!;
-                            }
-                            context.read<ResponseBuilder>().notify();
-                          },
+                          child: SizedButton(
+                            primaryColour: Colors.black,
+                            selectedColour: Colors.white,
+                            onPressedColour: Colors.blue,
+                            backgroundColour: Colors.blue.shade100,
+                            width: width * 0.3,
+                            height: 52.0,
+                            radius: BorderRadius.circular(20.0),
+                            child: Text(
+                              widget.meeting.painPoints[ppl[index]]!,
+                              textAlign: TextAlign.center,
+                              style: UITexts.mediumButtonText.copyWith(
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            useShadow: !data.value2.containsKey(ppl[index]),
+                            isSelected: data.value2.containsKey(ppl[index]),
+                            onPressed: (isSelected) {
+                              if (isSelected) {
+                                data.value2.remove(ppl[index]);
+                              } else {
+                                data.value2[ppl[index]] =
+                                    widget.meeting.painPoints[ppl[index]]!;
+                              }
+                              context.read<ResponseBuilder>().notify();
+                            },
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
             SizedBox(height: height * 0.03),
@@ -555,6 +567,7 @@ class _ReviewState extends State<Review> {
                     ),
                   ),
                   filled: true,
+                  alignLabelWithHint: true,
                   labelText: LangText.additionalComments.local,
                 ),
                 controller: _controller,
