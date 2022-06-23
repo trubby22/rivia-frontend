@@ -4,13 +4,11 @@ import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/routes/analytics.dart';
-import 'package:rivia/routes/dashboard_assigned.dart';
 import 'package:rivia/routes/dashboard_unassigned.dart';
 import 'package:rivia/routes/login.dart';
 import 'package:rivia/routes/presets.dart';
 import 'package:rivia/routes/redirect.dart';
 import 'package:rivia/routes/review.dart';
-import 'package:rivia/routes/create_meeting.dart';
 import 'package:rivia/routes/meeting_summary.dart';
 import 'dart:html';
 import 'package:rivia/models/meeting.dart';
@@ -58,7 +56,6 @@ class _MyAppState extends State<MyApp> {
       initialRoute: RouteNames.login,
       routes: {
         RouteNames.dashboardUnassigned: (_) => DashboardUnassigned(),
-        RouteNames.dashboardAssigned: (_) => DashboardAssigned(),
         RouteNames.redirect: (_) => Redirect(code: 'victory'),
         // RouteNames.login: (_) => Login(),
         // RouteNames.summary: (_) => MeetingSummary(meetings: [testMeeting2]),
@@ -114,16 +111,7 @@ class _MyAppState extends State<MyApp> {
                 adminConsent: dict['admin_consent'] == 'True',
               ),
             );
-          case RouteNames.createMeeting:
-            try {
-              return NoAnimationPageRoute(
-                builder: (_) => CreateMeeting(allParticipants: []),
-              );
-            } catch (_) {
-              throw Exception(
-                "ERROR: Did not pass a valid list of Participants for Create Meeting page! Type: ${routeSettings.arguments.runtimeType}",
-              );
-            }
+
           case RouteNames.review:
             if (routeSettings.arguments.runtimeType != Meeting) {
               throw Exception(
