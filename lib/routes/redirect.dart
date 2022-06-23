@@ -34,6 +34,9 @@ Future<void> dashboard(context, String? code) async {
 
   final meetings =
       await Future.wait(meetingIds.map((f) => getMeetingContent(f)));
+  for (final m in meetings) {
+    print(m!.toJson());
+  }
   if (!testMode) {
     window.history.pushState(null, 'home', 'https://app.rivia.me');
   }

@@ -13,7 +13,7 @@ class Fields {
   static String title = 'title';
   static String startTime = 'startTime';
   static String endTime = 'endTime';
-  static String participants = 'participants';
+  static String participants = 'users';
   static String meeting = 'meeting';
   static String meetings = 'meetings';
   static String meetingId = 'meetingId';
@@ -21,7 +21,7 @@ class Fields {
   static String reviews = 'reviews';
   static String responses = 'responses';
 
-  static String participant = 'participant';
+  static String participant = 'user';
   static String quality = 'quality';
   static String qualities = 'qualities';
   static String painPoints = 'presetQs';
