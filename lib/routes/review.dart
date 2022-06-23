@@ -733,7 +733,6 @@ class _ReviewState extends State<Review> {
               onPressed: (_) async {
                 if (!submitted) {
                   submitted = true;
-                  print('$p1, $p2, $p3');
                   final review = submitReview(context);
                   final timing = postTiming([
                     p1.toDouble() / 10.0,

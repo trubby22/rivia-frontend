@@ -240,7 +240,8 @@ class _AnalyticsState extends State<Analytics> {
                             _selectedMeetings.clear();
                           }
                         }),
-                        value: _selectedMeetings.isNotEmpty,
+                        value: _selectedMeetings.length ==
+                            _filteredMeetings.length,
                       ),
                     ),
                   ),
@@ -621,32 +622,32 @@ class _AnalyticsState extends State<Analytics> {
                   ),
                 ),
               ),
-              if (_multiselect)
-                SizedButton(
-                  primaryColour: Colors.black,
-                  selectedColour: Colors.white,
-                  backgroundColour: Colors.blue.shade100,
-                  onPressedColour: Colors.blue,
-                  useShadow: true,
-                  width: 150,
-                  height: null,
-                  onPressed: (_) {
-                    setState(() {
-                      Navigator.of(context).pushNamed(
-                        RouteNames.summary,
-                        arguments: (_selectedMeetings
-                              ..removeWhere((key, _) =>
-                                  !_filteredMeetings.containsKey(key)))
-                            .values
-                            .toList(),
-                      );
-                    });
-                  },
-                  child: Text(
-                    LangText.showMultiSelectSummary.local,
-                    style: UITexts.smallButtonText,
-                  ),
-                ),
+              // if (_multiselect)
+              //   SizedButton(
+              //     primaryColour: Colors.black,
+              //     selectedColour: Colors.white,
+              //     backgroundColour: Colors.blue.shade100,
+              //     onPressedColour: Colors.blue,
+              //     useShadow: true,
+              //     width: 150,
+              //     height: null,
+              //     onPressed: (_) {
+              //       setState(() {
+              //         Navigator.of(context).pushNamed(
+              //           RouteNames.summary,
+              //           arguments: (_selectedMeetings
+              //                 ..removeWhere((key, _) =>
+              //                     !_filteredMeetings.containsKey(key)))
+              //               .values
+              //               .toList(),
+              //         );
+              //       });
+              //     },
+              //     child: Text(
+              //       LangText.showMultiSelectSummary.local,
+              //       style: UITexts.smallButtonText,
+              //     ),
+              //   ),
               SizedBox(height: height * 0.02),
               tableBuilder(context),
               SizedBox(height: height * 0.02),
@@ -726,24 +727,32 @@ class _AnalyticsState extends State<Analytics> {
               child: const Icon(Icons.arrow_back, size: 32.0),
             ),
           ),
-          Positioned(
-            bottom: 32.0,
-            right: 64.0,
-            child: SizedButton(
-              backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
-              primaryColour: Colors.black,
-              onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
-              height: null,
-              width: null,
-              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-              child: Text(LangText.createNewMeeting.local,
-                  style: UITexts.bigButtonText),
-              onPressed: (_) => Navigator.of(context).pushNamed(
-                RouteNames.createMeeting,
-                arguments: [],
+          if (_multiselect)
+            Positioned(
+              bottom: 32.0,
+              right: 64.0,
+              child: SizedButton(
+                backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
+                primaryColour: Colors.black,
+                onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
+                height: null,
+                width: null,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16.0,
+                  horizontal: 24.0,
+                ),
+                child: Text(LangText.showMultiSelectSummary.local,
+                    style: UITexts.bigButtonText),
+                onPressed: (_) => Navigator.of(context).pushNamed(
+                  RouteNames.summary,
+                  arguments: (_selectedMeetings
+                        ..removeWhere(
+                            (key, _) => !_filteredMeetings.containsKey(key)))
+                      .values
+                      .toList(),
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
