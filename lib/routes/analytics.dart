@@ -164,10 +164,12 @@ class _AnalyticsState extends State<Analytics> {
         Meeting meeting = _filteredMeetings[id]!;
 
         final isReviewed = await getIsReviewed(meeting.meetingId!);
-        Navigator.of(context).pushNamed(
-          isReviewed ? RouteNames.summary : RouteNames.review,
-          arguments: isReviewed ? [meeting] : meeting,
-        );
+        Navigator.of(context)
+            .pushNamed(
+              isReviewed ? RouteNames.summary : RouteNames.review,
+              arguments: isReviewed ? [meeting] : meeting,
+            )
+            .then((_) => setState(() {}));
       },
       child: MouseRegion(
         onEnter: (_) => setState(() => _highlightId = id),
