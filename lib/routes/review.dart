@@ -64,11 +64,9 @@ class _ReviewState extends State<Review> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
-          width: 120.0,
+          width: 200.0,
           height: 40.0,
-          child: Center(
-            child: Text(title, style: UITexts.bigText),
-          ),
+          child: Center(child: Text(title, style: UITexts.mediumText)),
         ),
         Container(
           decoration: BoxDecoration(
@@ -246,7 +244,7 @@ class _ReviewState extends State<Review> {
                   ),
                   SizedBox(height: height * 0.02),
                   Text(
-                    'How do you feel about the general quality of this meeting?',
+                    'In your opinion, what is the general quality of this meeting?',
                     style: UITexts.sectionSubheader,
                   ),
                   Row(
@@ -738,9 +736,9 @@ class _ReviewState extends State<Review> {
                   print('$p1, $p2, $p3');
                   final review = submitReview(context);
                   final timing = postTiming([
-                    p1.toDouble(),
-                    p2.toDouble(),
-                    p3.toDouble(),
+                    p1.toDouble() / 10.0,
+                    p2.toDouble() / 10.0,
+                    p3.toDouble() / 10.0,
                   ]);
                   final rating = postRating(x1, x2);
                   await Future.wait([review, timing, rating]);
@@ -798,7 +796,7 @@ class _ReviewState extends State<Review> {
     super.initState();
     getSharedPref(() => setState(() {}));
     periodicTimer = Timer.periodic(
-      const Duration(seconds: 1),
+      const Duration(milliseconds: 100),
       (timer) {
         switch (_step) {
           case ReviewSteps.slider:

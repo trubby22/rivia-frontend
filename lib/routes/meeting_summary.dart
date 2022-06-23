@@ -526,10 +526,9 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                   stream: _webSocket?.stream,
                   builder: (context, snapshot) {
                     if (snapshot.data != null) {
-                      Map<String, dynamic> content =
-                          json.decode(snapshot.data!.toString());
+                      dynamic content = json.decode(snapshot.data!.toString());
                       content = content[Fields.jsonData];
-                      if (content[Fields.meeting] != null) {
+                      if (content?[Fields.meeting] != null) {
                         content[Fields.meeting][Fields.meetingId] =
                             content[Fields.id];
                         content = content[Fields.meeting];

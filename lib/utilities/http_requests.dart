@@ -200,15 +200,15 @@ void postReview(String meetingId, Response review) async {
 Future<void> postTiming(List<double> times) async {
   http.Response response = await _httpClient.post(
     Uri.parse(API.timing()),
-    body: json.encode({Fields.painPoints: times}),
+    headers: _headers,
+    body: json.encode({'timings': times}),
   );
-  print(json.decode(response.body));
 }
 
 Future<void> postRating(double use, double like) async {
   http.Response response = await _httpClient.post(
-    Uri.parse(API.timing()),
+    Uri.parse(API.rating()),
+    headers: _headers,
     body: json.encode({'use': use, 'like': like}),
   );
-  print(json.decode(response.body));
 }

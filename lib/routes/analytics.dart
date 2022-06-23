@@ -672,10 +672,10 @@ class _AnalyticsState extends State<Analytics> {
             stream: _webSocket?.stream,
             builder: (context, snapshot) {
               if (snapshot.data != null) {
-                Map<String, dynamic> content =
-                    json.decode(snapshot.data!.toString());
+                dynamic content = json.decode(snapshot.data!.toString());
+                print('CONTENT: $content');
                 content = content[Fields.jsonData];
-                if (content[Fields.meeting] != null) {
+                if (content?[Fields.meeting] != null) {
                   content[Fields.meeting][Fields.meetingId] =
                       content[Fields.id];
                   content = content[Fields.meeting];
