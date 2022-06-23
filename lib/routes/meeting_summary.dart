@@ -8,6 +8,7 @@ import 'package:rivia/constants/languages.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
+import 'package:rivia/routes/redirect.dart';
 import 'package:rivia/utilities/bar_graph.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
@@ -585,7 +586,9 @@ class _MeetingSummaryState extends State<MeetingSummary> {
               height: 48.0,
               width: 48.0,
               radius: BorderRadius.circular(24.0),
-              onPressed: (_) => Navigator.of(context).pop(),
+              onPressed: (_) {
+                dashboard(context, null);
+              },
               child: const Icon(Icons.arrow_back, size: 32.0),
             ),
           ),

@@ -55,16 +55,18 @@ Future<bool> microsoftGetTokens(String code) async {
 
 /// Attempt to fetch the user id and tenant id from Microsoft Graph. Set the
 /// userId in [authToken] to null if failed (not logged in).
-Future<void> microsoftGetUserId(String? code) async {
+Future<bool> microsoftGetUserId(String? code) async {
   if (authToken.userId != null && authToken.tenantId != null) {
-    return;
+    return true;
   }
 
   if (code == null) {
     // No code; not logged in
     authToken.reset();
+    return false;
   } else {
     await foo(code);
+    return true;
     // final response = await http.get(
     //   Uri.parse('$_microsoftGraphBaseUrl/me'),
     //   headers: {'Authorization': 'Bearer ${authToken.token}'},

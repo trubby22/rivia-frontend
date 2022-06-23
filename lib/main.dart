@@ -102,6 +102,7 @@ class _MyAppState extends State<MyApp> {
             final locSplit = window.location.href.split('/');
             if (dict["code"] == null &&
                 dict['admin_consent'] == null &&
+                dict['meetingId'] == null &&
                 (locSplit.isEmpty || locSplit.last.isEmpty)) {
               return NoAnimationPageRoute(builder: (_) => Login());
             }
@@ -109,6 +110,7 @@ class _MyAppState extends State<MyApp> {
               builder: (_) => Redirect(
                 code: dict["code"],
                 adminConsent: dict['admin_consent'] == 'True',
+                meetingId: dict['meetingId'],
               ),
             );
 

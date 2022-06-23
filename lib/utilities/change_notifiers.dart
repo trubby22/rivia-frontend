@@ -19,6 +19,7 @@ Future<void> getSharedPref(Function()? callback) async {
     authToken.refreshToken = instance.getString(Fields.refreshToken);
     authToken.userId = instance.getString(Fields.id);
     authToken.tenantId = instance.getString(Fields.organiserId);
+    authToken.meetingId = instance.getString(Fields.meetingId);
     authToken.isAdmin = instance.getBool('isAdmin') ?? false;
   }
   callback?.call();
@@ -47,6 +48,11 @@ Future<void> setSharedPref() async {
   } else {
     instance.setString(Fields.organiserId, authToken.tenantId!);
   }
+  if (authToken.meetingId == null) {
+    instance.remove(Fields.meetingId);
+  } else {
+    instance.setString(Fields.meetingId, authToken.meetingId!);
+  }
   instance.setBool('isAdmin', authToken.isAdmin);
 }
 
@@ -56,6 +62,7 @@ class AuthToken {
   String? refreshToken;
   String? userId;
   String? tenantId;
+  String? meetingId;
   bool isAdmin = false;
 
   Future<void> reset() async {

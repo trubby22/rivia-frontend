@@ -8,9 +8,15 @@ import 'package:rivia/utilities/microsoft.dart';
 import 'dart:html';
 
 class Redirect extends StatefulWidget {
-  const Redirect({Key? key, this.code, this.adminConsent}) : super(key: key);
+  const Redirect({
+    Key? key,
+    this.code,
+    this.adminConsent,
+    this.meetingId,
+  }) : super(key: key);
   final String? code;
   final bool? adminConsent;
+  final String? meetingId;
 
   @override
   State<Redirect> createState() => _RedirectState();
@@ -31,16 +37,12 @@ Future<void> dashboard(context, String? code) async {
   final meetingIds = await getMeetings().onError(
     (error, stackTrace) => Future.value([]),
   );
-
   final meetings =
       await Future.wait(meetingIds.map((f) => getMeetingContent(f)));
-  for (final m in meetings) {
-    print(m!.toJson());
-  }
   if (!testMode) {
     window.history.pushState(null, 'home', 'https://app.rivia.me');
   }
-  Navigator.of(context).popAndPushNamed(
+  (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
     RouteNames.analytics,
     arguments: meetings.cast<Meeting>(),
   );
@@ -48,6 +50,24 @@ Future<void> dashboard(context, String? code) async {
 
 class _RedirectState extends State<Redirect> {
   Future<void> redirectLogic() async {
+    if (widget.meetingId != null) {
+      await getSharedPref(null);
+      final hasId = await microsoftGetUserId(null);
+      if (hasId) {
+        final meeting = await getMeetingContent(widget.meetingId!);
+        final isReviewed = await getIsReviewed(widget.meetingId!);
+        Navigator.of(context).pushNamed(
+          isReviewed ? RouteNames.summary : RouteNames.review,
+          arguments: isReviewed ? [meeting!] : meeting!,
+        );
+      } else {
+        authToken.meetingId = widget.meetingId;
+        await setSharedPref();
+        microsoftLogin();
+      }
+      return;
+    }
+
     if (widget.code == null) {
       if (widget.adminConsent != true) {
         return;
@@ -62,7 +82,15 @@ class _RedirectState extends State<Redirect> {
     //     ? await microsoftGetTokens(widget.code!)
     //     : true;
 
-    if (authToken.isAdmin) {
+    if (authToken.meetingId != null) {
+      await microsoftGetUserId(widget.code);
+      final meeting = await getMeetingContent(authToken.meetingId!);
+      final isReviewed = await getIsReviewed(authToken.meetingId!);
+      Navigator.of(context).pushNamed(
+        isReviewed ? RouteNames.summary : RouteNames.review,
+        arguments: isReviewed ? [meeting!] : meeting!,
+      );
+    } else if (authToken.isAdmin) {
       presets(context, widget.code);
     } else {
       dashboard(context, widget.code);

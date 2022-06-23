@@ -741,15 +741,11 @@ class _ReviewState extends State<Review> {
                   ]);
                   final rating = postRating(x1, x2);
                   Future.wait([review, timing, rating]);
-                  // TODO: Explicitly go to analytics instead of mere pop
-                  Navigator.of(context).pop();
+                  dashboard(context, null);
                 }
               },
               isSelected: true,
-              child: Text(
-                LangText.submit.local,
-                style: UITexts.bigButtonText,
-              ),
+              child: Text(LangText.submit.local, style: UITexts.bigButtonText),
             ),
             SizedBox(height: height * 0.02),
           ],
@@ -844,11 +840,7 @@ class _ReviewState extends State<Review> {
                   onPressed: (_) {
                     switch (_step) {
                       case ReviewSteps.slider:
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        } else {
-                          dashboard(context, null);
-                        }
+                        dashboard(context, null);
                         break;
                       case ReviewSteps.selection:
                         setState(() => _step = ReviewSteps.slider);

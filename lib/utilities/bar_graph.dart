@@ -134,7 +134,6 @@ class _BarGraphState extends State<BarGraph> {
       );
 
   Widget _barGraphBuilder(int? showCount) {
-    // TODO: No Friend Scenario
     if (_sortedRanks.isEmpty) return const SizedBox();
 
     final maxCount = _sortedRanks.lastKey()!.value2;
