@@ -23,7 +23,7 @@ class LanguageSwitcher extends StatelessWidget {
         width: 64.0,
         onPressed: (_) async {
           if (authToken.language == Lang.en) {
-            authToken.language = Lang.ru;
+            authToken.language = Lang.ua;
           } else {
             authToken.language = Lang.en;
           }

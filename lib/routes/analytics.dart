@@ -196,27 +196,27 @@ class _AnalyticsState extends State<Analytics> {
         .where((element) =>
             _organiser == allParticipants || element.organiser == _organiser)
         .where((element) {
-      if (element.qualities.isEmpty) {
-        return true;
-      }
-      return element.qualities.reduce((a, b) => a + b) /
-                  element.qualities.length *
-                  100 >=
-              _lowerSatisfaction &&
-          element.qualities.reduce((a, b) => a + b) /
-                  element.qualities.length *
-                  100 <=
-              _upperSatisfaction;
-    })
-        // .where(
-        //   (element) =>
-        //       (element.startTime.isAfter(_startDate) ||
-        //           element.startTime.isAtSameMomentAs(_startDate)) &&
-        //       (element.endTime.isBefore(_endDate.add(
-        //               const Duration(hours: 23, minutes: 59, seconds: 59))) ||
-        //           element.endTime.isAtSameMomentAs(_endDate.add(
-        //               const Duration(hours: 23, minutes: 59, seconds: 59)))),
-        // )
+          if (element.qualities.isEmpty) {
+            return true;
+          }
+          return element.qualities.reduce((a, b) => a + b) /
+                      element.qualities.length *
+                      100 >=
+                  _lowerSatisfaction &&
+              element.qualities.reduce((a, b) => a + b) /
+                      element.qualities.length *
+                      100 <=
+                  _upperSatisfaction;
+        })
+        .where(
+          (element) =>
+              (element.startTime.isAfter(_startDate) ||
+                  element.startTime.isAtSameMomentAs(_startDate)) &&
+              (element.endTime.isBefore(_endDate.add(
+                      const Duration(hours: 23, minutes: 59, seconds: 59))) ||
+                  element.endTime.isAtSameMomentAs(_endDate.add(
+                      const Duration(hours: 23, minutes: 59, seconds: 59)))),
+        )
         .map((m) => MapEntry(m.meetingId!, m)));
     return SizedBox(
       width: width * 0.8,
@@ -453,11 +453,13 @@ class _AnalyticsState extends State<Analytics> {
           ),
           child: Column(
             children: [
+              Text(LangText.filters.local, style: UITexts.sectionSubheader),
               Align(
                 child: Padding(
                   padding: EdgeInsets.only(
-                      top: height * 0.06, bottom: height * 0.06),
-                  // width: width * 0.72,
+                    top: height * 0.03,
+                    bottom: height * 0.06,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -650,7 +652,9 @@ class _AnalyticsState extends State<Analytics> {
               //       style: UITexts.smallButtonText,
               //     ),
               //   ),
+              Text(LangText.meetings.local, style: UITexts.sectionSubheader),
               SizedBox(height: height * 0.02),
+
               tableBuilder(context),
               SizedBox(height: height * 0.02),
             ],
