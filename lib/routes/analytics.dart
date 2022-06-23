@@ -674,7 +674,7 @@ class _AnalyticsState extends State<Analytics> {
               if (snapshot.data != null) {
                 dynamic content = json.decode(snapshot.data!.toString());
                 print('CONTENT: $content');
-                content = content[Fields.jsonData];
+                // content = content[Fields.jsonData];
                 if (content?[Fields.meeting] != null) {
                   content[Fields.meeting][Fields.meetingId] =
                       content[Fields.id];

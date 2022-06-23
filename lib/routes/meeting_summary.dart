@@ -527,7 +527,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                   builder: (context, snapshot) {
                     if (snapshot.data != null) {
                       dynamic content = json.decode(snapshot.data!.toString());
-                      content = content[Fields.jsonData];
+                      // content = content[Fields.jsonData];
                       if (content?[Fields.meeting] != null) {
                         content[Fields.meeting][Fields.meetingId] =
                             content[Fields.id];

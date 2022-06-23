@@ -741,7 +741,7 @@ class _ReviewState extends State<Review> {
                     p3.toDouble() / 10.0,
                   ]);
                   final rating = postRating(x1, x2);
-                  await Future.wait([review, timing, rating]);
+                  Future.wait([review, timing, rating]);
                   // TODO: Explicitly go to analytics instead of mere pop
                   Navigator.of(context).pop();
                 }
