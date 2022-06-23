@@ -5,7 +5,6 @@ import 'package:rivia/models/meeting.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/microsoft.dart';
-import 'package:rivia/utilities/toast.dart';
 import 'dart:html';
 
 class Redirect extends StatefulWidget {
@@ -24,10 +23,7 @@ Future<void> presets(context, String? code) async {
   }
   await postPresets(null);
   final presets = await getPresets();
-  Navigator.of(context).popAndPushNamed(
-    RouteNames.presets,
-    arguments: {"Preset 1", "Preset 2", "Preset 3"},
-  );
+  Navigator.of(context).popAndPushNamed(RouteNames.presets, arguments: presets);
 }
 
 Future<void> dashboard(context, String? code) async {

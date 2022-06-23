@@ -674,18 +674,22 @@ class _AnalyticsState extends State<Analytics> {
               if (snapshot.data != null) {
                 Map<String, dynamic> content =
                     json.decode(snapshot.data!.toString());
-                content[Fields.meeting][Fields.meetingId] = content[Fields.id];
-                content = content[Fields.meeting];
-                final newMeeting = Meeting.fromJson(content);
+                content = content[Fields.jsonData];
+                if (content[Fields.meeting] != null) {
+                  content[Fields.meeting][Fields.meetingId] =
+                      content[Fields.id];
+                  content = content[Fields.meeting];
+                  final newMeeting = Meeting.fromJson(content);
 
-                widget.meetings.removeWhere(
-                  (m) => m.meetingId == newMeeting?.meetingId,
-                );
-                if (newMeeting != null) {
-                  widget.meetings.add(newMeeting);
-                  entryCache[newMeeting.meetingId!] = Map.fromEntries(
-                    columnWidths.mapIndexed((i, _) => MapEntry(i, null)),
+                  widget.meetings.removeWhere(
+                    (m) => m.meetingId == newMeeting?.meetingId,
                   );
+                  if (newMeeting != null) {
+                    widget.meetings.add(newMeeting);
+                    entryCache[newMeeting.meetingId!] = Map.fromEntries(
+                      columnWidths.mapIndexed((i, _) => MapEntry(i, null)),
+                    );
+                  }
                 }
                 widget.meetings.sortBy((m) => m.startTime);
               }

@@ -26,8 +26,7 @@ Future<void> foo(String code) async {
     headers: _headers,
     body: json.encode({'authorizationCode': code}),
   );
-  final Map<String, dynamic> r = json.decode(response.body);
-  print(r);
+  final Map<String, dynamic> r = json.decode(response.body)[Fields.jsonData];
   authToken.tenantId = r['tenantId'];
   authToken.userId = r['userId'];
   await setSharedPref();
@@ -57,9 +56,13 @@ void disposeWebSocket(WebSocketChannel? _webSocket) {
 // Get the list of Preset Questions.
 Future<Set<String>> getPresets() async {
   http.Response response = await _httpClient.get(Uri.parse(API.getPresets()));
-  print(json.decode(response.body));
-  return (json.decode(response.body) as Map<String, dynamic>)
-      .values
+  return (json.decode(response.body)[Fields.jsonData] as List<dynamic>)
+      .map(
+        (e) {
+          final entry = e as Map<String, dynamic>;
+          return entry['text'];
+        },
+      )
       .toSet()
       .cast<String>();
 }
@@ -72,7 +75,6 @@ Future<void> postPresets(List<String>? presets) async {
       if (presets != null) Fields.painPoints: presets,
     }),
   );
-  print(json.decode(response.body));
 }
 
 /// Get the list of [Meeting]s.
@@ -86,7 +88,6 @@ Future<List<String>> getMeetings() async {
       "Get Meetings Failed!\nError Code: ${jason[Fields.errorCode]}",
     );
   }
-  print(jason);
   var jsonList = (jason[Fields.jsonData] as List<dynamic>).cast<String>();
   return jsonList;
 }
