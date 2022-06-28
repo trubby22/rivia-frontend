@@ -32,7 +32,7 @@ Meeting testMeeting = Meeting(
         )
         .toList(),
   ),
-  painPoints: {'0': "PAINTOS"},
+  painPoints: {'0': const TaggedPresets(content: "PAINTOS", selectCount: 2)},
 );
 
 Response testResponse = Response(

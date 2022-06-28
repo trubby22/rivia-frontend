@@ -27,7 +27,6 @@ Future<void> presets(context, String? code) async {
   if (!testMode) {
     window.history.pushState(null, 'home', 'https://app.rivia.me');
   }
-  await postPresets(null);
   final presets = await getPresets();
   Navigator.of(context).popAndPushNamed(RouteNames.presets, arguments: presets);
 }
@@ -44,7 +43,7 @@ Future<void> dashboard(context, String? code) async {
   }
   (Navigator.of(context)..popUntil((route) => route.isFirst)).pushNamed(
     RouteNames.analytics,
-    arguments: meetings.cast<Meeting>(),
+    arguments: meetings.where((m) => m != null).cast<Meeting>().toList(),
   );
 }
 
@@ -57,7 +56,7 @@ class _RedirectState extends State<Redirect> {
         final meeting = await getMeetingContent(widget.meetingId!);
         final isReviewed = await getIsReviewed(widget.meetingId!);
         Navigator.of(context).pushNamed(
-          isReviewed ? RouteNames.summary : RouteNames.review,
+          isReviewed ? RouteNames.summaryLink : RouteNames.reviewLink,
           arguments: isReviewed ? [meeting!] : meeting!,
         );
       } else {
@@ -86,8 +85,10 @@ class _RedirectState extends State<Redirect> {
       await microsoftGetUserId(widget.code);
       final meeting = await getMeetingContent(authToken.meetingId!);
       final isReviewed = await getIsReviewed(authToken.meetingId!);
+      authToken.meetingId = null;
+      await setSharedPref();
       Navigator.of(context).pushNamed(
-        isReviewed ? RouteNames.summary : RouteNames.review,
+        isReviewed ? RouteNames.summaryLink : RouteNames.reviewLink,
         arguments: isReviewed ? [meeting!] : meeting!,
       );
     } else if (authToken.isAdmin) {

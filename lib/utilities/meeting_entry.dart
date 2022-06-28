@@ -70,7 +70,7 @@ class MeetingEntry extends StatelessWidget {
                       ),
                       const SizedBox(height: 8.0),
                       Text(
-                        '${LangText.date.local}: ${meeting.startTime.day}/${meeting.startTime.month}/${meeting.startTime.year}',
+                        '${LangText.date.local}: ${meeting.startTime.day}.${meeting.startTime.month}.${meeting.startTime.year}',
                         style: UITexts.mediumText,
                       ),
                       Text(

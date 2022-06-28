@@ -56,7 +56,9 @@ class _PresetsState extends State<Presets> {
                   bottom: max(height * 0.05, 20.0),
                 ),
                 padding: const EdgeInsets.symmetric(
-                    vertical: 16.0, horizontal: 32.0),
+                  vertical: 16.0,
+                  horizontal: 32.0,
+                ),
                 decoration: const BoxDecoration(
                   color: Color(0xFFE6E6E6),
                   borderRadius: BorderRadius.all(Radius.circular(48.0)),
@@ -69,7 +71,7 @@ class _PresetsState extends State<Presets> {
                       (index) {
                         return Container(
                           margin: const EdgeInsets.all(12.0),
-                          width: width * 0.3,
+                          width: width * 0.6,
                           height: 52.0,
                           decoration: BoxDecoration(
                             color: Colors.blue.shade100,

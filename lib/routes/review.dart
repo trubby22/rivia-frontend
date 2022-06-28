@@ -27,11 +27,13 @@ enum ReviewSteps {
 class Review extends StatefulWidget {
   final Meeting meeting;
   final Participant? participant;
+  final bool pop;
 
   const Review({
     Key? key,
     required this.meeting,
     this.participant,
+    this.pop = true,
   }) : super(key: key);
 
   @override
@@ -239,12 +241,12 @@ class _ReviewState extends State<Review> {
                     '${widget.meeting.title} '
                     '${TimeOfDay.fromDateTime(widget.meeting.startTime).format(context)} - '
                     '${TimeOfDay.fromDateTime(widget.meeting.endTime).format(context)} '
-                    '${widget.meeting.startTime.day}/${widget.meeting.startTime.month}/${widget.meeting.startTime.year}',
+                    '${widget.meeting.startTime.day}.${widget.meeting.startTime.month}.${widget.meeting.startTime.year}',
                     style: UITexts.sectionHeader,
                   ),
                   SizedBox(height: height * 0.02),
                   Text(
-                    'In your opinion, what is the general quality of this meeting?',
+                    LangText.generalQuality.local,
                     style: UITexts.sectionSubheader,
                   ),
                   Row(
@@ -341,11 +343,11 @@ class _ReviewState extends State<Review> {
                             selectedColour: Colors.white,
                             onPressedColour: Colors.blue,
                             backgroundColour: Colors.blue.shade100,
-                            width: width * 0.3,
+                            width: width * 0.6,
                             height: 52.0,
                             radius: BorderRadius.circular(20.0),
                             child: Text(
-                              widget.meeting.painPoints[ppl[index]]!,
+                              widget.meeting.painPoints[ppl[index]]!.content,
                               textAlign: TextAlign.center,
                               style: UITexts.mediumButtonText.copyWith(
                                 fontWeight: FontWeight.normal,
@@ -357,8 +359,8 @@ class _ReviewState extends State<Review> {
                               if (isSelected) {
                                 data.value2.remove(ppl[index]);
                               } else {
-                                data.value2[ppl[index]] =
-                                    widget.meeting.painPoints[ppl[index]]!;
+                                data.value2[ppl[index]] = widget
+                                    .meeting.painPoints[ppl[index]]!.content;
                               }
                               context.read<ResponseBuilder>().notify();
                             },
@@ -443,7 +445,7 @@ class _ReviewState extends State<Review> {
               '${widget.meeting.title} '
               '${TimeOfDay.fromDateTime(widget.meeting.startTime).format(context)} - '
               '${TimeOfDay.fromDateTime(widget.meeting.endTime).format(context)} '
-              '${widget.meeting.startTime.day}/${widget.meeting.startTime.month}/${widget.meeting.startTime.year}',
+              '${widget.meeting.startTime.day}.${widget.meeting.startTime.month}.${widget.meeting.startTime.year}',
               style: UITexts.sectionHeader,
             ),
             SizedBox(height: height * 0.04),
@@ -525,7 +527,7 @@ class _ReviewState extends State<Review> {
               '${widget.meeting.title} '
               '${TimeOfDay.fromDateTime(widget.meeting.startTime).format(context)} - '
               '${TimeOfDay.fromDateTime(widget.meeting.endTime).format(context)} '
-              '${widget.meeting.startTime.day}/${widget.meeting.startTime.month}/${widget.meeting.startTime.year}',
+              '${widget.meeting.startTime.day}.${widget.meeting.startTime.month}.${widget.meeting.startTime.year}',
               style: UITexts.sectionHeader,
             ),
             SizedBox(height: height * 0.04),
@@ -610,7 +612,7 @@ class _ReviewState extends State<Review> {
           children: [
             SizedBox(height: height * 0.02),
             Text(
-              'To what extent do you think our product is sueful?',
+              'To what extent do you think our product is useful?',
               style: UITexts.sectionHeader,
             ),
             Row(
@@ -741,7 +743,9 @@ class _ReviewState extends State<Review> {
                   ]);
                   final rating = postRating(x1, x2);
                   Future.wait([review, timing, rating]);
-                  dashboard(context, null);
+                  widget.pop
+                      ? Navigator.of(context).pop()
+                      : dashboard(context, null);
                 }
               },
               isSelected: true,
@@ -840,7 +844,9 @@ class _ReviewState extends State<Review> {
                   onPressed: (_) {
                     switch (_step) {
                       case ReviewSteps.slider:
-                        dashboard(context, null);
+                        widget.pop
+                            ? Navigator.of(context).pop()
+                            : dashboard(context, null);
                         break;
                       case ReviewSteps.selection:
                         setState(() => _step = ReviewSteps.slider);

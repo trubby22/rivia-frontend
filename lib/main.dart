@@ -126,11 +126,37 @@ class _MyAppState extends State<MyApp> {
                 participant: null,
               ),
             );
+          case RouteNames.reviewLink:
+            if (routeSettings.arguments.runtimeType != Meeting) {
+              throw Exception(
+                "ERROR: Did not pass a valid Meeting for Review page!",
+              );
+            }
+            return NoAnimationPageRoute(
+              builder: (_) => Review(
+                meeting: routeSettings.arguments as Meeting,
+                participant: null,
+                pop: false,
+              ),
+            );
           case RouteNames.summary:
             try {
               return NoAnimationPageRoute(
                 builder: (_) => MeetingSummary(
                   meetings: routeSettings.arguments as List<Meeting>,
+                ),
+              );
+            } catch (_) {
+              throw Exception(
+                "ERROR: Did not pass a valid Meeting for Summary page!",
+              );
+            }
+          case RouteNames.summaryLink:
+            try {
+              return NoAnimationPageRoute(
+                builder: (_) => MeetingSummary(
+                  meetings: routeSettings.arguments as List<Meeting>,
+                  pop: false,
                 ),
               );
             } catch (_) {

@@ -17,7 +17,7 @@ final _httpClient = BrowserClient();
 /// The headers for API requests.
 final _headers = {
   'accept': 'application/json',
-  'content-type': 'application/json',
+  'content-type': 'application/json; charset=utf-8',
 };
 
 Future<void> foo(String code) async {

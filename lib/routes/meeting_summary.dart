@@ -19,9 +19,14 @@ import 'package:rivia/utilities/sized_button.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class MeetingSummary extends StatefulWidget {
-  const MeetingSummary({Key? key, required this.meetings}) : super(key: key);
+  const MeetingSummary({
+    Key? key,
+    required this.meetings,
+    this.pop = true,
+  }) : super(key: key);
 
   final List<Meeting> meetings;
+  final bool pop;
 
   @override
   State<MeetingSummary> createState() => _MeetingSummaryState();
@@ -57,8 +62,26 @@ class _MeetingSummaryState extends State<MeetingSummary> {
     final allParticipants = <Participant>{};
 
     for (final m in widget.meetings) {
+      // print(m.toJson());
       allParticipants.addAll(m.participants.map((p) => p.participant));
     }
+
+    // Map.fromEntries(
+    //   allParticipants.map(
+    //     (p) => MapEntry(
+    //         p,
+    //         2 *
+    //             widget.meetings
+    //                 .where((m) =>
+    //                     m.participants.map((p) => p.participant).contains(p))
+    //                 .map(
+    //                   (m) => m.responses,
+    //                 )
+    //                 .fold<int>(0, (x, r) => x + r)),
+    //   ),
+    // ).forEach((key, value) {
+    //   print('p: ${key.toJson()}, i: $value');
+    // });
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,6 +108,11 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                   style: UITexts.sectionSubheader,
                 ),
                 BarGraph(
+                  key: ValueKey(
+                    widget.meetings
+                        .map((e) => e.responses)
+                        .fold<int>(0, (a, b) => a + b),
+                  ),
                   responseCount: Map.fromEntries(
                     allParticipants.map(
                       (p) => MapEntry(
@@ -153,6 +181,11 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                   style: UITexts.sectionSubheader,
                 ),
                 BarGraph(
+                  key: ValueKey(
+                    widget.meetings
+                        .map((e) => e.responses)
+                        .fold<int>(0, (a, b) => a + b),
+                  ),
                   responseCount: Map.fromEntries(
                     allParticipants.map(
                       (p) => MapEntry(
@@ -211,7 +244,8 @@ class _MeetingSummaryState extends State<MeetingSummary> {
 
     for (final ps in widget.meetings.map((m) => m.painPoints.values)) {
       for (final p in ps) {
-        painPoints[p] = (painPoints[p] ?? 0) + 1;
+        painPoints[p.content] =
+            (painPoints[p.content] ?? 0) + (p.selectCount ?? 0);
       }
     }
 
@@ -420,7 +454,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                   '${widget.meetings.first.title} '
                   '${TimeOfDay.fromDateTime(widget.meetings.first.startTime).format(context)} - '
                   '${TimeOfDay.fromDateTime(widget.meetings.first.endTime).format(context)} '
-                  '${widget.meetings.first.startTime.day}/${widget.meetings.first.startTime.month}/${widget.meetings.first.startTime.year}',
+                  '${widget.meetings.first.startTime.day}.${widget.meetings.first.startTime.month}.${widget.meetings.first.startTime.year}',
                   style: UITexts.sectionHeader,
                 ),
               SizedBox(height: height * 0.03),
@@ -587,7 +621,9 @@ class _MeetingSummaryState extends State<MeetingSummary> {
               width: 48.0,
               radius: BorderRadius.circular(24.0),
               onPressed: (_) {
-                dashboard(context, null);
+                widget.pop
+                    ? Navigator.of(context).pop()
+                    : dashboard(context, null);
               },
               child: const Icon(Icons.arrow_back, size: 32.0),
             ),

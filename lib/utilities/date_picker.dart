@@ -94,7 +94,7 @@ class _DatePickerState extends State<DatePicker> with RestorationMixin {
       height: null,
       width: null,
       child: Text(
-        '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}',
+        '${_selectedDate.value.day}.${_selectedDate.value.month}.${_selectedDate.value.year}',
       ),
     );
   }

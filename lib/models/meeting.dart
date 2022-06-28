@@ -12,7 +12,7 @@ class Meeting {
   DateTime endTime;
   final String organiserId;
   final List<TaggedParticipant> participants;
-  final Map<String, String> painPoints;
+  final Map<String, TaggedPresets> painPoints;
   final List<double> qualities;
   final int responses;
   final List<String> feedback;
@@ -68,10 +68,18 @@ class Meeting {
                 ?.map((e) => TaggedParticipant.fromJson(e)!)
                 .toList() ??
             const [],
-        painPoints: Map.fromEntries((json[Fields.painPoints] as List<dynamic>?)
-                ?.map((e) =>
-                    MapEntry(e['presetQ'][Fields.id], e['presetQ']['text'])) ??
-            const []),
+        painPoints: Map.fromEntries(
+          (json[Fields.painPoints] as List<dynamic>?)?.map(
+                (e) => MapEntry(
+                  e['presetQ'][Fields.id],
+                  TaggedPresets(
+                    content: e['presetQ']['text'],
+                    selectCount: e['selected'],
+                  ),
+                ),
+              ) ??
+              const [],
+        ),
       );
     } catch (e) {
       debugPrint("Error on deserialising meeting: $e");
@@ -92,8 +100,10 @@ class Meeting {
               (e) => {
                 'presetQ': {
                   Fields.id: e.key,
-                  'text': e.value,
+                  'text': e.value.content,
                 },
+                if (e.value.selectCount != null)
+                  'selected': e.value.selectCount,
               },
             )
             .toList(),
@@ -146,6 +156,13 @@ class MeetingBuilder with ChangeNotifier {
   void notify() {
     notifyListeners();
   }
+}
+
+class TaggedPresets {
+  final String content;
+  final int? selectCount;
+
+  const TaggedPresets({required this.content, required this.selectCount});
 }
 
 /// [Participant] with their corresponding votes by others.
