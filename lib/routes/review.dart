@@ -1,21 +1,25 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
+import 'package:collection/collection.dart';
 
 import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rivia/constants/fields.dart';
 import 'package:rivia/constants/languages.dart';
+import 'package:rivia/constants/route_names.dart';
 import 'package:rivia/constants/ui_texts.dart';
 import 'package:rivia/models/meeting.dart';
 import 'package:rivia/models/participant.dart';
 import 'package:rivia/models/response.dart';
-import 'package:rivia/routes/redirect.dart';
 import 'package:rivia/utilities/change_notifiers.dart';
 import 'package:rivia/utilities/http_requests.dart';
 import 'package:rivia/utilities/language_switcher.dart';
 import 'package:rivia/utilities/log_out_button.dart';
 import 'package:rivia/utilities/sized_button.dart';
 import 'package:rivia/utilities/toast.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 enum ReviewSteps {
   slider,
@@ -50,6 +54,33 @@ class _ReviewState extends State<Review> {
   int p2 = 0;
   int p3 = 0;
   Timer? periodicTimer;
+  List<Meeting?>? meetings;
+  late Future<void> future;
+  WebSocketChannel? _webSocket;
+
+  Future<void> stuff() async {
+    final meetingIds = await getMeetings().onError(
+      (error, stackTrace) => Future.value([]),
+    );
+    meetings = await Future.wait(meetingIds.map((f) => getMeetingContent(f)));
+    _webSocket = getWebSocket();
+    _webSocket?.stream.listen((snapshot) {
+      dynamic content = json.decode(snapshot.toString());
+      print('CONTENT: $content');
+      if (content?[Fields.meeting] != null) {
+        content[Fields.meeting][Fields.meetingId] = content[Fields.id];
+        content = content[Fields.meeting];
+        final newMeeting = Meeting.fromJson(content);
+
+        meetings?.removeWhere(
+          (m) => m?.meetingId == newMeeting?.meetingId,
+        );
+        if (newMeeting != null) {
+          meetings?.add(newMeeting);
+        }
+      }
+    });
+  }
 
   /// Build the selection panel.
   Widget selectionPanelBuilder(
@@ -592,8 +623,28 @@ class _ReviewState extends State<Review> {
                   width: width * 0.17,
                   radius: BorderRadius.circular(24.0),
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  onPressed: (_) {
-                    setState(() => _step = ReviewSteps.rating);
+                  onPressed: (_) async {
+                    // setState(() => _step = ReviewSteps.rating);
+                    if (!submitted) {
+                      submitted = true;
+                      await submitReview(context);
+
+                      if (widget.pop) {
+                        Navigator.of(context).pop();
+                        return;
+                      }
+                      await future;
+                      disposeWebSocket(_webSocket);
+                      (Navigator.of(context)
+                            ..popUntil((route) => route.isFirst))
+                          .pushNamed(
+                        RouteNames.analytics,
+                        arguments: meetings!
+                            .where((m) => m != null)
+                            .cast<Meeting>()
+                            .toList(),
+                      );
+                    }
                   },
                   isSelected: true,
                   child: Text(
@@ -743,9 +794,20 @@ class _ReviewState extends State<Review> {
                   ]);
                   final rating = postRating(x1, x2);
                   Future.wait([review, timing, rating]);
-                  widget.pop
-                      ? Navigator.of(context).pop()
-                      : dashboard(context, null);
+                  if (widget.pop) {
+                    Navigator.of(context).pop();
+                    return;
+                  }
+                  await future;
+                  disposeWebSocket(_webSocket);
+                  (Navigator.of(context)..popUntil((route) => route.isFirst))
+                      .pushNamed(
+                    RouteNames.analytics,
+                    arguments: meetings!
+                        .where((m) => m != null)
+                        .cast<Meeting>()
+                        .toList(),
+                  );
                 }
               },
               isSelected: true,
@@ -793,6 +855,7 @@ class _ReviewState extends State<Review> {
   @override
   void initState() {
     super.initState();
+    future = stuff();
     getSharedPref(() => setState(() {}));
     periodicTimer = Timer.periodic(
       const Duration(milliseconds: 100),
@@ -841,12 +904,24 @@ class _ReviewState extends State<Review> {
                   height: 48.0,
                   width: 48.0,
                   radius: BorderRadius.circular(24.0),
-                  onPressed: (_) {
+                  onPressed: (_) async {
                     switch (_step) {
                       case ReviewSteps.slider:
-                        widget.pop
-                            ? Navigator.of(context).pop()
-                            : dashboard(context, null);
+                        if (widget.pop) {
+                          Navigator.of(context).pop();
+                          return;
+                        }
+                        await future;
+                        disposeWebSocket(_webSocket);
+                        (Navigator.of(context)
+                              ..popUntil((route) => route.isFirst))
+                            .pushNamed(
+                          RouteNames.analytics,
+                          arguments: meetings!
+                              .where((m) => m != null)
+                              .cast<Meeting>()
+                              .toList(),
+                        );
                         break;
                       case ReviewSteps.selection:
                         setState(() => _step = ReviewSteps.slider);

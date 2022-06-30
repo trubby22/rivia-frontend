@@ -30,74 +30,93 @@ class _LoginState extends State<Login> {
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: const Color.fromRGBO(244, 242, 234, 1),
-        body: Stack(
-          children: [
-            Center(
-              child: Container(
-                width: max(350, MediaQuery.of(context).size.width * 0.25),
-                height: max(450.0, MediaQuery.of(context).size.height * 0.55),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: const BorderRadius.all(Radius.circular(48.0)),
-                  boxShadow: const [
-                    BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(LangText.rivia.local, style: UITexts.iconHeader),
-                    SizedBox(height: MediaQuery.of(context).size.width * 0.04),
-                    SizedButton(
-                      backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
-                      primaryColour: Colors.black,
-                      onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
-                      height: 64.0,
-                      width:
-                          max(350, MediaQuery.of(context).size.width * 0.25) *
-                              0.7,
-                      onPressed: (_) async {
-                        if ((authToken.isAdmin == false ||
-                                authToken.userId == null) &&
-                            !testMode) {
-                          microsoftLoginAdmin();
-                        } else {
-                          presets(context, null);
-                        }
-                      },
-                      child: Text(
-                        LangText.loginAsAdmin.local,
-                        style: UITexts.mediumButtonText,
+        body: FutureBuilder<String?>(
+            future: getSharedPref(null).then((_) => authToken.userId),
+            builder: (context, snapshot) {
+              print(authToken.userId);
+              if (snapshot.hasData &&
+                  snapshot.data != null &&
+                  !authToken.isAdmin) {
+                dashboard(context, null);
+                return Container();
+              }
+              return Stack(
+                children: [
+                  Center(
+                    child: Container(
+                      width: max(350, MediaQuery.of(context).size.width * 0.25),
+                      height:
+                          max(450.0, MediaQuery.of(context).size.height * 0.55),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade100,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(48.0)),
+                        boxShadow: const [
+                          BoxShadow(offset: Offset(0, 1), blurRadius: 2.0),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(LangText.rivia.local, style: UITexts.iconHeader),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.width * 0.04),
+                          SizedButton(
+                            backgroundColour:
+                                const Color.fromRGBO(239, 198, 135, 1),
+                            primaryColour: Colors.black,
+                            onPressedColour:
+                                const Color.fromRGBO(239, 198, 135, 1),
+                            height: 64.0,
+                            width: max(350,
+                                    MediaQuery.of(context).size.width * 0.25) *
+                                0.7,
+                            onPressed: (_) async {
+                              if ((authToken.isAdmin == false ||
+                                      authToken.userId == null) &&
+                                  !testMode) {
+                                microsoftLoginAdmin();
+                              } else {
+                                presets(context, null);
+                              }
+                            },
+                            child: Text(
+                              LangText.loginAsAdmin.local,
+                              style: UITexts.mediumButtonText,
+                            ),
+                          ),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.width * 0.02),
+                          SizedButton(
+                            backgroundColour:
+                                const Color.fromRGBO(239, 198, 135, 1),
+                            primaryColour: Colors.black,
+                            onPressedColour:
+                                const Color.fromRGBO(239, 198, 135, 1),
+                            height: 64.0,
+                            width: max(350,
+                                    MediaQuery.of(context).size.width * 0.25) *
+                                0.7,
+                            onPressed: (_) {
+                              if (authToken.userId == null) {
+                                microsoftLogin();
+                              } else {
+                                dashboard(context, null);
+                              }
+                            },
+                            child: Text(
+                              LangText.loginAsUser.local,
+                              style: UITexts.mediumButtonText,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.width * 0.02),
-                    SizedButton(
-                      backgroundColour: const Color.fromRGBO(239, 198, 135, 1),
-                      primaryColour: Colors.black,
-                      onPressedColour: const Color.fromRGBO(239, 198, 135, 1),
-                      height: 64.0,
-                      width:
-                          max(350, MediaQuery.of(context).size.width * 0.25) *
-                              0.7,
-                      onPressed: (_) {
-                        if (authToken.userId == null) {
-                          microsoftLogin();
-                        } else {
-                          dashboard(context, null);
-                        }
-                      },
-                      child: Text(
-                        LangText.loginAsUser.local,
-                        style: UITexts.mediumButtonText,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            LanguageSwitcher(callback: () => setState(() => {})),
-          ],
-        ),
+                  ),
+                  LanguageSwitcher(callback: () => setState(() => {})),
+                ],
+              );
+            }),
       ),
     );
   }

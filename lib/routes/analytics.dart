@@ -197,7 +197,7 @@ class _AnalyticsState extends State<Analytics> {
             _organiser == allParticipants || element.organiser == _organiser)
         .where((element) {
           if (element.qualities.isEmpty) {
-            return true;
+            return _lowerSatisfaction < 50 && _upperSatisfaction > 50;
           }
           return element.qualities.reduce((a, b) => a + b) /
                       element.qualities.length *

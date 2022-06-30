@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -42,6 +43,15 @@ WebSocketChannel getWebSocket() {
 
   _webSocket.sink.add(
     '{"user": "${authToken.userId}", "tenant": "${authToken.tenantId}"}',
+  );
+
+  Timer? periodicTimer = Timer.periodic(
+    Duration(minutes: 5),
+    (_) => {
+      _webSocket.sink.add(
+        '{"user": "${authToken.userId}", "tenant": "${authToken.tenantId}"}',
+      )
+    },
   );
 
   return _webSocket;
