@@ -98,8 +98,14 @@ class _ReviewState extends State<Review> {
       children: [
         SizedBox(
           width: 200.0,
-          height: 40.0,
-          child: Center(child: Text(title, style: UITexts.mediumText)),
+          height: 60.0,
+          child: Center(
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: UITexts.bigText,
+            ),
+          ),
         ),
         Container(
           decoration: BoxDecoration(
@@ -231,7 +237,7 @@ class _ReviewState extends State<Review> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 40.0),
+            const SizedBox(height: 60.0),
             ...List.generate(
               widget.meeting.participants.length,
               (index) => SizedBox(
@@ -240,7 +246,7 @@ class _ReviewState extends State<Review> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     widget.meeting.participants[index].participant.fullName,
-                    style: UITexts.bigText,
+                    style: UITexts.sectionSubheader,
                     maxLines: 2,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,

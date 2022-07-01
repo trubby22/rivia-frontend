@@ -39,11 +39,16 @@ class _MeetingSummaryState extends State<MeetingSummary> {
 
   Widget pieChartBuilder(BuildContext context) {
     return PieChart(
+      chartLegendSpacing: 128.0,
       dataMap: binQualityReviews(widget.meetings),
-      chartRadius: MediaQuery.of(context).size.width / 4,
+      legendOptions: const LegendOptions(
+        legendTextStyle: UITexts.sectionSubheader,
+      ),
+      chartRadius: MediaQuery.of(context).size.width / 3.5,
       initialAngleInDegree: 270,
       chartValuesOptions: const ChartValuesOptions(
         showChartValuesInPercentage: true,
+        chartValueStyle: UITexts.sectionSubheader,
         decimalPlaces: 0,
       ),
       colorList: [
@@ -467,7 +472,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                     backgroundColour: Colors.blue.shade100,
                     onPressedColour: Colors.blue,
                     useShadow: false,
-                    width: 180.0,
+                    width: 240.0,
                     height: null,
                     isSelected: _selectedIndex == 0,
                     onPressed: (_) {
@@ -475,11 +480,12 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                         _selectedIndex = 0;
                       });
                     },
-                    child: SizedBox(
-                      height: FontSizes.mediumTextSize * 1.5,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      height: FontSizes.bigTextSize * 1.75,
                       child: Text(
                         LangText.overallSat.local,
-                        style: UITexts.smallButtonText,
+                        style: UITexts.mediumButtonText,
                       ),
                     ),
                   ),
@@ -490,7 +496,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                     backgroundColour: Colors.blue.shade100,
                     onPressedColour: Colors.blue,
                     useShadow: false,
-                    width: 180.0,
+                    width: 240.0,
                     height: null,
                     isSelected: _selectedIndex == 1,
                     onPressed: (_) {
@@ -498,11 +504,12 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                         _selectedIndex = 1;
                       });
                     },
-                    child: SizedBox(
-                      height: FontSizes.mediumTextSize * 1.5,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      height: FontSizes.bigTextSize * 1.75,
                       child: Text(
                         LangText.participants.local,
-                        style: UITexts.smallButtonText,
+                        style: UITexts.mediumButtonText,
                       ),
                     ),
                   ),
@@ -513,7 +520,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                     backgroundColour: Colors.blue.shade100,
                     onPressedColour: Colors.blue,
                     useShadow: false,
-                    width: 180.0,
+                    width: 240.0,
                     height: null,
                     isSelected: _selectedIndex == 2,
                     onPressed: (_) {
@@ -521,11 +528,12 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                         _selectedIndex = 2;
                       });
                     },
-                    child: SizedBox(
-                      height: FontSizes.mediumTextSize * 1.5,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      height: FontSizes.bigTextSize * 1.75,
                       child: Text(
                         LangText.preset.local,
-                        style: UITexts.smallButtonText,
+                        style: UITexts.mediumButtonText,
                       ),
                     ),
                   ),
@@ -536,7 +544,7 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                     backgroundColour: Colors.blue.shade100,
                     onPressedColour: Colors.blue,
                     useShadow: false,
-                    width: 180.0,
+                    width: 240.0,
                     height: null,
                     isSelected: _selectedIndex == 3,
                     onPressed: (_) {
@@ -544,11 +552,12 @@ class _MeetingSummaryState extends State<MeetingSummary> {
                         _selectedIndex = 3;
                       });
                     },
-                    child: SizedBox(
-                      height: FontSizes.mediumTextSize * 1.5,
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      height: FontSizes.bigTextSize * 1.75,
                       child: Text(
                         LangText.feedback.local,
-                        style: UITexts.smallButtonText,
+                        style: UITexts.mediumButtonText,
                       ),
                     ),
                   ),
